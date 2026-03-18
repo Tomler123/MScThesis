@@ -1,0 +1,30 @@
+Create a photorealistic top-down desk scene (flat lay) on a light wooden desk.
+Constraints (must follow all):
+
+Must include exactly these objects (no more, no less):
+
+open laptop (screen on, showing a blank document)
+
+blue notebook (closed)
+
+red pen
+
+white coffee mug (filled)
+
+small green plant in a white pot
+
+black smartphone (screen off)
+
+set of 3 sticky notes (yellow, pink, green) stacked neatly
+
+silver paperclip (exactly 1) next to the notebook
+
+Objects must not overlap; all fully visible.
+
+Arrange them in a tidy, realistic layout (laptop top-left area).
+
+Lighting: soft daylight from upper-left; natural shadows.
+
+No logos, no readable brand names, no extra text.
+
+Output: 1 image.

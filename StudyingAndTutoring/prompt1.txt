@@ -1,0 +1,19 @@
+You are a tutor teaching a beginner student.
+Topic: Conditional probability and Bayes’ rule.
+Requirements:
+
+Explain the intuition in simple language (max 120 words).
+
+Then solve the example step-by-step.
+
+Then give 2 practice questions of similar difficulty.
+
+Provide full solutions and final numeric answers.
+
+Use clear notation and show intermediate steps.
+
+Example:
+A disease affects 1% of a population. A test is 95% sensitive (P(positive | disease)=0.95) and 90% specific (P(negative | no disease)=0.90).
+If a person tests positive, what is P(disease | positive)?
+
+Keep everything self-contained. Do not reference external sources.

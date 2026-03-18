@@ -1,0 +1,10 @@
+Translate the following text to English.
+
+Constraints:
+- Preserve meaning exactly; do not add or remove information.
+- Keep a professional, polite tone.
+- Preserve time expressions and the proper noun “Beta Research” exactly.
+- Output only the translation.
+
+Text (Georgian):
+"გთხოვთ, დაადასტუროთ, შეძლებთ თუ არა განახლებული დოკუმენტის გამოგზავნას დღეს 17:00 საათამდე. თუ ეს შეუძლებელია, შემოგვთავაზეთ სხვა დრო და მოკლედ განმარტეთ შეფერხების მიზეზი. ეს განახლება საჭიროა Beta Research-ის გუნდთან შეხვედრისთვის ხვალ დილით, ამიტომ მნიშვნელოვანია, რომ ყველაფერი მკაფიო იყოს."

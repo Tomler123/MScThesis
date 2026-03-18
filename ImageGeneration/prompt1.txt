@@ -1,0 +1,22 @@
+Create a photorealistic studio product photo of a matte-black reusable water bottle.
+Constraints (must follow all):
+
+Plain white background, seamless (no texture, no gradient).
+
+Bottle centered, full object visible, 3/4 angle, camera at bottle mid-height.
+
+Bottle has a stainless-steel screw cap with a subtle brushed-metal texture.
+
+Bottle body is matte (no glossy reflections), with a thin vertical grip ridge on one side.
+
+Add small water droplets on the bottle surface (subtle, realistic).
+
+Softbox lighting from upper-left; one soft shadow under bottle; no harsh glare.
+
+Depth of field: sharp bottle edges, slightly softened shadow.
+
+No branding, no logo, no text, no extra props.
+
+High resolution, realistic proportions.
+
+Output: 1 image.

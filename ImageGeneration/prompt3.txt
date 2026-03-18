@@ -1,0 +1,16 @@
+Create a clean, photorealistic overhead scene of a plain light-gray tabletop.
+Constraints (must follow all):
+
+Place exactly 7 paperclips visible on the table.
+
+Paperclips must be identical silver metal, not stacked, all clearly separable.
+
+Include one yellow sticky note.
+
+On the sticky note, write exactly this text in uppercase: MEETING AT 3
+
+No other text anywhere in the image.
+
+Lighting: soft and even; avoid strong shadows.
+
+Output: 1 image.

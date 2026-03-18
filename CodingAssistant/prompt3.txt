@@ -1,0 +1,65 @@
+Refactor the function below for readability and maintainability without changing its behavior.
+Keep the same input/output for all cases.
+
+Constraints:
+'''
+Keep the function name and parameters the same.
+
+Add type hints and a docstring.
+
+Reduce nesting (prefer early returns).
+
+Use meaningful variable names.
+
+Do not use external libraries.
+'''
+
+Original code:
+
+"""
+def score_password(p):
+    s=0
+    if p==None:
+        return 0
+    if len(p)>=8:
+        s=s+2
+    else:
+        s=s+0
+    c1=False
+    c2=False
+    c3=False
+    for ch in p:
+        if ch>='a' and ch<='z':
+            c1=True
+        if ch>='A' and ch<='Z':
+            c2=True
+        if ch>='0' and ch<='9':
+            c3=True
+    if c1 and c2:
+        s=s+2
+    if c3:
+        s=s+1
+    if '!' in p or '?' in p or '.' in p:
+        s=s+1
+    if len(p)>=12 and c1 and c2 and c3:
+        s=s+2
+    if s>10:
+        s=10
+    return s
+"""
+
+Must pass these tests exactly:
+
+"""
+assert score_password(None) == 0
+assert score_password("") == 0
+assert score_password("abcd") == 0
+assert score_password("abcdefgh") == 2
+assert score_password("Abcdefgh") == 4
+assert score_password("Abcdefg1") == 5
+assert score_password("Abcdefg1!") == 6
+assert score_password("Abcdefghijk1!") == 8
+assert score_password("Abcdefghijk1!Z") == 10
+"""
+
+After refactoring, list the changes you made (bullet points) and why they improve readability.

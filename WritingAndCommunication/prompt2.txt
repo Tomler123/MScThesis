@@ -1,0 +1,19 @@
+Write two messages communicating the same update:
+A) Technical teammate and B) Non-technical manager.
+Shared content to communicate: "A critical bug was fixed. Release is delayed by one day due to additional testing."
+Constraints:
+
+Each message must be 90–110 words.
+
+Each message must include exactly one sentence describing the reason for the delay.
+
+Message A must include exactly two technical terms from this list: {regression, deployment, patch, QA, rollback}.
+
+Message B must include zero technical terms from that list.
+
+Both messages must include: (i) a clear next step, and (ii) a confidence statement ("We are confident…" or equivalent).
+
+Do not use bullet points.
+Output format must be:
+A) ...
+B) ...

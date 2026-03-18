@@ -1,0 +1,10 @@
+Summarize the text below.
+
+Constraints:
+- Output exactly 3 bullet points.
+- Each bullet must be 10–14 words.
+- Do not add any information not present in the text.
+- Keep the wording neutral (no opinions).
+
+Text:
+"Remote work increases flexibility and reduces commuting time. However, it may weaken informal collaboration and blur work-life boundaries. Many organizations adopt hybrid schedules to balance productivity, coordination, and employee wellbeing."

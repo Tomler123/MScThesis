@@ -1,0 +1,10 @@
+Translate the following text to English.
+
+Constraints:
+- Preserve meaning exactly; do not add or remove information.
+- Keep a professional, polite tone.
+- Preserve time expressions and the proper noun “Beta Research” exactly.
+- Output only the translation.
+
+Text (Italian):
+"Per favore, conferma se puoi inviare il documento revisionato entro le 17:00 di oggi. Se non è possibile, suggerisci un orario alternativo e spiega brevemente il motivo del ritardo. Questo aggiornamento è necessario per una riunione con il team Beta Research domani mattina, quindi è importante essere chiari."

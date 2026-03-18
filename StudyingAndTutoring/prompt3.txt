@@ -1,0 +1,17 @@
+You are a tutor teaching an intermediate student.
+Topic: Proof by contradiction and common logical mistakes.
+Requirements:
+
+Briefly explain proof by contradiction (max 110 words).
+
+Provide a clear proof (step-by-step) of the statement:
+"If n^2 is even, then n is even."
+
+Then diagnose the student’s incorrect proof attempt below: list exactly 3 mistakes, explain why each is wrong, and show how to fix the reasoning.
+
+Finish with 1 short practice statement for the student to prove, and provide the solution.
+
+Student’s attempt (incorrect):
+"Assume n^2 is even. Then n must be even because even numbers have even squares. Therefore the statement is true."
+
+Keep it self-contained and avoid external references.

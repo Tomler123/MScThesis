@@ -1,0 +1,17 @@
+Draft an internal announcement about scheduled maintenance for an internal web service.
+Use exactly these headings, in this order: Summary, Impact, Time Window, Action Required, Contact.
+Constraints (must follow all):
+
+Each heading must have exactly 2 sentences (so total = 10 sentences).
+
+"Time Window" must include the phrase: "next Tuesday" and the duration: "2 hours".
+
+"Impact" must mention both: (i) possible unavailability, and (ii) possible slow performance.
+
+"Action Required" must include exactly 3 actions, written as an inline sentence separated by semicolons (no bullets).
+
+"Contact" must include one placeholder email: support@example.com.
+
+Keep the tone neutral and informative; do not include apologies.
+
+Total length must be 150–190 words.

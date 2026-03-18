@@ -1,0 +1,39 @@
+Implement a Python function:
+
+"""
+def split_csv_line(line: str) -> list[str]:
+    """Split a single CSV line into fields (RFC4180-like), without external libraries."""
+"""
+
+Requirements:
+'''
+Fields are separated by commas.
+
+Fields may be quoted with double quotes "...".
+
+Inside quoted fields, a literal quote is escaped as "" (two quotes).
+
+Commas inside quoted fields do not split fields.
+
+Preserve whitespace exactly as it appears inside fields.
+
+Return a list of strings (decoded field values, quotes removed, "" unescaped).
+
+Do not use the csv module or any external libraries.
+
+Add type hints and a docstring.
+'''
+
+Must pass these tests:
+"""
+assert split_csv_line("a,b,c") == ["a", "b", "c"]
+assert split_csv_line('a,"b,c",d') == ["a", "b,c", "d"]
+assert split_csv_line('"a","b","c"') == ["a", "b", "c"]
+assert split_csv_line('"a""b",c') == ['a"b', "c"]
+assert split_csv_line(',"",') == ["", "", ""]
+assert split_csv_line('"  spaced  ",x') == ["  spaced  ", "x"]
+assert split_csv_line('"""",x') == ['"', "x"]
+assert split_csv_line('a,"b""c,d""e",f') == ["a", 'b"c,d"e', "f"]
+"""
+
+After the code, explain in 4–7 sentences how your parser handles quotes and edge cases.

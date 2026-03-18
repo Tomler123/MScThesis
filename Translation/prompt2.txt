@@ -1,0 +1,10 @@
+Translate the following text to English.
+
+Constraints:
+- Preserve meaning exactly; do not add or remove information.
+- Keep a professional, polite tone.
+- Preserve time expressions and the proper noun “Beta Research” exactly.
+- Output only the translation.
+
+Text (Russian):
+"Пожалуйста, подтвердите, сможете ли вы отправить обновлённый документ сегодня до 17:00. Если это невозможно, предложите другое время и кратко объясните причину задержки. Это обновление нужно для встречи с командой Beta Research завтра утром, поэтому важна ясность."

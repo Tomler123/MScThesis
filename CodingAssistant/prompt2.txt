@@ -1,0 +1,55 @@
+The function below should check whether brackets are balanced in a string.
+Bracket types: (), [], {}.
+
+Special rule:
+
+Ignore any brackets that occur inside double quotes "...".
+
+A double quote can be escaped inside quotes as \" (backslash quote), and escaped quotes do not end the quoted region.
+
+The function is buggy. Fix it without changing the function signature.
+
+"""
+def is_balanced(text: str) -> bool:
+    stack = []
+    in_quotes = False
+    pairs = {')': '(', ']': '[', '}': '{'}
+    for ch in text:
+        if ch == '"':
+            in_quotes = not in_quotes
+        if not in_quotes:
+            if ch in "([{":
+                stack.append(ch)
+            elif ch in ")]}":
+                if not stack or stack[-1] != pairs[ch]:
+                    return False
+                stack.pop()
+    return stack == []
+"""
+
+Requirements:
+'''
+Handle escaped quotes \" correctly (inside quotes, it should not toggle in_quotes).
+
+Only ignore brackets inside quotes; outside quotes they must be checked normally.
+
+Return True only if all brackets are properly balanced.
+
+Add type hints if missing and a short docstring.
+'''
+
+Must pass these tests:
+
+"""
+assert is_balanced("") is True
+assert is_balanced("([]){}") is True
+assert is_balanced("(]") is False
+assert is_balanced("([)]") is False
+assert is_balanced('"(]"') is True                  # brackets inside quotes ignored
+assert is_balanced('"("') is True                   # ignored
+assert is_balanced('(")")') is True                 # inside quotes ignored, outside balanced
+assert is_balanced('(")")(') is False               # outside has extra '('
+assert is_balanced('"a \\" b"') is True             # escaped quote inside quotes
+assert is_balanced('"a \\" ( ]"') is True           # brackets inside quotes ignored
+assert is_balanced('"unclosed') is True             # treat as: in_quotes at end -> still ignore inside (no bracket constraint)
+"""

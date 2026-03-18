@@ -1,0 +1,17 @@
+Write a polite but firm professional email.
+Constraints (must follow all):
+
+Include a subject line (max 8 words).
+
+Body must be 110–130 words (not counting subject).
+
+Use exactly 3 paragraphs (no bullet points).
+
+Include one explicit deadline: "by 5 PM today".
+
+Include one concrete next step (e.g., "Please reply with…", "Please send…").
+
+Do not use the words: urgent, ASAP, need.
+
+Keep tone professional and non-accusatory.
+Message: "Hello, I have not received the updated document yet. I need it today. Please confirm when you can send it."

@@ -4,13 +4,13 @@ This folder contains evaluation prompts for the **Writing & Communication** doma
 Each prompt is designed to test controlled writing quality under explicit constraints.
 
 ## Files
-- `prompt1.txt` — Professional email rewrite with strict constraints
-- `prompt2.txt` — Audience adaptation (technical teammate vs non-technical manager)
-- `prompt3.txt` — Internal maintenance announcement with fixed headings and hard rules
+- `prompt1.txt` - Professional email rewrite with strict constraints
+- `prompt2.txt` - Audience adaptation (technical teammate vs non-technical manager)
+- `prompt3.txt` - Internal maintenance announcement with fixed headings and hard rules
 
 ## Prompt descriptions
 
-### Prompt 1 — Professional Email (Polite but Firm)
+### Prompt 1 - Professional Email (Polite but Firm)
 **Goal:** Assess professional tone, concision, and strict constraint compliance in email writing.
 
 **What it tests**
@@ -27,7 +27,7 @@ Each prompt is designed to test controlled writing quality under explicit constr
 
 ---
 
-### Prompt 2 — Audience Adaptation (Two Audiences)
+### Prompt 2 - Audience Adaptation (Two Audiences)
 **Goal:** Assess the model’s ability to communicate the same update to two audiences with different language constraints.
 
 **What it tests**
@@ -46,7 +46,7 @@ Each prompt is designed to test controlled writing quality under explicit constr
 
 ---
 
-### Prompt 3 — Maintenance Announcement (Fixed Headings)
+### Prompt 3 - Maintenance Announcement (Fixed Headings)
 **Goal:** Assess structured communication with rigid formatting and content placement rules.
 
 **What it tests**

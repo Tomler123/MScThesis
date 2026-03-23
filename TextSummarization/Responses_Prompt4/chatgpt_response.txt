@@ -1,0 +1,20 @@
+Response:
+
+'''
+
+'''
+
+Extra feature:
+-    Open in email button
+-    Read loud
+-    Thinking option
+-    Copy button
+-    Seperate window for email
+-    Personality Adjustment (Basically deciding the style, tone and formatting of the response that model gives)
+-    Showing the sources from which it took the information
+
+Model:
+Free tier chatgpt.com (ChatGPT) using "GPT-5.3" + Thinking
+
+Date:
+3/23/2026

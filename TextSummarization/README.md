@@ -7,14 +7,14 @@ The prompts focus on three core qualities:
 - **Conciseness** (brief, well-structured output)
 
 ## Files
-- `prompt1.txt` — Paragraph summarization with strict bullet and length constraints
-- `prompt2.txt` — Research paper PDF summarization with fixed section schema
-- `prompt3.txt` — Technical/lecture PDF summarization with a structured bullet template
-- `prompt4.txt` — Webpage summarization with fixed sections and browsing constraint
+- `prompt1.txt` - Paragraph summarization with strict bullet and length constraints
+- `prompt2.txt` - Research paper PDF summarization with fixed section schema
+- `prompt3.txt` - Technical/lecture PDF summarization with a structured bullet template
+- `prompt4.txt` - Webpage summarization with fixed sections and browsing constraint
 
 ## Prompt descriptions
 
-### Prompt 1 — Short Paragraph Summarization
+### Prompt 1 - Short Paragraph Summarization
 **Goal:** Test concise, faithful summarization of a short inline paragraph.
 
 **What it tests**
@@ -30,7 +30,7 @@ The prompts focus on three core qualities:
 
 ---
 
-### Prompt 2 — Literature PDF Summarization (Research Paper)
+### Prompt 2 - Literature PDF Summarization (Research Paper)
 **Goal:** Test summarization of a full research paper with a required section schema.
 
 **What it tests**
@@ -49,7 +49,7 @@ The prompts focus on three core qualities:
 
 ---
 
-### Prompt 3 — Technical / Lecture PDF Summarization
+### Prompt 3 - Technical / Lecture PDF Summarization
 **Goal:** Test summarization of technical educational content under a fixed template.
 
 **What it tests**
@@ -69,7 +69,7 @@ The prompts focus on three core qualities:
 
 ---
 
-### Prompt 4 — Webpage Summarization (Link-Based)
+### Prompt 4 - Webpage Summarization (Link-Based)
 **Goal:** Test summarization of a webpage with strict section constraints.
 
 **What it tests**

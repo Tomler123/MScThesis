@@ -1,0 +1,31 @@
+Response:
+
+'''
+Summary
+We are performing scheduled maintenance on the primary internal corporate web service to improve overall system stability. This critical update ensures that all backend components remain secure and efficient for daily business operations.
+
+Impact
+Users may experience possible unavailability during the scheduled maintenance period. Some specific interactions might also suffer from possible slow performance before the technical work concludes.
+
+Time Window
+The maintenance is officially scheduled to begin next Tuesday at 10:00 AM. The entire upgrade process is expected to last for approximately 2 hours.
+
+Action Required
+Please save your current work before the start time; log out of the application prior to the window; refresh your browser after maintenance ends. All staff members should carefully plan their daily tasks around this scheduled downtime accordingly.
+
+Contact
+Direct any technical questions or concerns to the dedicated IT helpdesk team. You can reach them via email at support@example.com for any further assistance.
+'''
+
+Extra feature:
+-    Auto option on model selection. (Decides which model to use that better suits the input)
+-    Thinking option
+-    Copy button
+-    Export to PDF option.
+-    Read loud
+
+Model:
+Free tier chat.qwen.ai (QWEN) using "Qwen3.5-Flash" + Thinking
+
+Date:
+3/23/2026

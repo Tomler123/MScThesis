@@ -1,0 +1,30 @@
+Response:
+
+'''
+Subject: Follow-Up on Updated Document
+
+Dear Colleague,
+
+I trust this message finds you well. I am following up on the updated document discussed earlier this week, as I have not yet received it. Our team anticipates this revision to advance the planned activities, and we appreciate your support in our shared objectives.
+
+It would be helpful to receive the document by 5 PM today so we can proceed with the necessary reviews without any delay to the schedule. This timing aligns with the expectations from our last meeting.
+
+Please reply with the updated document attached and confirm its dispatch in your response. Thank you for your continued attention to this, and I look forward to our ongoing productive collaboration on the project.
+'''
+
+Extra feature:
+-    Auto option on model selection. (Decides which model to use that better suits the input)
+-    Expert option (Similar to whats most commonly known as Extended thinking)
+-    Copy button
+-    Export to PDF option
+-    Read loud
+-    Option for 3 follow up inputs that can be sent in one click:
+    *   Explain email etiquette nuances
+    *   Suggest alternate communication tools
+    *   Revise for firmer tone
+
+Model:
+Free tier grok.com (Grok) using "Grok 4.20" + Expert thinking
+
+Date:
+3/23/2026

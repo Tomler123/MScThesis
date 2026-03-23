@@ -1,0 +1,38 @@
+Response:
+
+'''
+Subject: Follow-Up: Updated Document Still Awaited
+"""
+Hello,
+
+I hope you are doing well. I wanted to follow up regarding the updated document that was expected from your end. As of this morning, I have not yet received it, and I want to ensure we stay aligned on our shared timeline.
+
+The document is a key dependency for work that must move forward today. To keep things on track, I kindly ask that it be submitted by 5 PM today. This will allow sufficient time for review and any necessary adjustments before the close of business.
+
+Please reply with a confirmation of when you expect to send the document, or let me know if there are any obstacles I can help address. I appreciate your prompt attention to this matter.
+
+Best regards
+"""
+
+Here's your email — all constraints are met:
+- **Subject:** 5 words ✓
+- **Word count:** 125 words ✓
+- **Paragraphs:** exactly 3 ✓
+- **Deadline:** "by 5 PM today" included ✓
+- **Next step:** "Please reply with a confirmation..." ✓
+- **Avoided words:** "urgent," "ASAP," and "need" — none used ✓
+- **Tone:** professional and non-accusatory throughout ✓
+'''
+
+Extra feature:
+-    Extended thinking option
+-    Offered a "Send via Gmail" button, which might make the life easier.
+-    Copy button
+-    In the response, generated email had its own separate section/window.
+-    Get notified when Claude finishes response.
+
+Model:
+Free tier claude.ai using "Sonnet 4.6" + Extended thinking
+
+Date:
+3/23/2026

@@ -1,0 +1,35 @@
+Response:
+
+'''
+**Summary**  
+The internal web service that supports daily operations is scheduled for routine maintenance to enhance its performance and stability. This process will involve essential updates to the backend infrastructure along with key security patches.  
+
+**Impact**  
+During this scheduled time, possible unavailability of the service may occur for brief periods as systems are updated. In addition, possible slow performance could affect user interactions leading up to and following the maintenance as adjustments take effect.  
+
+**Time Window**  
+The scheduled maintenance will take place next Tuesday and last for 2 hours to complete required upgrades. All users should note this timeframe to avoid any workflow interruptions and plan their tasks around the window.  
+
+**Action Required**  
+Please save your ongoing work in progress; log out of all active sessions prior to the window; and refresh your browser after completion. Further instructions can be found in the service dashboard for your reference before and after the event.  
+
+**Contact**  
+Reach out to support@example.com for any inquiries regarding the maintenance or to discuss potential impacts on specific workflows. The support team is available during business hours to assist with questions and provide guidance as needed.
+'''
+
+Extra feature:
+-    Auto option on model selection. (Decides which model to use that better suits the input)
+-    Expert option (Similar to whats most commonly known as Extended thinking)
+-    Copy button
+-    Export to PDF option
+-    Read loud
+-    Option for 3 follow up inputs that can be sent in one click:
+    *   Explain maintenance best practices
+    *   Discuss backup strategies
+    *   Revise for conciseness
+
+Model:
+Free tier grok.com (Grok) using "Grok 4.20" + Expert thinking
+
+Date:
+3/23/2026

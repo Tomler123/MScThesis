@@ -1,0 +1,31 @@
+Response:
+
+'''
+**Summary**
+Scheduled maintenance will be performed on the internal web service next Tuesday. This work is part of routine infrastructure updates intended to ensure continued system reliability and performance.
+
+**Impact**
+During the maintenance window, the service may be temporarily unavailable to all users. In addition, some users may experience slow performance in the period immediately preceding the maintenance start.
+
+**Time Window**
+The maintenance is scheduled for next Tuesday and will last approximately 2 hours. The work is expected to begin at 10:00 PM EST and will conclude no later than midnight.
+
+**Action Required**
+Users should save all active work before the maintenance window begins; log out of the service prior to the scheduled start time; and verify access by logging back in once the window has closed. No further action is required at this time.
+
+**Contact**
+For questions or concerns, contact the support team directly at support@example.com. Status updates will be communicated through the standard internal notification channels as the maintenance progresses.
+'''
+
+Extra feature:
+-    Extended thinking option
+-    Offered a "Send via Gmail" button, which might make the life easier.
+-    Copy button
+-    In the response, generated email had its own separate section/window.
+-    Get notified when Claude finishes response.
+
+Model:
+Free tier claude.ai using "Sonnet 4.6" + Extended thinking
+
+Date:
+3/23/2026

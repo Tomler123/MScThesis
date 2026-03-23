@@ -1,0 +1,32 @@
+Response:
+
+'''
+**Summary**
+Scheduled maintenance will be performed on the internal web service to improve reliability and support upcoming changes. The maintenance is planned to be routine and should complete without any configuration changes for most users.
+
+**Impact**
+During the maintenance window, the service may experience possible unavailability and possible slow performance. Some requests may fail intermittently while backend components are being updated.
+
+**Time Window**
+The maintenance is scheduled for next Tuesday and is expected to last 2 hours. Work will begin during the announced window and end once validation checks are complete.
+
+**Action Required**
+Please save any work in progress before the window begins; avoid deploying changes to the service during the window; and monitor dependent systems for errors. No additional steps are required unless your team notices unexpected behavior afterward.
+
+**Contact**
+For questions or coordination, contact [support@example.com](mailto:support@example.com). Please include any relevant service details so the team can respond efficiently.
+'''
+
+Extra feature:
+-    Open in email button
+-    Read loud
+-    Thinking option
+-    Copy button
+-    Seperate window for email
+-    Personality Adjustment (Basically deciding the style, tone and formatting of the response that model gives)
+
+Model:
+Free tier chatgpt.com (ChatGPT) using "GPT-5.3" + Thinking
+
+Date:
+3/23/2026

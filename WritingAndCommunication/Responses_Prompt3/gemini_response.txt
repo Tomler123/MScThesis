@@ -1,0 +1,32 @@
+Response:
+
+'''
+## Summary
+The IT infrastructure team has scheduled essential maintenance for the internal project management portal to ensure system stability. This update involves upgrading the backend database and applying necessary security patches to the server environment.
+
+## Impact
+Users may experience possible unavailability while the primary server nodes are being rebooted during the maintenance process. There is also a chance of possible slow performance as traffic is rerouted through the secondary backup systems.
+
+## Time Window
+The maintenance window is scheduled for next Tuesday to minimize disruption to the standard work week. Operations are expected to last for a duration of 2 hours starting precisely at midnight Central Standard Time.
+
+## Action Required
+Please save all active work before the window begins; log out of the web service entirely; clear your browser cache after the update is complete. Staff should notify their respective department heads if any critical tasks are scheduled during this specific period.
+
+## Contact
+Questions regarding this maintenance or technical issues following the update should be directed to support@example.com. The support desk will monitor this inbox throughout the maintenance period to address any immediate technical concerns.
+
+Would you like me to create a follow-up reminder for the day before this maintenance?
+'''
+
+Extra feature:
+-    Extended thinking
+-    Draft in Gmail
+-    Export to Docs
+-    Listen (Clear, outloud reading of the given output)
+
+Model:
+Free tier gemini.google.com (Gemini) using "Gemini 3" + Extended thinking
+
+Date:
+3/23/2026

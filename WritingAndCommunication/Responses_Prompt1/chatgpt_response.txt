@@ -1,0 +1,29 @@
+Response:
+
+'''
+"""
+Subject: Updated Document Timing
+
+---
+
+Hello,
+
+I have not received the updated document yet. Please send it by 5 PM today, or reply with the exact time it will be available. I want to make sure I can review it on schedule and keep things moving smoothly.
+
+If there is any issue causing a delay, please let me know briefly so I can plan accordingly. Otherwise, please confirm once it has been sent.
+"""
+'''
+
+Extra feature:
+-    Open in email button
+-    Read loud
+-    Thinking option
+-    Copy button
+-    Seperate window for email
+-    Personality Adjustment (Basically deciding the style, tone and formatting of the response that model gives)
+
+Model:
+Free tier chatgpt.com (ChatGPT) using "GPT-5.3" + Thinking
+
+Date:
+3/23/2026

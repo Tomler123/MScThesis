@@ -1,0 +1,105 @@
+Response:
+
+'''
+```python
+def split_csv_line(line: str) -> list[str]:
+    """
+    Split a single CSV line into fields following RFC 4180-like rules.
+
+    Rules:
+    - Fields are separated by commas.
+    - Fields may be optionally enclosed in double quotes.
+    - A literal double quote inside a quoted field is represented as two
+      consecutive double quotes ("").
+    - Commas inside quoted fields are treated as part of the field value.
+    - Whitespace is preserved exactly as it appears inside fields.
+
+    Args:
+        line: A single CSV line (no trailing newline expected, but tolerated).
+
+    Returns:
+        A list of decoded field strings with enclosing quotes removed and
+        escaped double-quotes ("") replaced by a single double-quote (").
+    """
+    fields: list[str] = []
+    current: list[str] = []
+    i = 0
+    n = len(line)
+
+    while i <= n:
+        # --- End of line: flush the current field and stop ---
+        if i == n:
+            fields.append("".join(current))
+            break
+
+        ch = line[i]
+
+        # --- Start of a quoted field ---
+        if ch == '"' and not current:
+            i += 1  # skip the opening quote
+            while i < n:
+                c = line[i]
+                if c == '"':
+                    # Peek ahead: "" is an escaped quote, otherwise closing quote
+                    if i + 1 < n and line[i + 1] == '"':
+                        current.append('"')
+                        i += 2  # consume both quote characters
+                    else:
+                        i += 1  # consume closing quote
+                        break
+                else:
+                    current.append(c)
+                    i += 1
+            # After the closing quote the next character must be ',' or end-of-line
+            # (malformed input is parsed leniently: any trailing chars are ignored)
+
+        # --- Field separator: commit the current field ---
+        elif ch == ',':
+            fields.append("".join(current))
+            current = []
+            i += 1
+
+        # --- Ordinary unquoted character ---
+        else:
+            current.append(ch)
+            i += 1
+
+    return fields
+```
+
+**Testing it:**
+
+```python
+assert split_csv_line("a,b,c") == ["a", "b", "c"]
+assert split_csv_line('a,"b,c",d') == ["a", "b,c", "d"]
+assert split_csv_line('"a","b","c"') == ["a", "b", "c"]
+assert split_csv_line('"a""b",c') == ['a"b', "c"]
+assert split_csv_line(',"",') == ["", "", ""]
+assert split_csv_line('"  spaced  ",x') == ["  spaced  ", "x"]
+assert split_csv_line('"""",x') == ['"', "x"]
+assert split_csv_line('a,"b""c,d""e",f') == ["a", 'b"c,d"e', "f"]
+print("All tests passed.")
+```
+
+---
+
+**How the parser handles quotes and edge cases:**
+
+The parser walks the input character by character using an index `i`, accumulating characters for the *current field* in a list that is joined and committed whenever a comma or end-of-line is reached. A quoted field is detected by the presence of a `"` character when the current field buffer is still empty — it then enters a dedicated inner loop that consumes characters until a *closing* double-quote is found. Inside that inner loop, the only special sequence is `""`: when the parser sees a `"` followed immediately by another `"`, it appends a single literal `"` and advances by two positions, implementing the RFC 4180 escape rule. A lone `"` with no following `"` is treated as the closing delimiter, at which point the inner loop exits and the outer loop resumes looking for the next comma. The edge case `'"""",x'` resolves correctly because the first two quotes are consumed as one escaped `"`, the third quote is then the closing delimiter, yielding a one-character field containing `"`. Empty fields (adjacent commas or a leading/trailing comma) are handled naturally: when a comma is encountered with an empty buffer, an empty string is flushed — and the `while i <= n` condition (note `<=`, not `<`) ensures the very last field is always flushed even when the line doesn't end with a comma.
+'''
+
+Test Result:
+'All tests passed.'
+
+Extra feature:
+-    Extended thinking option
+-    Copy button
+-    In the response, generated email had its own separate section/window.
+-    Get notified when Claude finishes response
+-    2 Seperate window for Code and for Testing
+
+Model:
+Free tier claude.ai using "Sonnet 4.6" + Extended thinking
+
+Date:
+3/23/2026

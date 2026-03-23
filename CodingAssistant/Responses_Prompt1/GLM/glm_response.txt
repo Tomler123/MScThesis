@@ -1,0 +1,66 @@
+Response:
+
+'''
+```python
+def split_csv_line(line: str) -> list[str]:
+    """Split a single CSV line into fields according to RFC4180-like rules.
+
+    Fields are separated by commas. Fields may be quoted with double quotes.
+    Inside quoted fields, a double quote is escaped as two double quotes.
+    Commas inside quoted fields do not split fields. Whitespace is preserved exactly.
+    Returns a list of field strings with quotes removed and escaped quotes unescaped.
+    """
+    fields: list[str] = []
+    current: list[str] = []
+    in_quotes = False
+    i = 0
+    n = len(line)
+
+    while i < n:
+        ch = line[i]
+        if not in_quotes:
+            if ch == ',':
+                fields.append(''.join(current))
+                current = []
+                i += 1
+            elif ch == '"':
+                in_quotes = True
+                i += 1
+            else:
+                current.append(ch)
+                i += 1
+        else:  # inside a quoted field
+            if ch == '"':
+                # Look ahead for escaped double quote
+                if i + 1 < n and line[i + 1] == '"':
+                    current.append('"')
+                    i += 2
+                else:
+                    # Closing quote
+                    in_quotes = False
+                    i += 1
+            else:
+                current.append(ch)
+                i += 1
+
+    # Append the last field
+    fields.append(''.join(current))
+    return fields
+```
+
+The parser uses a simple state machine with a boolean `in_quotes` to track whether it is inside a quoted field. When not inside quotes, a comma ends the current field, and a double quote signals the start of a quoted field. Inside a quoted field, characters are taken literally except for double quotes: if two double quotes appear consecutively, they are collapsed into one double quote (escaped quote); a lone double quote terminates the quoted field. This approach correctly handles empty fields, escaped quotes, commas inside quotes, and preserves whitespace exactly. The algorithm assumes well-formed input as per the given tests and RFC4180 guidelines.
+'''
+
+Test Results:
+'All tests passed.'
+
+Extra feature:
+-    Thinking option
+-    Copy button
+-    Seperate window for Code
+
+Model:
+Free tier chat.z.ai (GLM) using "GLM-5" + Expert thinking
+
+Date:
+3/23/2026

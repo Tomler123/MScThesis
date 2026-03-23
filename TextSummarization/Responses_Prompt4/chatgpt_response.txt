@@ -9,7 +9,6 @@ Extra feature:
 -    Read loud
 -    Thinking option
 -    Copy button
--    Seperate window for email
 -    Personality Adjustment (Basically deciding the style, tone and formatting of the response that model gives)
 -    Showing the sources from which it took the information
 

@@ -1,0 +1,74 @@
+Response:
+
+'''
+Here's the refactored function:
+
+```python
+def format_user_line(name: str | None, age: int | None, city: str | None) -> str:
+    """
+    Format a user record as a display string.
+
+    Args:
+        name: The user's name. Must be a non-empty, non-blank string.
+        age:  The user's age. Must be a non-negative integer.
+        city: The user's city. Defaults to "Unknown" if missing or blank.
+
+    Returns:
+        A formatted string like "Anna (20) - Budapest",
+        or "Invalid user" if name or age are invalid.
+    """
+    INVALID = "Invalid user"
+    DEFAULT_CITY = "Unknown"
+
+    is_invalid_name = not name or not isinstance(name, str)
+    if is_invalid_name:
+        return INVALID
+
+    is_invalid_age = age is None or not isinstance(age, int) or age < 0
+    if is_invalid_age:
+        return INVALID
+
+    clean_name = name.strip()
+    if not clean_name:
+        return INVALID
+
+    clean_city = city.strip() if isinstance(city, str) else ""
+    resolved_city = clean_city if clean_city else DEFAULT_CITY
+
+    return f"{clean_name} ({age}) - {resolved_city}"
+```
+
+---
+
+**Changes made and why:**
+
+- **Named constants `INVALID` and `DEFAULT_CITY`** — eliminates repeated magic strings `"Invalid user"` and `"Unknown"`, making future changes a one-line edit and signalling intent clearly.
+
+- **Consolidated validation into boolean expressions** — the four separate `if` checks for `name` and the four for `age` are each collapsed into a single descriptive expression (`is_invalid_name`, `is_invalid_age`). This reduces the vertical footprint and reads like plain English.
+
+- **Used `is None` instead of `== None`** — idiomatic Python; `==` can be overridden by `__eq__`, `is None` is always safe and signals identity, not equality.
+
+- **Meaningful variable names** — `s` → `clean_name`, `c` → `clean_city`/`resolved_city`. These immediately communicate what the variable holds and what transformation was applied.
+
+- **f-string instead of string concatenation** — `f"{clean_name} ({age}) - {resolved_city}"` is easier to read and edit than `s+" ("+str(age)+") - "+c`, and handles the `str(age)` cast implicitly.
+
+- **Early returns throughout** — validation failures exit immediately at the top, so by the time you reach the formatting logic at the bottom, all inputs are guaranteed valid. This eliminates nested `if`/`else` chains and keeps the "happy path" visually separate.
+
+- **Docstring** — documents the contract (valid inputs, what each arg means, the return value) so callers don't need to read the implementation to understand how to use it.
+'''
+
+Test Result:
+'All tests passed.'
+
+Extra feature:
+-    Extended thinking option
+-    Copy button
+-    In the response, generated email had its own separate section/window.
+-    Get notified when Claude finishes response
+-    Seperate window for Code
+
+Model:
+Free tier claude.ai using "Sonnet 4.6" + Extended thinking
+
+Date:
+3/23/2026

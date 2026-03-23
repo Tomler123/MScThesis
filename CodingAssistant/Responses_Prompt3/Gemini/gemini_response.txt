@@ -1,0 +1,61 @@
+Response:
+
+'''
+Here is the refactored code. I have preserved the exact behavior required by your test cases while improving the structure and readability.
+
+```python
+def format_user_line(name: str | None, age: int | None, city: str | None) -> str:
+    """
+    Formats user data into a string: 'Name (Age) - City'.
+    
+    Validates that name is a non-empty string and age is a non-negative integer.
+    Returns 'Invalid user' if validation fails. Defaults empty cities to 'Unknown'.
+    """
+    # Validate name: ensure it is not None and contains non-whitespace characters
+    if not name or not name.strip():
+        return "Invalid user"
+
+    # Validate age: must be exactly an int (not a bool or string) and >= 0
+    if type(age) is not int or age < 0:
+        return "Invalid user"
+
+    # Normalize city: default to 'Unknown' if None, empty, or only whitespace
+    if not city or not city.strip():
+        clean_city = "Unknown"
+    else:
+        clean_city = city.strip()
+
+    clean_name = name.strip()
+    
+    return f"{clean_name} ({age}) - {clean_city}"
+```
+
+---
+
+### List of Changes & Improvements
+
+* **Type Hinting:** Added type hints (`str | None`, etc.) to the parameters and return type. This allows IDEs to catch potential bugs before the code even runs and makes the function's expectations clear.
+* **F-String Interpolation:** Replaced manual string concatenation (`+`) with an f-string. This is more readable and handles the integer-to-string conversion of `age` automatically and efficiently.
+* **Consolidated Logic:** I used `if not name or not name.strip()` to handle `None`, empty strings, and whitespace strings in a single readable block, rather than having four separate `if` statements for the same outcome.
+* **Meaningful Variable Names:** Used `clean_name` and `clean_city` to distinguish between the raw input and the processed (stripped/defaulted) data.
+* **Early Returns:** Maintained the early return pattern for "Invalid user" cases. This "Guard Clause" style keeps the "happy path" of the function at the lowest indentation level, making it easier to follow.
+* **Type Integrity:** Used `type(age) is not int` to match your original constraint. In Python, `isinstance(True, int)` is `True`, so checking the type specifically ensures that booleans are rejected as they were in your original code.
+* **Docstring:** Included a PEP 257 compliant docstring to explain the function's purpose and validation rules.
+
+Would you like me to write a few more test cases to cover edge cases like boolean inputs for age or special characters in the names?
+'''
+
+Test Results:
+'All tests passed!'
+
+Extra feature:
+-    Extended thinking
+-    Draft in Gmail
+-    Export to Docs
+-    Listen (Clear, outloud reading of the given output)
+
+Model:
+Free tier gemini.google.com (Gemini) using "Gemini 3" + Extended thinking
+
+Date:
+3/23/2026

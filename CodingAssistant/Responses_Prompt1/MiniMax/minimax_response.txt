@@ -1,0 +1,57 @@
+Response:
+
+'''
+Received. I'm starting to work on implementing the `split_csv_line` function based on your requirements.
+
+I'll implement this CSV parser function with a character-by-character state machine approach.
+
+
+
+<think duration="686" >
+Now let me run the tests to verify the implementation works correctly.
+
+</think>
+
+
+
+All tests pass. Here's the implementation and explanation:
+
+```python
+def split_csv_line(line: str) -> list[str]:
+    """Split a single CSV line into fields (RFC4180-like), without external libraries."""
+```
+
+**How the Parser Works:**
+
+The parser uses a character-by-character state machine with a boolean flag `in_quotes` to track whether we're currently parsing inside quoted text. When not in quotes, commas act as field separators and quotes start a new quoted field. When inside quotes, commas are treated as literal characters, and quotes have special meaning: if a quote is followed by another quote (`""`), it's an **escaped quote** and adds one literal `"` to the field. A lone quote ends the quoted field.
+
+**Edge Cases Handled:**
+
+1. **Trailing commas** (`',""',`): The parser appends a field after every comma, including the last one, resulting in three empty strings.
+
+2. **Whitespace preservation**: Characters inside quotes are added verbatim without trimming, so `"  spaced  "` preserves the spaces exactly.
+
+3. **Multiple escaped quotes** (`""""`): The sequence `""` inside quotes decodes to a single `"`. Four consecutive quotes (`""""`) therefore become one literal quote character in the output.
+
+4. **Complex mixing** (`a,"b""c,d""e",f`): The parser correctly handles alternating quoted and unquoted sections, preserving commas and embedded escaped quotes within the same field.
+
+The algorithm runs in O(n) time where n is the length of the input line, using only constant extra space beyond the output fields.
+'''
+
+Test Results:
+'All tests passed!'
+
+Extra feature:
+-    Auto option on model selection. (Decides which model to use that better suits the input)
+-    Thinking option
+-    Copy button
+-    Export to PDF option.
+-    Having seperate section for the generated code files
+-    All files can be downloaded
+-    All files can be editted
+
+Model:
+Free tier agent.minimax.io (MiniMax) using "MiniMax-M2.7"
+
+Date:
+3/23/2026

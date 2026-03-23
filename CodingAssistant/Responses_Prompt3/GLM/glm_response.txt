@@ -1,0 +1,64 @@
+Response:
+
+'''
+Here is the refactored code:
+
+```python
+def format_user_line(name: str, age: int, city: str) -> str:
+    """
+    Formats user details into a specific string format.
+
+    Validates the input name and age. Returns "Invalid user" if the name is
+    None, empty, or whitespace-only, or if the age is None, not an integer,
+    or negative. Handles missing or empty cities by defaulting to "Unknown".
+
+    Args:
+        name: The user's name.
+        age: The user's age (must be a non-negative integer).
+        city: The user's city.
+
+    Returns:
+        A formatted string "Name (Age) - City" or "Invalid user".
+    """
+    # Validate name: check for None, empty string, or whitespace-only string
+    if name is None or name.strip() == "":
+        return "Invalid user"
+
+    # Validate age: check for None, incorrect type, or negative value
+    if age is None or not isinstance(age, int) or age < 0:
+        return "Invalid user"
+
+    # Normalize city: default to "Unknown" if None, empty, or whitespace-only
+    if city is None or city.strip() == "":
+        city = "Unknown"
+
+    clean_name = name.strip()
+    clean_city = city.strip()
+
+    return f"{clean_name} ({age}) - {clean_city}"
+```
+
+### Changes Made
+
+*   **Added Type Hints and Docstring**: Added `str` and `int` type hints to the function signature and a comprehensive docstring explaining the logic, parameters, and return values. This improves code documentation and makes the expected inputs explicit.
+*   **Reduced Nesting and Unified Validations**: Combined the separate `if` statements for `name` validation (None, empty string) into a single check, and did the same for `age` validation (None, type, negative). This reduces cognitive complexity and makes the "guard clause" pattern clearer.
+*   **Consolidated City Logic**: Merged the city handling logic. Instead of using four separate `if` statements to handle `None` and `""` before and after stripping, the code now checks if the city is `None` or evaluates to empty after checking whitespace (using the same logic as the name validation), assigning "Unknown" once.
+*   **Used Meaningful Variable Names**: Renamed `s` and `c` to `clean_name` and `clean_city`. This makes it obvious that the variables hold the stripped versions of the inputs.
+*   **Used f-strings for Formatting**: Replaced the manual string concatenation (`+`) with an f-string. This is the modern, readable Python standard for string formatting.
+*   **Replaced `type()` check with `isinstance()`**: Switched `type(age) != int` to `not isinstance(age, int)`. While the behavior remains the same for this specific constraint, `isinstance` is the idiomatic Python way to perform type checks.
+*   **Direct Whitespace Validation**: Changed the logic from `.strip()` inside a `len()` check to a direct `== ""` check after stripping (conceptually `name.strip() == ""`). This is more readable than checking if the length of a temporary string is zero.
+'''
+
+Test Results:
+'All tests passed.'
+
+Extra feature:
+-    Thinking option
+-    Copy button
+-    Seperate window for Code
+
+Model:
+Free tier chat.z.ai (GLM) using "GLM-5" + Expert thinking
+
+Date:
+3/23/2026

@@ -1,0 +1,61 @@
+Response:
+
+'''
+```python
+def is_balanced(text: str) -> bool:
+    """Return True if brackets are balanced outside double-quoted regions."""
+    stack: list[str] = []
+    in_quotes = False
+    pairs = {')': '(', ']': '[', '}': '{'}
+    i = 0
+
+    while i < len(text):
+        ch = text[i]
+
+        if ch == '"':
+            # Inside quotes, a quote preceded by an odd number of backslashes is escaped.
+            if in_quotes:
+                backslashes = 0
+                j = i - 1
+                while j >= 0 and text[j] == '\\':
+                    backslashes += 1
+                    j -= 1
+                if backslashes % 2 == 0:
+                    in_quotes = False
+            else:
+                in_quotes = True
+
+        elif not in_quotes:
+            if ch in "([{":
+                stack.append(ch)
+            elif ch in ")]}":
+                if not stack or stack[-1] != pairs[ch]:
+                    return False
+                stack.pop()
+
+        i += 1
+
+    return not stack
+```
+
+This fixes the escaped-quote handling, keeps bracket checking active only outside quotes, and returns `True` even if the string ends while still inside quotes.
+
+'''
+
+Test Results:
+'All tests passed.'
+
+Extra feature:
+-    Open in email button
+-    Read loud
+-    Thinking option
+-    Copy button
+-    Seperate window for Code
+-    Option to Run the code on web based interface
+-    Personality Adjustment (Basically deciding the style, tone and formatting of the response that model gives)
+
+Model:
+Free tier chatgpt.com (ChatGPT) using "GPT-5.3" + Thinking
+
+Date:
+3/23/2026

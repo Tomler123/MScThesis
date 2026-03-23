@@ -1,0 +1,84 @@
+Response:
+
+'''
+Here is the implementation of the CSV line parser using a state-machine approach to handle the RFC4180 requirements without external dependencies.
+
+```python
+def split_csv_line(line: str) -> list[str]:
+    """
+    Split a single CSV line into fields (RFC4180-like), without external libraries.
+    
+    Handles quoted fields, escaped double quotes (""), and literal commas 
+    within quotes while preserving whitespace.
+    """
+    fields = []
+    current_field = []
+    in_quotes = False
+    i = 0
+    
+    while i < len(line):
+        char = line[i]
+        
+        if in_quotes:
+            if char == '"':
+                # Check if this is an escaped quote ("")
+                if i + 1 < len(line) and line[i + 1] == '"':
+                    current_field.append('"')
+                    i += 1  # Skip the second quote
+                else:
+                    # Closing quote
+                    in_quotes = False
+            else:
+                # Literal character inside quotes
+                current_field.append(char)
+        else:
+            if char == '"':
+                # Opening quote
+                in_quotes = True
+            elif char == ',':
+                # Field delimiter
+                fields.append("".join(current_field))
+                current_field = []
+            else:
+                # Regular character outside quotes
+                current_field.append(char)
+        i += 1
+        
+    # Append the final field after the loop ends
+    fields.append("".join(current_field))
+    return fields
+
+# Verification Tests
+if __name__ == "__main__":
+    assert split_csv_line("a,b,c") == ["a", "b", "c"]
+    assert split_csv_line('a,"b,c",d') == ["a", "b,c", "d"]
+    assert split_csv_line('"a","b","c"') == ["a", "b", "c"]
+    assert split_csv_line('"a""b",c') == ['a"b', "c"]
+    assert split_csv_line(',"",') == ["", "", ""]
+    assert split_csv_line('"  spaced  ",x') == ["  spaced  ", "x"]
+    assert split_csv_line('"""",x') == ['"', "x"]
+    assert split_csv_line('a,"b""c,d""e",f') == ["a", 'b"c,d"e', "f"]
+    print("All tests passed!")
+```
+
+### How the Parser Works
+The parser employs a **state-machine approach**, iterating through each character while tracking whether the current position is inside a quoted string using the `in_quotes` flag. When the flag is active, commas are treated as literal text and the parser looks specifically for double-quote characters to determine if it should exit the quoted state. If it encounters two consecutive double quotes (`""`), it interprets them as a single escaped quote and appends it to the buffer while skipping the second character. When the parser is outside of quotes, a comma serves as the primary delimiter to finalize the current field and reset the buffer for the next one. This logic handles edge cases like empty quoted strings (`""`) and trailing commas by ensuring that every segment—even an empty one—is appended to the final list. By processing the string character-by-character, the function accurately preserves whitespace and handles complex nested quotes without the need for complex regular expressions.
+
+**Would you like me to extend this function to handle multi-line CSV files or add support for different delimiters like tabs?**
+'''
+
+Test Results:
+'All tests passed!'
+
+Extra feature:
+-    Extended thinking
+-    Draft in Gmail
+-    Export to Docs
+-    Seperate window for Code
+-    Listen (Clear, outloud reading of the given output)
+
+Model:
+Free tier gemini.google.com (Gemini) using "Gemini 3" + Extended thinking
+
+Date:
+3/23/2026

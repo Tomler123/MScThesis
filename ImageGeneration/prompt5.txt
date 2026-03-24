@@ -1,0 +1,12 @@
+Edit the provided cartoon character image into a technical blueprint illustration style.
+
+Transformations required (must follow all):
+1) Convert the entire image to a blueprint palette: deep blue background with light cyan/white linework.
+2) Render the character as clean technical line art with consistent stroke width, plus minimal flat fills (use exactly 2 fill tones total).
+3) Add exactly 3 callout arrows pointing to: (A) head/face, (B) torso/clothing, (C) shoes.
+4) At the end of each arrow, place a small label box containing only a single letter: A, B, or C (no other text).
+5) No other text anywhere in the image.
+6) Keep the original pose, proportions, and framing (no cropping). Preserve aspect ratio.
+7) Do not add extra characters or new objects.
+
+Output: 1 edited image.

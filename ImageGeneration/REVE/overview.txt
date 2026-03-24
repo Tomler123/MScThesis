@@ -1,0 +1,18 @@
+Extra Features:
+-   Offers Preferences:
+    *   Count (Auto, 1, 2, 4, 8)
+    *   Aspect Ratio (Auto, 16:9, 3:2, 4:3, 1:1, 3:4, 2:3, 9:16)
+    *   Use Attachments (to create an image as close to the Attachments as possible OR to use Attachments as inspiration)
+    *   Models: Default + Fast
+    *   Custom Instructions
+-   Web Interface offers Albums folder
+-   Web Interface offers References folder
+-   Web Interface offers Inspirations section with lot's of image styles/templates (Exact count could not be found)
+
+Generated images count: 3
+
+Model:
+app.reve.com (reve-v1 1.5) + Default + Preferences (Default Preferences)
+
+Date:
+3/24/2026

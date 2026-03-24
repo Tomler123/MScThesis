@@ -1,0 +1,21 @@
+Extra Features:
+-   Offers Preferences:
+    *   Aspect Ratio (21:9, 16:9, 4:3, 1:1, 3:4, 9:16, 9:21)
+    *   Use Attachments (to create an image as close to the Attachments as possible OR to use Attachments as inspiration)
+    *   Models: FLUX.2 MAX, FLUX.2 PRO, FLUX.2 FELX, FLUX.2 KLEIN 9B, FLUX.2 KLEIN 4B, (Plus old models) 
+    *   Resolution (0.6 MP, 1 MP, 2 MP, 4 MP)
+-   Web Interface offers Inspirations section with lot's of image styles/templates (Exact count could not be found)
+-   Web Interface offers Library section with History and Assets folders:
+-   Web Interface Image section offers:
+    *   Generate
+    *   Fill (Fill or Remove any detail from the image)
+    *   Expand (Expand images to any size)
+-   Offers free credits for image generation
+
+Generated images count: 4
+
+Model:
+playground.bfl.ai (FLUX.2 MAX) + (Count 4) + (Prompt Upscaling = TRUE) + (1 MP) + (16:9)
+
+Date:
+3/24/2026

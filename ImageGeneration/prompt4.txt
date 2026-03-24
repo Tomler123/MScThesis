@@ -1,0 +1,12 @@
+Edit the provided cartoon character image into a hybrid of stop-motion clay animation and watercolor illustration.
+
+Transformations required (must follow all):
+1) The character must look like a handmade clay figure: subtle fingerprints, soft rounded edges, slightly imperfect symmetry, matte clay surface.
+2) Lighting must match clay stop-motion: soft studio light with one gentle shadow under the character.
+3) The background must become a watercolor paper wash: visible paper grain and soft bleed edges, using muted pastel tones.
+4) Keep the original pose, composition, and general silhouette clearly recognizable.
+5) Keep the same clothing type and accessories as the original, but render them with clay texture.
+6) Do not add any text, logos, watermarks, or extra characters/objects.
+7) Preserve the original aspect ratio and keep the character centered.
+
+Output: 1 edited image.

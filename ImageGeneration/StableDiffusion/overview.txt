@@ -1,0 +1,23 @@
+Extra Features:
+-   Offers Preferences:
+    *   Aspect Ratio (16:9, 4:3, 3:2, 1:1, 2:3, 3:4, 9:16)
+    *   Use Attachments (to create an image as close to the Attachments as possible OR to use Attachments as inspiration)
+    *   Models: Base, Plus, Pro, Ultra 
+    *   Resolution (0.6 MP, 1 MP, 2 MP, 4 MP)
+-   Web Interface offers Inspirations section with lot's of image styles/templates (Exact count could not be found)
+-   Web Interface offers Library section with History and Prompt database folders:
+-   Web Interface offers Vieo generation for the generated Image
+-   Web Interface offers AI tools for image editting and built in instructions(e.g. remove background)
+-   Web Interface Image section offers:
+    *   Generate
+    *   Fill (Fill or Remove any detail from the image)
+    *   Expand (Expand images to any size)
+-   Offers free credits for image generation
+
+Generated images count: 4
+
+Model:
+stablediffusionweb.com (stablediffusion Plus) + (Count 1) + (Prompt Upscaling = TRUE) + (1 MP) + (16:9)
+
+Date:
+3/24/2026

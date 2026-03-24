@@ -1,0 +1,16 @@
+Extra Features:
+-   Offers Preferences:
+    *   Aspect Ratio (16:9, 3:2, 1:1, 2:3, 9:16)
+    *   Use Attachments (to create an image as close to the Attachments as possible OR to use Attachments as inspiration)
+    *   Models: Default + Fast
+    *   Custom Instructions
+-   Web Interface offers Projects folder
+-   Web Interface offers Inspirations section with lot's of image styles/templates (Exact count could not be found)
+
+Generated images count: 1
+
+Model:
+chatgpt.com (OpenAI DALL·E 3) + Expert
+
+Date:
+3/24/2026

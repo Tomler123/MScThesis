@@ -1,0 +1,9 @@
+Extra Features:
+-   The image generation tool offers 20 templates/styles for the requested image.
+-   Offers Fast + Thinking modes
+
+Model:
+google.gemini.com (Nano Banana 2) + Thinking
+
+Date:
+3/24/2026

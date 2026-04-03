@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing &amp; Communication — GenAI Evaluation Tool</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+/* ═══════════════════════ RESET & VARIABLES ═══════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-900:#0b0e14;--bg-800:#111520;--bg-700:#171c28;--bg-600:#1e2434;
+  --bg-500:#252c3e;--border:#2a3148;--border-focus:#3d6bff;
+  --text-100:#e8ecf4;--text-200:#b0b8cc;--text-300:#7a849a;
+  --accent:#3d6bff;--accent-hover:#5a82ff;--accent-glow:rgba(61,107,255,.25);
+  --green:#2dd4a0;--green-bg:rgba(45,212,160,.12);
+  --red:#ff5c72;--red-bg:rgba(255,92,114,.12);
+  --yellow:#f5c542;--yellow-bg:rgba(245,197,66,.12);
+  --orange:#ff8f3f;--purple:#a78bfa;--cyan:#22d3ee;
+  --radius:10px;--radius-sm:6px;--radius-lg:14px;
+  --shadow:0 4px 24px rgba(0,0,0,.35);
+  --font-mono:'Menlo','Consolas','Monaco',monospace;
+}
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg-900);color:var(--text-100);font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+
+/* ═══════════════════════ LAYOUT ═══════════════════════ */
+.app-header{background:var(--bg-800);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.app-header h1{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:.6rem}
+.app-header h1 .icon{width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.app-header .badge{font-size:.7rem;background:var(--accent);color:#fff;padding:.15rem .5rem;border-radius:20px;font-weight:600;letter-spacing:.03em}
+.container{max-width:1320px;margin:0 auto;padding:1.5rem 2rem 4rem}
+
+/* ═══════════════════════ WIZARD STEPPER ═══════════════════════ */
+.stepper{display:flex;gap:0;margin-bottom:2rem;background:var(--bg-800);border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border)}
+.step-tab{flex:1;padding:.9rem 1.2rem;text-align:center;cursor:pointer;transition:all .25s;border-right:1px solid var(--border);position:relative;font-weight:500}
+.step-tab:last-child{border-right:none}
+.step-tab .step-num{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--bg-500);align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin-right:.5rem;transition:all .25s}
+.step-tab.active{background:var(--bg-600);color:var(--accent)}
+.step-tab.active .step-num{background:var(--accent);color:#fff}
+.step-tab.completed .step-num{background:var(--green);color:#fff}
+.step-tab:hover{background:var(--bg-700)}
+.step-panel{display:none;animation:fadeIn .3s ease}
+.step-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════ CARDS & PANELS ═══════════════════════ */
+.card{background:var(--bg-800);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem;box-shadow:var(--shadow)}
+.card-title{font-size:1.05rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.card-title .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+
+/* ═══════════════════════ FORM ELEMENTS ═══════════════════════ */
+label{display:block;font-size:.82rem;font-weight:600;color:var(--text-200);margin-bottom:.35rem;letter-spacing:.02em;text-transform:uppercase}
+textarea,input[type=text],input[type=number],input[type=password]{width:100%;background:var(--bg-700);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.65rem .85rem;color:var(--text-100);font-size:.9rem;font-family:inherit;resize:vertical;transition:border-color .2s}
+textarea:focus,input:focus{outline:none;border-color:var(--border-focus);box-shadow:0 0 0 3px var(--accent-glow)}
+textarea{min-height:140px;font-family:var(--font-mono);font-size:.82rem;line-height:1.55}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+/* ═══════════════════════ BUTTONS ═══════════════════════ */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.3rem;border:none;border-radius:var(--radius-sm);font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-hover);box-shadow:0 0 20px var(--accent-glow)}
+.btn-secondary{background:var(--bg-500);color:var(--text-100);border:1px solid var(--border)}.btn-secondary:hover{background:var(--bg-600);border-color:var(--accent)}
+.btn-success{background:var(--green);color:#000}.btn-success:hover{filter:brightness(1.1)}
+.btn-danger{background:var(--red);color:#fff}.btn-danger:hover{filter:brightness(1.1)}
+.btn-sm{padding:.4rem .8rem;font-size:.78rem}
+.btn-group{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap}
+
+/* ═══════════════════════ MODEL ENTRY ═══════════════════════ */
+.model-entry{background:var(--bg-700);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;margin-bottom:1rem;position:relative}
+.model-entry .model-header{display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem}
+.model-entry .model-number{width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.model-entry .remove-btn{position:absolute;top:.8rem;right:.8rem;width:28px;height:28px;border-radius:50%;background:var(--red-bg);color:var(--red);border:none;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.model-entry .remove-btn:hover{background:var(--red);color:#fff}
+.file-upload{margin-top:.5rem}
+.file-upload input[type=file]{display:none}
+.file-upload label.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .8rem;background:var(--bg-500);border:1px dashed var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:.78rem;color:var(--text-200);transition:all .2s}
+.file-upload label.file-label:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ═══════════════════════ RESULTS SECTION ═══════════════════════ */
+.leaderboard-table{width:100%;border-collapse:collapse}
+.leaderboard-table th{text-align:left;padding:.65rem .8rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text-300);border-bottom:2px solid var(--border);font-weight:600}
+.leaderboard-table td{padding:.65rem .8rem;border-bottom:1px solid var(--border);font-size:.88rem}
+.leaderboard-table tr:hover{background:var(--bg-700)}
+.rank-badge{display:inline-flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;font-weight:800;font-size:.8rem}
+.rank-1{background:linear-gradient(135deg,#ffd700,#ffb700);color:#000}
+.rank-2{background:linear-gradient(135deg,#c0c0c0,#a0a0a0);color:#000}
+.rank-3{background:linear-gradient(135deg,#cd7f32,#b06c2c);color:#fff}
+.rank-default{background:var(--bg-500);color:var(--text-200)}
+.score-bar{height:6px;border-radius:3px;background:var(--bg-500);overflow:hidden;width:120px;display:inline-block;vertical-align:middle;margin-left:.5rem}
+.score-bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+
+/* ═══════════════════════ CHARTS GRID ═══════════════════════ */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.chart-box{background:var(--bg-800);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.2rem}
+.chart-box h3{font-size:.9rem;font-weight:600;margin-bottom:.8rem;color:var(--text-200)}
+.chart-box canvas{max-height:350px}
+.chart-box.full-width{grid-column:1/-1}
+
+/* ═══════════════════════ STATS TABLE ═══════════════════════ */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;margin-bottom:1rem}
+.stat-card{background:var(--bg-700);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem;text-align:center}
+.stat-card .stat-value{font-size:1.4rem;font-weight:800;color:var(--accent)}
+.stat-card .stat-label{font-size:.7rem;color:var(--text-300);text-transform:uppercase;letter-spacing:.04em;margin-top:.2rem}
+
+/* ═══════════════════════ CONSTRAINT DETAILS ═══════════════════════ */
+.constraint-row{display:flex;align-items:center;gap:.8rem;padding:.55rem .8rem;border-radius:var(--radius-sm);margin-bottom:.4rem;font-size:.85rem}
+.constraint-row.pass{background:var(--green-bg)}
+.constraint-row.fail{background:var(--red-bg)}
+.constraint-row.partial{background:var(--yellow-bg)}
+.constraint-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;font-weight:700}
+.constraint-icon.pass{background:var(--green);color:#000}
+.constraint-icon.fail{background:var(--red);color:#fff}
+.constraint-icon.partial{background:var(--yellow);color:#000}
+.constraint-desc{flex:1}
+.constraint-actual{font-family:var(--font-mono);font-size:.78rem;color:var(--text-300)}
+
+/* ═══════════════════════ WEIGHT SLIDERS ═══════════════════════ */
+.weight-slider{display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem}
+.weight-slider label{width:170px;font-size:.78rem;text-transform:none;margin-bottom:0}
+.weight-slider input[type=range]{flex:1;height:6px;-webkit-appearance:none;background:var(--bg-500);border-radius:3px;outline:none}
+.weight-slider input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer}
+.weight-slider .weight-val{width:36px;text-align:right;font-family:var(--font-mono);font-size:.82rem;color:var(--accent);font-weight:700}
+
+/* ═══════════════════════ LLM JUDGE ═══════════════════════ */
+.llm-panel{background:var(--bg-700);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem}
+.llm-panel h3{margin-bottom:1rem;font-size:1rem}
+.llm-result{background:var(--bg-800);border-radius:var(--radius);padding:1rem;margin-top:.8rem;white-space:pre-wrap;font-size:.85rem;line-height:1.6;max-height:500px;overflow-y:auto}
+
+/* ═══════════════════════ TABS ═══════════════════════ */
+.tab-bar{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:1.2rem}
+.tab-btn{padding:.55rem 1.2rem;font-size:.82rem;font-weight:600;color:var(--text-300);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;font-family:inherit}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-btn:hover{color:var(--text-100)}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* ═══════════════════════ METRIC DETAIL TABLE ═══════════════════════ */
+.metric-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.metric-table th{text-align:left;padding:.5rem .6rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text-300);border-bottom:1px solid var(--border);font-weight:600}
+.metric-table td{padding:.45rem .6rem;border-bottom:1px solid rgba(42,49,72,.5);font-family:var(--font-mono);font-size:.8rem}
+.metric-table tr:hover{background:var(--bg-700)}
+.metric-cat-header{background:var(--bg-600);font-weight:700;color:var(--accent);font-family:inherit !important}
+
+/* ═══════════════════════ MODEL SELECT TABS ═══════════════════════ */
+.model-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.model-tab{padding:.4rem 1rem;border-radius:20px;font-size:.8rem;font-weight:600;cursor:pointer;background:var(--bg-500);color:var(--text-200);border:1px solid var(--border);transition:all .2s}
+.model-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.model-tab:hover{border-color:var(--accent)}
+
+/* ═══════════════════════ NOTIFICATION ═══════════════════════ */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--bg-600);border:1px solid var(--accent);color:var(--text-100);padding:.8rem 1.4rem;border-radius:var(--radius);font-size:.85rem;z-index:1000;opacity:0;transform:translateY(20px);transition:all .3s;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
+
+/* ═══════════════════════ LOADING ═══════════════════════ */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(11,14,20,.85);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+.loading-overlay.show{display:flex}
+.spinner{width:48px;height:48px;border:4px solid var(--bg-500);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:.95rem;color:var(--text-200)}
+
+/* ═══════════════════════ Z-SCORE HEATMAP ═══════════════════════ */
+.heatmap-table{width:100%;border-collapse:collapse}
+.heatmap-table th{padding:.5rem .6rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;color:var(--text-300);border-bottom:1px solid var(--border);font-weight:600}
+.heatmap-table td{padding:.5rem .6rem;text-align:center;font-family:var(--font-mono);font-size:.82rem;font-weight:600;border-bottom:1px solid rgba(42,49,72,.5)}
+
+/* ═══════════════════════ RESPONSIVE ═══════════════════════ */
+@media(max-width:768px){
+  .charts-grid{grid-template-columns:1fr}
+  .input-row{grid-template-columns:1fr}
+  .container{padding:1rem}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <h1><span class="icon">✍</span> Writing &amp; Communication Evaluation Tool</h1>
+  <span class="badge">MSc THESIS — GenAI Benchmarking</span>
+</header>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Running evaluation metrics…</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<div class="container">
+
+<!-- ═══════════════════════ WIZARD STEPPER ═══════════════════════ -->
+<div class="stepper">
+  <div class="step-tab active" data-step="1" onclick="goToStep(1)"><span class="step-num">1</span> Setup</div>
+  <div class="step-tab" data-step="2" onclick="goToStep(2)"><span class="step-num">2</span> Model Responses</div>
+  <div class="step-tab" data-step="3" onclick="goToStep(3)"><span class="step-num">3</span> Results</div>
+</div>
+
+<!-- ═══════════════════════ STEP 1: SETUP ═══════════════════════ -->
+<div class="step-panel active" id="step1">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span> Writing Prompt</div>
+    <label for="promptInput">Paste the exact prompt you gave to AI models (including all constraints)</label>
+    <textarea id="promptInput" placeholder="Paste your writing prompt here. Include all constraints, requirements, tone instructions, word limits, and formatting rules. The system will automatically parse these and evaluate each model's adherence."></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--cyan)"></span> Context / Background Material (Optional)</div>
+    <label for="contextInput">Any additional context the models were supposed to incorporate</label>
+    <textarea id="contextInput" placeholder="(Optional) Paste any background information, source material, or context that was provided alongside the prompt. The tool will check whether models incorporated this information." style="min-height:100px"></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--purple)"></span> Evaluation Weights</div>
+    <p style="font-size:.82rem;color:var(--text-300);margin-bottom:1rem">Adjust the importance of each evaluation category for the composite score.</p>
+    <div id="weightSliders"></div>
+  </div>
+
+  <div class="btn-group" style="justify-content:flex-end">
+    <button class="btn btn-primary" onclick="goToStep(2)">Next → Model Responses</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ STEP 2: MODEL RESPONSES ═══════════════════════ -->
+<div class="step-panel" id="step2">
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--green)"></span> AI Model Outputs</div>
+    <p style="font-size:.82rem;color:var(--text-300);margin-bottom:1rem">Add each model's response. Type the model name and paste or upload the output.</p>
+    <div id="modelEntries"></div>
+    <div class="btn-group">
+      <button class="btn btn-secondary" onclick="addModelEntry()">＋ Add Model</button>
+    </div>
+  </div>
+
+  <div class="btn-group" style="justify-content:space-between">
+    <button class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
+    <button class="btn btn-primary" onclick="runEvaluation()">🔬 Run Evaluation</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ STEP 3: RESULTS ═══════════════════════ -->
+<div class="step-panel" id="step3">
+
+  <!-- Parsed Constraints Info -->
+  <div class="card" id="parsedConstraintsCard" style="display:none">
+    <div class="card-title"><span class="dot" style="background:var(--yellow)"></span> Auto-Parsed Constraints <span id="constraintCount" style="font-size:.78rem;color:var(--text-300);font-weight:400;margin-left:.5rem"></span></div>
+    <div id="parsedConstraintsList" style="font-size:.83rem;color:var(--text-200)"></div>
+  </div>
+
+  <!-- Stats Overview -->
+  <div id="statsOverview" class="stats-grid" style="display:none"></div>
+
+  <!-- Leaderboard -->
+  <div class="card" id="leaderboardCard" style="display:none">
+    <div class="card-title"><span class="dot" style="background:var(--green)"></span> Leaderboard</div>
+    <table class="leaderboard-table" id="leaderboardTable">
+      <thead><tr><th style="width:50px">Rank</th><th>Model</th><th>Composite Score</th><th>Visual</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-grid" id="chartsSection" style="display:none">
+    <div class="chart-box">
+      <h3>📊 Radar — Category Comparison</h3>
+      <canvas id="radarChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>📈 Bar — Composite Scores</h3>
+      <canvas id="barChart"></canvas>
+    </div>
+    <div class="chart-box full-width">
+      <h3>🔥 Category Scores by Model</h3>
+      <canvas id="groupedBarChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Z-Score Heatmap -->
+  <div class="card" id="heatmapCard" style="display:none">
+    <div class="card-title"><span class="dot" style="background:var(--orange)"></span> Z-Score Heatmap (Cross-Model Normalization)</div>
+    <div style="overflow-x:auto"><table class="heatmap-table" id="heatmapTable"><thead></thead><tbody></tbody></table></div>
+  </div>
+
+  <!-- Cross-Model Stats -->
+  <div class="card" id="crossStatsCard" style="display:none">
+    <div class="card-title"><span class="dot" style="background:var(--cyan)"></span> Cross-Model Statistics</div>
+    <div style="overflow-x:auto"><table class="metric-table" id="crossStatsTable"><thead></thead><tbody></tbody></table></div>
+  </div>
+
+  <!-- Detailed Results per Model -->
+  <div class="card" id="detailCard" style="display:none">
+    <div class="card-title"><span class="dot" style="background:var(--purple)"></span> Detailed Metrics</div>
+    <div class="model-tabs" id="detailModelTabs"></div>
+
+    <div class="tab-bar" id="detailTabBar">
+      <button class="tab-btn active" data-tab="allMetrics" onclick="switchDetailTab(this,'allMetrics')">All Metrics</button>
+      <button class="tab-btn" data-tab="constraints" onclick="switchDetailTab(this,'constraints')">Constraints</button>
+    </div>
+
+    <div class="tab-content active" id="allMetricsTab">
+      <table class="metric-table" id="metricsDetailTable"><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="tab-content" id="constraintsTab">
+      <div id="constraintDetails"></div>
+    </div>
+  </div>
+
+  <!-- LLM-as-Judge -->
+  <div class="card" id="llmCard" style="display:none">
+    <div class="card-title"><span class="dot" style="background:var(--orange)"></span> LLM-as-Judge (Groq — Llama 3.3 70B)</div>
+    <div class="llm-panel">
+      <p style="font-size:.82rem;color:var(--text-300);margin-bottom:1rem">Optional. Enter your Groq API key to get an AI-powered qualitative evaluation of each model's writing quality.</p>
+      <div class="input-row" style="margin-bottom:1rem">
+        <div>
+          <label for="groqKey">Groq API Key</label>
+          <input type="password" id="groqKey" placeholder="gsk_...">
+        </div>
+        <div>
+          <label>Model to Judge</label>
+          <select id="llmModelSelect" style="width:100%;background:var(--bg-700);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.65rem;color:var(--text-100);font-size:.9rem"></select>
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="runLLMJudge()">⚖️ Run LLM Judge</button>
+        <button class="btn btn-secondary" onclick="runLLMJudgeAll()">⚖️ Judge All Models</button>
+      </div>
+      <div id="llmResults"></div>
+    </div>
+  </div>
+
+  <!-- Export -->
+  <div class="card" id="exportCard" style="display:none">
+    <div class="card-title"><span class="dot" style="background:var(--green)"></span> Export</div>
+    <div class="btn-group">
+      <button class="btn btn-success" onclick="exportCSV()">📄 Export CSV</button>
+      <button class="btn btn-primary" onclick="exportJSON()">📋 Export JSON</button>
+      <button class="btn btn-secondary" onclick="goToStep(1)">← New Evaluation</button>
+    </div>
+  </div>
+
+</div>
+
+</div><!-- /container -->
+
+<script>
+/* ═══════════════════════ STATE ═══════════════════════ */
+let currentStep = 1;
+let modelCount = 0;
+let evalResults = null;
+const MODEL_COLORS = [
+  '#3d6bff','#2dd4a0','#ff5c72','#f5c542','#a78bfa',
+  '#22d3ee','#ff8f3f','#ff6b9d','#7dd87d','#c084fc'
+];
+const CATEGORIES = [
+  {key:'content_quality', label:'Content Quality'},
+  {key:'tone_sentiment', label:'Tone & Sentiment'},
+  {key:'readability', label:'Readability'},
+  {key:'lexical_analysis', label:'Lexical Analysis'},
+  {key:'structural', label:'Structural'},
+  {key:'constraint_adherence', label:'Constraint Adherence'},
+  {key:'coherence_flow', label:'Coherence & Flow'},
+  {key:'redundancy', label:'Redundancy'},
+];
+const DEFAULT_WEIGHTS = {
+  content_quality:20, tone_sentiment:15, readability:15,
+  lexical_analysis:10, structural:10, constraint_adherence:20,
+  coherence_flow:5, redundancy:5
+};
+let weights = {...DEFAULT_WEIGHTS};
+
+/* ═══════════════════════ INIT ═══════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  buildWeightSliders();
+  addModelEntry();
+  addModelEntry();
+});
+
+/* ═══════════════════════ WIZARD NAV ═══════════════════════ */
+function goToStep(n) {
+  if (n === 3 && !evalResults) { showToast('Run evaluation first'); return; }
+  currentStep = n;
+  document.querySelectorAll('.step-tab').forEach(t => {
+    const s = +t.dataset.step;
+    t.classList.toggle('active', s === n);
+    t.classList.toggle('completed', s < n);
+  });
+  document.querySelectorAll('.step-panel').forEach((p, i) => p.classList.toggle('active', i === n - 1));
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+/* ═══════════════════════ WEIGHT SLIDERS ═══════════════════════ */
+function buildWeightSliders() {
+  const c = document.getElementById('weightSliders');
+  c.innerHTML = '';
+  CATEGORIES.forEach(cat => {
+    const w = weights[cat.key] || 10;
+    c.innerHTML += `
+      <div class="weight-slider">
+        <label>${cat.label}</label>
+        <input type="range" min="0" max="50" value="${w}" oninput="updateWeight('${cat.key}',this.value)" id="w_${cat.key}">
+        <span class="weight-val" id="wv_${cat.key}">${w}</span>
+      </div>`;
+  });
+}
+function updateWeight(key, val) {
+  weights[key] = +val;
+  document.getElementById('wv_'+key).textContent = val;
+}
+
+/* ═══════════════════════ MODEL ENTRIES ═══════════════════════ */
+function addModelEntry() {
+  modelCount++;
+  const n = modelCount;
+  const c = document.getElementById('modelEntries');
+  const div = document.createElement('div');
+  div.className = 'model-entry';
+  div.id = `model_${n}`;
+  div.innerHTML = `
+    <button class="remove-btn" onclick="removeModel(${n})" title="Remove">✕</button>
+    <div class="model-header">
+      <div class="model-number">${n}</div>
+      <input type="text" id="mname_${n}" placeholder="Model name (e.g., GPT-4o, Claude 3.5, Gemini)" style="flex:1">
+    </div>
+    <label for="mresp_${n}">Model Response</label>
+    <textarea id="mresp_${n}" placeholder="Paste the model's complete response here…" rows="6"></textarea>
+    <div class="file-upload">
+      <input type="file" id="mfile_${n}" accept=".txt,.json" onchange="loadFile(${n})">
+      <label class="file-label" for="mfile_${n}">📎 Upload .txt or .json</label>
+      <span class="file-name" id="fname_${n}" style="font-size:.75rem;color:var(--text-300);margin-left:.5rem"></span>
+    </div>`;
+  c.appendChild(div);
+}
+function removeModel(n) {
+  const el = document.getElementById('model_'+n);
+  if (el) el.remove();
+}
+function loadFile(n) {
+  const file = document.getElementById('mfile_'+n).files[0];
+  if (!file) return;
+  document.getElementById('fname_'+n).textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    let text = e.target.result;
+    if (file.name.endsWith('.json')) {
+      try { const j = JSON.parse(text); text = j.response || j.text || j.content || j.output || text; } catch(err) {}
+    }
+    document.getElementById('mresp_'+n).value = text;
+  };
+  reader.readAsText(file);
+}
+
+/* ═══════════════════════ RUN EVALUATION ═══════════════════════ */
+async function runEvaluation() {
+  const prompt = document.getElementById('promptInput').value.trim();
+  const context = document.getElementById('contextInput').value.trim();
+  if (!prompt) { showToast('Please enter a writing prompt'); return; }
+
+  const models = [];
+  document.querySelectorAll('.model-entry').forEach(el => {
+    const id = el.id.split('_')[1];
+    const name = document.getElementById('mname_'+id)?.value?.trim();
+    const resp = document.getElementById('mresp_'+id)?.value?.trim();
+    if (name && resp) models.push({name, response: resp});
+  });
+  if (models.length === 0) { showToast('Add at least one model with name and response'); return; }
+
+  showLoading(true);
+  try {
+    const res = await fetch('/evaluate', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({prompt, context, models, weights})
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    evalResults = data;
+    renderResults(data);
+    goToStep(3);
+  } catch(err) {
+    showToast('Error: ' + err.message);
+  }
+  showLoading(false);
+}
+
+/* ═══════════════════════ RENDER RESULTS ═══════════════════════ */
+function renderResults(data) {
+  // Show all result sections
+  ['parsedConstraintsCard','statsOverview','leaderboardCard','chartsSection',
+   'heatmapCard','crossStatsCard','detailCard','llmCard','exportCard'].forEach(id => {
+    document.getElementById(id).style.display = '';
+  });
+
+  // Parsed Constraints
+  const constraints = data.parsed_constraints || [];
+  document.getElementById('constraintCount').textContent = `(${constraints.length} constraints detected)`;
+  document.getElementById('parsedConstraintsList').innerHTML = constraints.map((c,i) =>
+    `<div style="padding:.25rem 0;border-bottom:1px solid var(--border)">
+      <span style="color:var(--accent);font-weight:600">${i+1}.</span> ${c}
+    </div>`
+  ).join('');
+
+  // Stats Overview
+  const names = Object.keys(data.results);
+  const composites = names.map(n => data.results[n].composite_score);
+  document.getElementById('statsOverview').innerHTML = `
+    <div class="stat-card"><div class="stat-value">${names.length}</div><div class="stat-label">Models</div></div>
+    <div class="stat-card"><div class="stat-value">${constraints.length}</div><div class="stat-label">Constraints</div></div>
+    <div class="stat-card"><div class="stat-value">${Math.max(...composites).toFixed(1)}</div><div class="stat-label">Best Score</div></div>
+    <div class="stat-card"><div class="stat-value">${(composites.reduce((a,b)=>a+b,0)/composites.length).toFixed(1)}</div><div class="stat-label">Avg Score</div></div>
+    <div class="stat-card"><div class="stat-value">${(Math.max(...composites)-Math.min(...composites)).toFixed(1)}</div><div class="stat-label">Score Range</div></div>
+    <div class="stat-card"><div class="stat-value">8</div><div class="stat-label">Categories</div></div>
+  `;
+
+  // Leaderboard
+  const lb = data.leaderboard;
+  const tbody = document.querySelector('#leaderboardTable tbody');
+  tbody.innerHTML = lb.map(e => {
+    const rankClass = e.rank <= 3 ? `rank-${e.rank}` : 'rank-default';
+    const color = scoreColor(e.composite);
+    return `<tr>
+      <td><span class="rank-badge ${rankClass}">${e.rank}</span></td>
+      <td style="font-weight:600">${e.name}</td>
+      <td style="color:${color};font-weight:700;font-family:var(--font-mono)">${e.composite.toFixed(2)}</td>
+      <td><div class="score-bar"><div class="score-bar-fill" style="width:${e.composite}%;background:${color}"></div></div></td>
+    </tr>`;
+  }).join('');
+
+  // Charts
+  renderRadarChart(data);
+  renderBarChart(data);
+  renderGroupedBarChart(data);
+
+  // Heatmap
+  renderHeatmap(data);
+
+  // Cross-model stats
+  renderCrossStats(data);
+
+  // Detail tabs
+  renderDetailTabs(data, names[0]);
+
+  // LLM select
+  const sel = document.getElementById('llmModelSelect');
+  sel.innerHTML = names.map(n => `<option value="${n}">${n}</option>`).join('');
+}
+
+function scoreColor(v) {
+  if (v >= 75) return 'var(--green)';
+  if (v >= 50) return 'var(--yellow)';
+  if (v >= 25) return 'var(--orange)';
+  return 'var(--red)';
+}
+
+/* ═══════════════════════ CHARTS ═══════════════════════ */
+let radarChartInstance, barChartInstance, groupedBarInstance;
+
+function renderRadarChart(data) {
+  if (radarChartInstance) radarChartInstance.destroy();
+  const labels = CATEGORIES.map(c => c.label);
+  const datasets = Object.keys(data.results).map((name, i) => ({
+    label: name,
+    data: CATEGORIES.map(c => data.results[name].category_scores[c.key] || 0),
+    borderColor: MODEL_COLORS[i % MODEL_COLORS.length],
+    backgroundColor: MODEL_COLORS[i % MODEL_COLORS.length] + '22',
+    pointBackgroundColor: MODEL_COLORS[i % MODEL_COLORS.length],
+    borderWidth: 2, pointRadius: 4,
+  }));
+  radarChartInstance = new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {labels, datasets},
+    options: {
+      responsive: true,
+      scales: {r: {beginAtZero: true, max: 100, ticks: {stepSize: 20, color:'#7a849a', backdropColor:'transparent'}, grid: {color:'#2a3148'}, pointLabels: {color:'#b0b8cc', font:{size:11}}}},
+      plugins: {legend: {position:'bottom', labels: {color:'#b0b8cc', usePointStyle: true, padding: 15}}}
+    }
+  });
+}
+
+function renderBarChart(data) {
+  if (barChartInstance) barChartInstance.destroy();
+  const lb = data.leaderboard;
+  barChartInstance = new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: lb.map(e => e.name),
+      datasets: [{
+        label: 'Composite Score',
+        data: lb.map(e => e.composite),
+        backgroundColor: lb.map((_, i) => MODEL_COLORS[i % MODEL_COLORS.length] + 'cc'),
+        borderColor: lb.map((_, i) => MODEL_COLORS[i % MODEL_COLORS.length]),
+        borderWidth: 2, borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, indexAxis: 'y',
+      scales: {x: {beginAtZero: true, max: 100, grid: {color:'#2a3148'}, ticks: {color:'#7a849a'}}, y: {grid: {display: false}, ticks: {color:'#b0b8cc', font:{weight:'bold'}}}},
+      plugins: {legend: {display: false}}
+    }
+  });
+}
+
+function renderGroupedBarChart(data) {
+  if (groupedBarInstance) groupedBarInstance.destroy();
+  const names = Object.keys(data.results);
+  const datasets = names.map((name, i) => ({
+    label: name,
+    data: CATEGORIES.map(c => data.results[name].category_scores[c.key] || 0),
+    backgroundColor: MODEL_COLORS[i % MODEL_COLORS.length] + 'bb',
+    borderColor: MODEL_COLORS[i % MODEL_COLORS.length],
+    borderWidth: 1, borderRadius: 4,
+  }));
+  groupedBarInstance = new Chart(document.getElementById('groupedBarChart'), {
+    type: 'bar',
+    data: {labels: CATEGORIES.map(c => c.label), datasets},
+    options: {
+      responsive: true,
+      scales: {y: {beginAtZero: true, max: 100, grid: {color:'#2a3148'}, ticks: {color:'#7a849a'}}, x: {grid: {display: false}, ticks: {color:'#b0b8cc', font:{size:10}}}},
+      plugins: {legend: {position:'bottom', labels: {color:'#b0b8cc', usePointStyle: true}}}
+    }
+  });
+}
+
+/* ═══════════════════════ HEATMAP ═══════════════════════ */
+function renderHeatmap(data) {
+  const names = Object.keys(data.z_scores);
+  const cats = CATEGORIES.map(c => c.key);
+  const thead = document.querySelector('#heatmapTable thead');
+  const tbody = document.querySelector('#heatmapTable tbody');
+  thead.innerHTML = `<tr><th>Model</th>${CATEGORIES.map(c => `<th>${c.label}</th>`).join('')}</tr>`;
+  tbody.innerHTML = names.map(name => {
+    const cells = cats.map(cat => {
+      const z = data.z_scores[name]?.[cat] || 0;
+      const bg = zColor(z);
+      return `<td style="background:${bg};color:#fff">${z.toFixed(2)}</td>`;
+    }).join('');
+    return `<tr><td style="font-weight:600;text-align:left">${name}</td>${cells}</tr>`;
+  }).join('');
+}
+function zColor(z) {
+  if (z >= 1.0) return 'rgba(45,212,160,.7)';
+  if (z >= 0.5) return 'rgba(45,212,160,.4)';
+  if (z >= 0) return 'rgba(45,212,160,.15)';
+  if (z >= -0.5) return 'rgba(255,92,114,.15)';
+  if (z >= -1.0) return 'rgba(255,92,114,.4)';
+  return 'rgba(255,92,114,.7)';
+}
+
+/* ═══════════════════════ CROSS STATS ═══════════════════════ */
+function renderCrossStats(data) {
+  const stats = data.cross_model_stats;
+  const thead = document.querySelector('#crossStatsTable thead');
+  const tbody = document.querySelector('#crossStatsTable tbody');
+  thead.innerHTML = `<tr><th>Category</th><th>Mean</th><th>Std Dev</th><th>Min</th><th>Max</th><th>Range</th><th>Median</th></tr>`;
+  tbody.innerHTML = CATEGORIES.map(c => {
+    const s = stats[c.key] || {};
+    return `<tr><td style="font-weight:600">${c.label}</td><td>${(s.mean||0).toFixed(2)}</td><td>${(s.std||0).toFixed(2)}</td><td>${(s.min||0).toFixed(2)}</td><td>${(s.max||0).toFixed(2)}</td><td>${(s.range||0).toFixed(2)}</td><td>${(s.median||0).toFixed(2)}</td></tr>`;
+  }).join('');
+}
+
+/* ═══════════════════════ DETAIL TABS ═══════════════════════ */
+let currentDetailModel = null;
+function renderDetailTabs(data, selectedModel) {
+  currentDetailModel = selectedModel;
+  const names = Object.keys(data.results);
+  const tabsEl = document.getElementById('detailModelTabs');
+  tabsEl.innerHTML = names.map(n =>
+    `<div class="model-tab ${n===selectedModel?'active':''}" onclick="switchModel('${n}')">${n}</div>`
+  ).join('');
+  renderModelDetail(data.results[selectedModel], selectedModel);
+}
+function switchModel(name) {
+  currentDetailModel = name;
+  document.querySelectorAll('.model-tab').forEach(t => t.classList.toggle('active', t.textContent === name));
+  renderModelDetail(evalResults.results[name], name);
+}
+function switchDetailTab(btn, tabId) {
+  document.querySelectorAll('#detailTabBar .tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+  document.querySelectorAll('#detailCard .tab-content').forEach(t => t.classList.toggle('active', t.id === tabId + 'Tab'));
+}
+
+function renderModelDetail(result, name) {
+  // All metrics table
+  const tbody = document.querySelector('#metricsDetailTable tbody');
+  let rows = '';
+  const metricGroups = [
+    {label:'Content Quality', data: result.metrics.content_quality},
+    {label:'Tone & Sentiment', data: result.metrics.tone_sentiment},
+    {label:'Readability', data: result.metrics.readability},
+    {label:'Lexical Analysis', data: result.metrics.lexical_analysis},
+    {label:'Structural', data: result.metrics.structural},
+    {label:'Coherence & Flow', data: result.metrics.coherence_flow},
+    {label:'Redundancy', data: result.metrics.redundancy},
+  ];
+  metricGroups.forEach(g => {
+    rows += `<tr><td class="metric-cat-header" colspan="2">▸ ${g.label}</td></tr>`;
+    Object.entries(g.data).forEach(([k, v]) => {
+      const label = k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      const val = typeof v === 'number' ? v.toFixed(2) : v;
+      rows += `<tr><td>${label}</td><td>${val}</td></tr>`;
+    });
+  });
+  tbody.innerHTML = rows;
+
+  // Constraint details
+  const cd = result.constraint_details;
+  const cDiv = document.getElementById('constraintDetails');
+  if (cd && cd.constraints && cd.constraints.length > 0) {
+    cDiv.innerHTML = `
+      <div style="margin-bottom:.8rem;font-size:.85rem;color:var(--text-200)">
+        <strong>Score:</strong> ${cd.total_score.toFixed(1)}/100 &nbsp;|&nbsp;
+        <strong style="color:var(--green)">Passed:</strong> ${cd.passed_count} &nbsp;|&nbsp;
+        <strong style="color:var(--red)">Failed:</strong> ${cd.failed_count}
+      </div>
+      ${cd.constraints.map(c => {
+        const cls = c.passed ? 'pass' : (c.score >= 50 ? 'partial' : 'fail');
+        const icon = c.passed ? '✓' : (c.score >= 50 ? '~' : '✕');
+        return `<div class="constraint-row ${cls}">
+          <div class="constraint-icon ${cls}">${icon}</div>
+          <div class="constraint-desc">${c.description}</div>
+          <div class="constraint-actual">${c.actual || ''}</div>
+          <div style="width:48px;text-align:right;font-weight:700;font-family:var(--font-mono);font-size:.82rem;color:${cls==='pass'?'var(--green)':cls==='partial'?'var(--yellow)':'var(--red)'}">${c.score}</div>
+        </div>`;
+      }).join('')}`;
+  } else {
+    cDiv.innerHTML = '<p style="color:var(--text-300)">No constraints detected from prompt.</p>';
+  }
+}
+
+/* ═══════════════════════ LLM-AS-JUDGE ═══════════════════════ */
+async function runLLMJudge() {
+  const key = document.getElementById('groqKey').value.trim();
+  if (!key) { showToast('Enter your Groq API key'); return; }
+  const modelName = document.getElementById('llmModelSelect').value;
+  if (!modelName) return;
+
+  showLoading(true);
+  try {
+    const prompt = document.getElementById('promptInput').value.trim();
+    const context = document.getElementById('contextInput').value.trim();
+    const response = evalResults.results[modelName];
+    // Find the original response text
+    let respText = '';
+    document.querySelectorAll('.model-entry').forEach(el => {
+      const id = el.id.split('_')[1];
+      const n = document.getElementById('mname_'+id)?.value?.trim();
+      if (n === modelName) respText = document.getElementById('mresp_'+id)?.value?.trim();
+    });
+
+    const judgePrompt = buildJudgePrompt(prompt, context, respText, modelName, response.category_scores);
+    const result = await callGroqAPI(key, judgePrompt);
+    appendLLMResult(modelName, result);
+  } catch(err) {
+    showToast('LLM Judge error: ' + err.message);
+  }
+  showLoading(false);
+}
+
+async function runLLMJudgeAll() {
+  const key = document.getElementById('groqKey').value.trim();
+  if (!key) { showToast('Enter your Groq API key'); return; }
+  showLoading(true);
+  const names = Object.keys(evalResults.results);
+  for (const modelName of names) {
+    try {
+      const prompt = document.getElementById('promptInput').value.trim();
+      const context = document.getElementById('contextInput').value.trim();
+      const response = evalResults.results[modelName];
+      let respText = '';
+      document.querySelectorAll('.model-entry').forEach(el => {
+        const id = el.id.split('_')[1];
+        const n = document.getElementById('mname_'+id)?.value?.trim();
+        if (n === modelName) respText = document.getElementById('mresp_'+id)?.value?.trim();
+      });
+      const judgePrompt = buildJudgePrompt(prompt, context, respText, modelName, response.category_scores);
+      const result = await callGroqAPI(key, judgePrompt);
+      appendLLMResult(modelName, result);
+    } catch(err) {
+      appendLLMResult(modelName, 'Error: ' + err.message);
+    }
+  }
+  showLoading(false);
+}
+
+function buildJudgePrompt(prompt, context, response, modelName, scores) {
+  return `You are an expert writing quality evaluator for an academic benchmarking study. Evaluate the following AI model's response to a writing prompt.
+
+## Writing Prompt Given to Model:
+${prompt}
+
+${context ? `## Background Context Provided:\n${context}\n` : ''}
+
+## Model Response (${modelName}):
+${response}
+
+## Automated Metric Scores (0-100):
+${CATEGORIES.map(c => `- ${c.label}: ${(scores[c.key]||0).toFixed(1)}`).join('\n')}
+
+## Your Evaluation Task:
+Rate the response on each dimension below using a score from 1-10, then provide an overall assessment.
+
+Dimensions:
+1. **Tone Accuracy** — Does the writing match the requested tone?
+2. **Constraint Following** — How well were explicit constraints followed?
+3. **Audience Appropriateness** — Is the writing suitable for the target audience?
+4. **Persuasiveness / Effectiveness** — How effective is the writing at its intended purpose?
+5. **Grammar & Polish** — Quality of grammar, punctuation, and overall polish.
+6. **Clarity & Conciseness** — Is the writing clear and appropriately concise?
+7. **Structure & Organization** — Is the content well-organized?
+8. **Creativity & Naturalness** — Does it read naturally, not robotic?
+
+Format your response as:
+**Model: ${modelName}**
+| Dimension | Score (1-10) | Notes |
+Then provide a brief **Overall Assessment** paragraph and a **Final Score** out of 100.`;
+}
+
+async function callGroqAPI(apiKey, prompt) {
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json', 'Authorization':'Bearer '+apiKey},
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      messages: [{role:'system', content:'You are an expert writing quality evaluator for academic research.'},{role:'user', content: prompt}],
+      temperature: 0.3, max_tokens: 1500
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error?.message || 'Groq API error');
+  }
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || 'No response';
+}
+
+function appendLLMResult(modelName, text) {
+  const div = document.getElementById('llmResults');
+  div.innerHTML += `
+    <div class="llm-result">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:.5rem;font-size:.95rem">⚖️ ${modelName}</div>
+      <div>${text.replace(/\n/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')}</div>
+    </div>`;
+}
+
+/* ═══════════════════════ EXPORT ═══════════════════════ */
+async function exportCSV() {
+  try {
+    const res = await fetch('/export/csv', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({results: evalResults.results})
+    });
+    const data = await res.json();
+    downloadFile(data.csv, 'writing_eval_results.csv', 'text/csv');
+    showToast('CSV exported');
+  } catch(err) { showToast('Export error'); }
+}
+
+function exportJSON() {
+  const json = JSON.stringify(evalResults, null, 2);
+  downloadFile(json, 'writing_eval_results.json', 'application/json');
+  showToast('JSON exported');
+}
+
+function downloadFile(content, filename, type) {
+  const blob = new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ═══════════════════════ UTILITIES ═══════════════════════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+function showLoading(show) {
+  document.getElementById('loadingOverlay').classList.toggle('show', show);
+}
+</script>
+</body>
+</html>

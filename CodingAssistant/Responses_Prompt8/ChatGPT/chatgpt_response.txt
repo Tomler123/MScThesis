@@ -1,0 +1,78 @@
+Here is the fixed implementation:
+
+```python
+def schedule_tasks(tasks: dict[str, list[str]]) -> list[str]:
+    """Return a topological execution order for tasks.
+
+    Each task appears after all of its dependencies. Dependencies that are
+    mentioned but are not keys in `tasks` are treated as leaf tasks with no
+    dependencies. Raises ValueError if the dependency graph contains a cycle.
+    """
+    order: list[str] = []
+    visiting: set[str] = set()   # currently being processed
+    visited: set[str] = set()    # fully processed
+
+    def dfs(task: str) -> None:
+        if task in visited:
+            return
+        if task in visiting:
+            raise ValueError(f"Cycle detected involving {task}")
+
+        visiting.add(task)
+
+        for dep in tasks.get(task, []):
+            dfs(dep)
+
+        visiting.remove(task)
+        visited.add(task)
+        order.append(task)
+
+    for task in tasks:
+        dfs(task)
+
+    return order
+```
+
+Why this works:
+
+A task is appended to `order` only after all of its dependencies have been processed, so every dependency appears earlier in the result. The use of `tasks.get(task, [])` ensures that dependencies not present as keys are still handled correctly as standalone leaf tasks.
+
+The bugs in the original version were these:
+
+1. **Cycle detection used only one `visited` set.**
+   In the broken code, revisiting any node immediately raised `ValueError`, even if that node had already been completed earlier through a different path. That incorrectly treats shared dependencies as cycles.
+   **Fix:** split the state into:
+
+   * `visiting`: nodes currently on the recursion stack
+   * `visited`: nodes already fully processed
+
+2. **Already-processed nodes were not skipped.**
+   The original function called `dfs()` repeatedly on tasks that may already have been handled, which either caused false cycle errors or duplicate work.
+   **Fix:** if a task is in `visited`, return immediately.
+
+3. **Tasks could be added more than once.**
+   Because there was no “fully processed” guard, a shared dependency could be appended multiple times.
+   **Fix:** only append after finishing DFS once, and never revisit a `visited` node.
+
+4. **Dependencies not present as keys were not handled cleanly.**
+   The original code checked `if task in tasks:` before iterating dependencies. That avoided a crash, but the intent was unclear and it did not integrate well with proper DFS state tracking.
+   **Fix:** use `tasks.get(task, [])`, which naturally treats missing tasks as leaf nodes.
+
+5. **Wrong notion of what revisit means.**
+   In DFS for cycle detection, encountering a node again is not always a cycle. It is only a cycle if the node is being explored *right now* on the current recursion path.
+   **Fix:** raise only when the task is in `visiting`, not when it is merely in `visited`.
+
+The difference between **currently being processed** and **fully processed** in DFS-based cycle detection is:
+
+* **Currently being processed (`visiting`)** means the node is on the active recursion stack. DFS entered it, but has not finished exploring all its descendants yet. If DFS reaches such a node again, there is a back-edge, which means a cycle.
+* **Fully processed (`visited`)** means DFS already explored all descendants of that node and safely finished it. Reaching it again later is normal in DAGs with shared dependencies, and should not be treated as a cycle.
+
+Example: in this graph
+
+```python
+{"d": ["b", "c"], "b": ["a"], "c": ["a"], "a": []}
+```
+
+when exploring `d`, DFS may visit `a` through `b` first. Later, when exploring `c`, it reaches `a` again. That is **not** a cycle, because `a` is already **fully processed**, not **currently being processed**.
+
+If you want, I can also show a step-by-step trace of the DFS on one of the test cases.

@@ -1,61 +1,63 @@
-Response:
-
-'''
-Here is the refactored code. I have preserved the exact behavior required by your test cases while improving the structure and readability.
+Here is the corrected implementation of the merge sort algorithm.
 
 ```python
-def format_user_line(name: str | None, age: int | None, city: str | None) -> str:
+def merge_sort(arr: list[int]) -> list[int]:
     """
-    Formats user data into a string: 'Name (Age) - City'.
+    Sorts a list of integers in ascending order using the merge sort algorithm.
     
-    Validates that name is a non-empty string and age is a non-negative integer.
-    Returns 'Invalid user' if validation fails. Defaults empty cities to 'Unknown'.
+    This implementation is recursive and maintains stability (equal elements 
+    retain their original relative order).
     """
-    # Validate name: ensure it is not None and contains non-whitespace characters
-    if not name or not name.strip():
-        return "Invalid user"
-
-    # Validate age: must be exactly an int (not a bool or string) and >= 0
-    if type(age) is not int or age < 0:
-        return "Invalid user"
-
-    # Normalize city: default to 'Unknown' if None, empty, or only whitespace
-    if not city or not city.strip():
-        clean_city = "Unknown"
-    else:
-        clean_city = city.strip()
-
-    clean_name = name.strip()
+    if len(arr) <= 1:
+        return arr
     
-    return f"{clean_name} ({age}) - {clean_city}"
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    
+    return merge(left, right)
+
+def merge(left: list[int], right: list[int]) -> list[int]:
+    """
+    Merges two sorted lists into a single sorted list.
+    
+    Uses two pointers to compare elements from the left and right lists,
+    appending the smaller element to the result list to maintain order.
+    """
+    result = []
+    i = j = 0
+    
+    # Compare elements from both lists and merge them in order
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            # Bug 1 Fixed: Changed right[i] to right[j]
+            result.append(right[j])
+            j += 1
+            
+    # Append any remaining elements from either list
+    result += left[i:]
+    # Bug 2 Fixed: Changed right[:j] to right[j:]
+    result += right[j:]
+    
+    return result
 ```
 
 ---
 
-### List of Changes & Improvements
+### **Bugs Found and Fixed**
 
-* **Type Hinting:** Added type hints (`str | None`, etc.) to the parameters and return type. This allows IDEs to catch potential bugs before the code even runs and makes the function's expectations clear.
-* **F-String Interpolation:** Replaced manual string concatenation (`+`) with an f-string. This is more readable and handles the integer-to-string conversion of `age` automatically and efficiently.
-* **Consolidated Logic:** I used `if not name or not name.strip()` to handle `None`, empty strings, and whitespace strings in a single readable block, rather than having four separate `if` statements for the same outcome.
-* **Meaningful Variable Names:** Used `clean_name` and `clean_city` to distinguish between the raw input and the processed (stripped/defaulted) data.
-* **Early Returns:** Maintained the early return pattern for "Invalid user" cases. This "Guard Clause" style keeps the "happy path" of the function at the lowest indentation level, making it easier to follow.
-* **Type Integrity:** Used `type(age) is not int` to match your original constraint. In Python, `isinstance(True, int)` is `True`, so checking the type specifically ensures that booleans are rejected as they were in your original code.
-* **Docstring:** Included a PEP 257 compliant docstring to explain the function's purpose and validation rules.
+#### **1. Index Mismatch in `merge` loop**
+* **Original Code:** `result.append(right[i])`
+* **The Problem:** Inside the `else` block (when the element in the `right` list is smaller), the code was attempting to access `right[i]`. Since `i` is the pointer for the `left` list, this would either pull the wrong value or cause an `IndexError` if `i` exceeded the length of the `right` list.
+* **The Fix:** Changed `right[i]` to `right[j]` to correctly use the pointer associated with the `right` list.
 
-Would you like me to write a few more test cases to cover edge cases like boolean inputs for age or special characters in the names?
-'''
+#### **2. Incorrect Slicing for Remaining Elements**
+* **Original Code:** `result += right[:j]`
+* **The Problem:** At the end of the merge process, you must append the *remaining* elements that weren't reached by the pointers. The original code used the slice `[:j]`, which takes elements from the **beginning** of the list up to the current pointer—meaning it was re-adding elements that were already in the `result` list.
+* **The Fix:** Changed `right[:j]` to `right[j:]` to correctly capture only the elements from the current pointer to the end of the list.
 
-Test Results:
-'All tests passed!'
-
-Extra feature:
--    Extended thinking
--    Draft in Gmail
--    Export to Docs
--    Listen (Clear, outloud reading of the given output)
-
-Model:
-Free tier gemini.google.com (Gemini) using "Gemini 3" + Extended thinking
-
-Date:
-3/23/2026
+### **Stability Check**
+The sort remains **stable** because of the condition `if left[i] <= right[j]:`. By choosing the element from the `left` list when values are equal, we ensure that elements that appeared earlier in the original array stay earlier in the sorted array.

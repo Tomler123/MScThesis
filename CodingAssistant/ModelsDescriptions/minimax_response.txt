@@ -1,0 +1,14 @@
+Model:
+Free tier agent.minimax.io (MiniMax) using "MiniMax-M2.7"
+
+Extra feature:
+-    Auto option on model selection. (Decides which model to use that better suits the input)
+-    Thinking option
+-    Copy button
+-    Export to PDF option.
+-    Having seperate section for the generated code files
+-    All files can be downloaded
+-    All files can be editted
+
+Date:
+4/5/2026

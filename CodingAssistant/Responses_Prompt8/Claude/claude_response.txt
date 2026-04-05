@@ -1,0 +1,96 @@
+All tests pass. Here is the fixed function and a detailed breakdown of every bug.
+
+***
+
+## Fixed Function
+
+```python
+def schedule_tasks(tasks: dict[str, list[str]]) -> list[str]:
+    """
+    Return a valid topological execution order for the given tasks, respecting dependencies.
+
+    Each key in `tasks` maps to a list of task names that must complete before it.
+    Tasks referenced as dependencies but absent from `tasks` are treated as having
+    no dependencies and are included in the output.
+
+    Raises ValueError if a cycle is detected.
+    """
+    order = []
+    # Three states: 0 = unvisited, 1 = in-progress, 2 = fully processed
+    state = {}
+
+    # Gather all nodes, including implicit ones from dependency lists
+    all_tasks = set(tasks.keys())
+    for deps in tasks.values():
+        all_tasks.update(deps)
+
+    def dfs(task):
+        s = state.get(task, 0)
+        if s == 1:
+            raise ValueError(f"Cycle detected involving '{task}'")
+        if s == 2:
+            return  # Already fully processed; skip
+        state[task] = 1  # Mark as in-progress
+        for dep in tasks.get(task, []):
+            dfs(dep)
+        state[task] = 2  # Mark as fully processed
+        order.append(task)
+
+    for task in all_tasks:
+        if state.get(task, 0) == 0:
+            dfs(task)
+
+    return order
+```
+
+***
+
+## Bug Analysis
+
+### Bug 1 — Incorrect cycle detection (two-state vs. three-state)
+
+**What was wrong:** The original code used a single `visited` set. When `dfs(task)` was called, it immediately added the task to `visited`. When a node was revisited at all — whether by a back-edge (cycle) or by a legitimate shared dependency (diamond graph) — it incorrectly raised `ValueError`.
+
+For example, in `{"d": ["b", "c"], "b": ["a"], "c": ["a"], "a": []}`, when processing `d → b → a` and then `d → c → a`, `a` is already in `visited` from the first path. The original code raises `ValueError` here even though there is no cycle.
+
+**Fix:** Replace the single set with a three-state `dict`:
+- `0` (unvisited): never seen
+- `1` (in-progress): currently on the DFS call stack — a revisit here means a **real cycle**
+- `2` (fully processed): completed, safe to skip
+
+A cycle exists only when you encounter a node with state `1`.
+
+***
+
+### Bug 2 — Duplicate entries in output
+
+**What was wrong:** Even if the incorrect cycle detection were fixed, the original code never skipped already-processed nodes. `order.append(task)` would execute for a shared dependency every time it was reached, producing duplicates like `["a", "b", "a", "c", "d"]`.
+
+**Fix:** The `if s == 2: return` guard (state check) exits immediately when a node is already fully processed, ensuring each task appears exactly once.
+
+***
+
+### Bug 3 — Missing implicit (external) dependency nodes
+
+**What was wrong:** The outer loop iterated only over `tasks.keys()`. If a task appeared only as a dependency (e.g., `"a"` in `{"b": ["a"]}`), it was never enqueued as a starting point for DFS. It only appeared in `order` if it happened to be visited while processing another task's deps — and only if that task was iterated first. With certain dict orderings this might silently work, but it is not guaranteed and fails the requirement explicitly.
+
+**Fix:** Before the DFS loop, build `all_tasks` as the union of all keys **and** all values (dependency names), then iterate over `all_tasks`.
+
+***
+
+### Bug 4 — `tasks[task]` KeyError for external dependencies
+
+**What was wrong:** Inside `dfs`, the line `if task in tasks: for dep in tasks[task]` guarded against missing keys, but the guard was placed *after* the cycle check and *before* the append. This structure is fine for external nodes, but when combined with the single-set cycle detection it meant external nodes (not keys in `tasks`) would be added to `visited` and raise false cycle errors on re-entry. More importantly, once the state dict approach is used, `tasks.get(task, [])` is the clean replacement — it naturally returns an empty list for external tasks, eliminating the need for the `if task in tasks` guard entirely.
+
+***
+
+## "In-Progress" vs. "Fully Processed" in DFS Cycle Detection
+
+The distinction is the key insight of the three-color DFS algorithm:
+
+| State | Meaning | What a revisit means |
+|---|---|---|
+| **In-progress** (grey) | The node is on the **current active call stack** — DFS entered it but hasn't returned yet | You've found a **back-edge** → a **real cycle** |
+| **Fully processed** (black) | DFS has returned from the node; all its descendants are done | A **cross-edge** or **forward-edge** → a **shared dependency**, perfectly legal |
+
+Think of it spatially: "in-progress" nodes are all the frames currently alive on the recursion stack. If you reach one of them again, you've found a path that loops back to your own ancestor — that's a cycle. "Fully processed" nodes were finished in a previous branch of the DFS tree; reaching them again just means two tasks share the same dependency, which is normal and fine.

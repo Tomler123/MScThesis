@@ -1,64 +1,52 @@
-Response:
-
-'''
-Here is the refactored code:
-
 ```python
-def format_user_line(name: str, age: int, city: str) -> str:
-    """
-    Formats user details into a specific string format.
-
-    Validates the input name and age. Returns "Invalid user" if the name is
-    None, empty, or whitespace-only, or if the age is None, not an integer,
-    or negative. Handles missing or empty cities by defaulting to "Unknown".
+def merge_sort(arr: list[int]) -> list[int]:
+    """Sort a list of integers using the merge sort algorithm.
 
     Args:
-        name: The user's name.
-        age: The user's age (must be a non-negative integer).
-        city: The user's city.
+        arr: The list of integers to be sorted.
 
     Returns:
-        A formatted string "Name (Age) - City" or "Invalid user".
+        A new list containing the sorted integers.
     """
-    # Validate name: check for None, empty string, or whitespace-only string
-    if name is None or name.strip() == "":
-        return "Invalid user"
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    return merge(left, right)
 
-    # Validate age: check for None, incorrect type, or negative value
-    if age is None or not isinstance(age, int) or age < 0:
-        return "Invalid user"
+def merge(left: list[int], right: list[int]) -> list[int]:
+    """Merge two sorted lists into a single sorted list (stable).
 
-    # Normalize city: default to "Unknown" if None, empty, or whitespace-only
-    if city is None or city.strip() == "":
-        city = "Unknown"
+    Args:
+        left: A sorted list of integers.
+        right: A sorted list of integers.
 
-    clean_name = name.strip()
-    clean_city = city.strip()
-
-    return f"{clean_name} ({age}) - {clean_city}"
+    Returns:
+        A sorted list containing all elements from left and right.
+    """
+    result = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    result += left[i:]
+    result += right[j:]
+    return result
 ```
 
-### Changes Made
+---
 
-*   **Added Type Hints and Docstring**: Added `str` and `int` type hints to the function signature and a comprehensive docstring explaining the logic, parameters, and return values. This improves code documentation and makes the expected inputs explicit.
-*   **Reduced Nesting and Unified Validations**: Combined the separate `if` statements for `name` validation (None, empty string) into a single check, and did the same for `age` validation (None, type, negative). This reduces cognitive complexity and makes the "guard clause" pattern clearer.
-*   **Consolidated City Logic**: Merged the city handling logic. Instead of using four separate `if` statements to handle `None` and `""` before and after stripping, the code now checks if the city is `None` or evaluates to empty after checking whitespace (using the same logic as the name validation), assigning "Unknown" once.
-*   **Used Meaningful Variable Names**: Renamed `s` and `c` to `clean_name` and `clean_city`. This makes it obvious that the variables hold the stripped versions of the inputs.
-*   **Used f-strings for Formatting**: Replaced the manual string concatenation (`+`) with an f-string. This is the modern, readable Python standard for string formatting.
-*   **Replaced `type()` check with `isinstance()`**: Switched `type(age) != int` to `not isinstance(age, int)`. While the behavior remains the same for this specific constraint, `isinstance` is the idiomatic Python way to perform type checks.
-*   **Direct Whitespace Validation**: Changed the logic from `.strip()` inside a `len()` check to a direct `== ""` check after stripping (conceptually `name.strip() == ""`). This is more readable than checking if the length of a temporary string is zero.
-'''
+### Bugs Found and Fixes
 
-Test Results:
-'All tests passed.'
+1. **Bug 1**: In the `else` branch of `merge`, the code appended `right[i]` instead of `right[j]`.  
+   - **What was wrong**: `i` is the index for the left list, not the right list. Using `right[i]` could cause an `IndexError` or produce incorrect elements.  
+   - **Fix**: Changed `result.append(right[i])` to `result.append(right[j])`.
 
-Extra feature:
--    Thinking option
--    Copy button
--    Seperate window for Code
-
-Model:
-Free tier chat.z.ai (GLM) using "GLM-5" + Expert thinking
-
-Date:
-3/23/2026
+2. **Bug 2**: After the `while` loop, the code used `result += right[:j]`.  
+   - **What was wrong**: This appends the already processed portion of `right` (from the beginning up to `j-1`), leading to duplicate elements and missing the remaining unprocessed elements.  
+   - **Fix**: Changed `result += right[:j]` to `result += right[j:]` to append only the unprocessed tail of `right`.

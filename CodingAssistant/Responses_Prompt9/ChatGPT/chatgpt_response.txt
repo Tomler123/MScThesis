@@ -1,0 +1,194 @@
+```python
+from __future__ import annotations
+
+import re
+from collections import Counter, defaultdict
+from typing import DefaultDict
+
+
+class SearchIndex:
+    """An in-memory inverted index for full-text search over documents.
+
+    Documents are tokenized by splitting on non-alphanumeric characters and
+    lowercasing all tokens. Search uses AND semantics: a document matches only
+    if it contains every query term.
+    """
+
+    def __init__(self) -> None:
+        """Initialize an empty search index."""
+        self._docs: dict[str, Counter[str]] = {}
+        self._index: DefaultDict[str, dict[str, int]] = defaultdict(dict)
+
+    @staticmethod
+    def _tokenize(text: str) -> list[str]:
+        """Split text into lowercase alphanumeric tokens."""
+        return re.findall(r"[A-Za-z0-9]+", text.lower())
+
+    def add(self, doc_id: str, text: str) -> None:
+        """Index a document, replacing any previously indexed content.
+
+        Args:
+            doc_id: Unique document identifier.
+            text: Document text to index.
+        """
+        self.remove(doc_id)
+
+        term_counts = Counter(self._tokenize(text))
+        self._docs[doc_id] = term_counts
+
+        for term, count in term_counts.items():
+            self._index[term][doc_id] = count
+
+    def search(self, query: str) -> list[str]:
+        """Return matching document IDs ranked by relevance.
+
+        A document matches only if it contains all query terms. Results are
+        sorted by:
+        1. total occurrences of all query terms in the document, descending
+        2. doc_id ascending for ties
+
+        Args:
+            query: Search query string.
+
+        Returns:
+            A list of matching document IDs in ranked order.
+        """
+        query_terms = set(self._tokenize(query))
+        if not query_terms:
+            return []
+
+        postings_lists: list[dict[str, int]] = []
+        for term in query_terms:
+            postings = self._index.get(term)
+            if not postings:
+                return []
+            postings_lists.append(postings)
+
+        matching_docs = set(postings_lists[0].keys())
+        for postings in postings_lists[1:]:
+            matching_docs &= postings.keys()
+
+        ranked = sorted(
+            matching_docs,
+            key=lambda doc_id: (
+                -sum(self._docs[doc_id][term] for term in query_terms),
+                doc_id,
+            ),
+        )
+        return ranked
+
+    def remove(self, doc_id: str) -> None:
+        """Remove a document from the index.
+
+        If the document is not present, this method does nothing.
+
+        Args:
+            doc_id: Document identifier to remove.
+        """
+        term_counts = self._docs.pop(doc_id, None)
+        if term_counts is None:
+            return
+
+        for term in term_counts:
+            postings = self._index[term]
+            postings.pop(doc_id, None)
+            if not postings:
+                del self._index[term]
+```
+
+### Data structures
+
+This uses two internal structures.
+
+`self._index`
+: an inverted index mapping each term to the documents that contain it, along with that term’s frequency in each document.
+
+Example shape:
+
+```python
+{
+    "fox": {"d1": 1, "d3": 3},
+    "quick": {"d1": 1, "d2": 1},
+}
+```
+
+`self._docs`
+: a document store mapping each `doc_id` to a `Counter` of its term frequencies.
+
+Example shape:
+
+```python
+{
+    "d1": Counter({"the": 2, "quick": 1, "brown": 1, "fox": 1}),
+    "d3": Counter({"fox": 3}),
+}
+```
+
+The document store is needed so removal is efficient and so relevance can be computed quickly during search.
+
+### How the operations work
+
+**add(doc_id, text)**
+
+* Tokenize the text.
+* Count token frequencies with `Counter`.
+* If the document already exists, remove its old version first.
+* Store the new term counts in `_docs`.
+* For each term, write its frequency into the inverted index `_index[term][doc_id]`.
+
+**search(query)**
+
+* Tokenize the query the same way as documents.
+* Empty query returns `[]`.
+* Use AND logic:
+
+  * fetch the posting list for each query term
+  * intersect their document ID sets
+* For each remaining document, compute relevance as:
+
+  * sum of that document’s frequencies for all query terms
+* Sort by:
+
+  * relevance descending
+  * `doc_id` ascending for ties
+
+**remove(doc_id)**
+
+* Look up the document’s stored term counts in `_docs`.
+* For each term the document had, delete that `doc_id` from the inverted index.
+* Remove empty term entries from `_index`.
+* Remove the document from `_docs`.
+
+### Time complexity
+
+Let:
+
+* `L` = number of tokens in the document being added
+* `U` = number of unique tokens in that document
+* `Q` = number of unique query terms
+* `R` = number of matching results
+* `P1, P2, ...` = sizes of posting lists for the query terms
+
+**add**
+
+* Tokenization + counting: `O(L)`
+* Updating inverted index: `O(U)`
+* Total: `O(L + U)`, which is effectively `O(L)`
+
+**remove**
+
+* Iterates through unique terms in that document: `O(U)`
+
+**search**
+
+* Tokenizing query: `O(len(query))`
+* Fetch posting lists: `O(Q)`
+* Intersect document sets: roughly proportional to the posting-list sizes involved, commonly written as `O(P1 + P2 + ... + PQ)` in this implementation
+* Compute relevance for matches: `O(R * Q)`
+* Sort results: `O(R log R)`
+
+So search is:
+
+`O(len(query) + (P1 + ... + PQ) + R*Q + R log R)`
+
+For an in-memory inverted index, that is the expected tradeoff: fast narrowing by term, then ranking the remaining candidates.

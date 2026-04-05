@@ -1,89 +1,46 @@
-def split_csv_line(line: str) -> list[str]:
-    """
-    Split a single CSV line into fields (RFC4180-like), without external libraries.
+def flatten_dict(d: dict, sep: str = ".") -> dict:
+    """Flatten a nested dictionary by joining keys with `sep`.
 
-    Rules:
-    - Fields are separated by commas.
-    - Fields may be quoted with double quotes "...".
-    - Inside quoted fields, a literal quote is escaped as "" (two quotes).
-    - Commas inside quoted fields do not split fields.
-    - Preserve whitespace exactly as it appears inside fields.
-    - Return a list of strings (decoded field values, quotes removed, "" unescaped).
+    Recursively flattens nested dictionaries, joining parent and child keys
+    with the specified separator. Non-dict values (ints, strings, lists, None, etc.)
+    are kept as-is. Empty nested dicts are preserved with empty dict values.
 
     Args:
-        line: A single CSV line string.
+        d: The dictionary to flatten.
+        sep: The separator to use for joining keys (default: ".").
 
     Returns:
-        A list of field strings with quotes removed and escaped quotes decoded.
+        A flattened dictionary with joined keys.
     """
-    fields = []
-    current_field = []
-    in_quotes = False
-    i = 0
+    result = {}
 
-    while i < len(line):
-        char = line[i]
-
-        if in_quotes:
-            if char == '"':
-                # Check if next char is also a quote (escaped quote "")
-                if i + 1 < len(line) and line[i + 1] == '"':
-                    # This is an escaped quote - add one " to the field
-                    current_field.append('"')
-                    i += 2  # Skip both quotes
-                else:
-                    # This is the end of the quoted field
-                    in_quotes = False
-                    i += 1
-            else:
-                # Any other character inside quotes is added verbatim
-                current_field.append(char)
-                i += 1
+    for key, value in d.items():
+        if isinstance(value, dict):
+            # Recursively flatten the nested dict
+            nested = flatten_dict(value, sep)
+            for nested_key, nested_value in nested.items():
+                result[key + sep + nested_key] = nested_value
+            # Handle empty dict case: {"a": {}} should become {"a": {}}
+            if not nested:
+                result[key] = {}
         else:
-            if char == '"':
-                # Start of a quoted field
-                in_quotes = True
-                i += 1
-            elif char == ',':
-                # Field separator
-                fields.append(''.join(current_field))
-                current_field = []
-                i += 1
-            else:
-                # Regular character outside quotes
-                current_field.append(char)
-                i += 1
+            # Non-dict values are kept as-is
+            result[key] = value
 
-    # Append the last field (handles trailing comma cases)
-    fields.append(''.join(current_field))
-
-    return fields
+    return result
 
 
-# Run the test cases
 if __name__ == "__main__":
-    # Test 1: Simple fields
-    assert split_csv_line("a,b,c") == ["a", "b", "c"], "Test 1 failed"
-
-    # Test 2: Quoted field containing comma
-    assert split_csv_line('a,"b,c",d') == ["a", "b,c", "d"], "Test 2 failed"
-
-    # Test 3: All quoted fields
-    assert split_csv_line('"a","b","c"') == ["a", "b", "c"], "Test 3 failed"
-
-    # Test 4: Escaped quotes inside quoted field
-    assert split_csv_line('"a""b",c') == ['a"b', "c"], "Test 4 failed"
-
-    # Test 5: Empty fields with quoted empty string
-    assert split_csv_line(',"",') == ["", "", ""], "Test 5 failed"
-
-    # Test 6: Whitespace preservation
-    assert split_csv_line('"  spaced  ",x') == ["  spaced  ", "x"], "Test 6 failed"
-
-    # Test 7: Multiple escaped quotes ("""" = one literal quote)
-    assert split_csv_line('"""",x') == ['"', "x"], "Test 7 failed"
-
-    # Test 8: Complex case with mixed quotes and commas
-    assert split_csv_line('a,"b""c,d""e",f') == ["a", 'b"c,d"e', "f"], "Test 8 failed"
+    # Run the tests
+    assert flatten_dict({"a": 1, "b": 2}) == {"a": 1, "b": 2}
+    assert flatten_dict({"a": {"b": 1, "c": 2}}) == {"a.b": 1, "a.c": 2}
+    assert flatten_dict({"a": {"b": {"c": 3}}}) == {"a.b.c": 3}
+    assert flatten_dict({"a": {"b": 1}, "c": 2}) == {"a.b": 1, "c": 2}
+    assert flatten_dict({}) == {}
+    assert flatten_dict({"a": {"b": {"c": {"d": 4}}}}, sep="/") == {"a/b/c/d": 4}
+    assert flatten_dict({"a": [1, 2], "b": {"c": None}}) == {"a": [1, 2], "b.c": None}
+    assert flatten_dict({"a": {}}) == {"a": {}}
+    assert flatten_dict({"x": {"": 1}}) == {"x.": 1}
+    assert flatten_dict({"a": {"b": 1, "c": {"d": 2, "e": 3}}, "f": 4}) == {"a.b": 1, "a.c.d": 2, "a.c.e": 3, "f": 4}
 
     print("All tests passed!")

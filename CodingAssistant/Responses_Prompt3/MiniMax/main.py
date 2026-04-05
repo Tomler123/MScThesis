@@ -1,40 +1,72 @@
-def format_user_line(name: str | None, age: int | None, city: str | None) -> str:
+def merge_sort(arr: list[int]) -> list[int]:
     """
-    Format a user line with name, age, and city.
+    Sort a list of integers using the merge sort algorithm.
 
     Args:
-        name: The user's name (required, non-empty after stripping).
-        age: The user's age (required, must be a positive integer).
-        city: The user's city (optional, defaults to "Unknown").
+        arr: A list of integers to be sorted.
 
     Returns:
-        A formatted string "name (age) - city", or "Invalid user" if validation fails.
+        A new list containing the sorted integers in ascending order.
+        The sort is stable, meaning equal elements maintain their original relative order.
+
+    Examples:
+        >>> merge_sort([3, 1, 2])
+        [1, 2, 3]
+        >>> merge_sort([5, 3, 8, 1, 2])
+        [1, 2, 3, 5, 8]
     """
-    # Validate name: must exist and contain non-whitespace characters
-    if not name or not name.strip():
-        return "Invalid user"
+    if len(arr) <= 1:
+        return arr
 
-    # Validate age: must be an integer and non-negative
-    if not isinstance(age, int) or age < 0:
-        return "Invalid user"
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
 
-    # Handle city: default to "Unknown" if empty or whitespace
-    if city and city.strip():
-        city = city.strip()
-    else:
-        city = "Unknown"
+    return merge(left, right)
 
-    # Format and return the result
-    return f"{name.strip()} ({age}) - {city}"
 
-assert format_user_line(None, 20, "Budapest") == "Invalid user"
-assert format_user_line("", 20, "Budapest") == "Invalid user"
-assert format_user_line("   ", 20, "Budapest") == "Invalid user"
-assert format_user_line("Anna", None, "Budapest") == "Invalid user"
-assert format_user_line("Anna", "20", "Budapest") == "Invalid user"
-assert format_user_line("Anna", -1, "Budapest") == "Invalid user"
-assert format_user_line(" Anna ", 20, " Budapest ") == "Anna (20) - Budapest"
-assert format_user_line("Anna", 20, None) == "Anna (20) - Unknown"
-assert format_user_line("Anna", 20, "") == "Anna (20) - Unknown"
-assert format_user_line("Anna", 20, "   ") == "Anna (20) - Unknown"
-print("All tests passed!")
+def merge(left: list[int], right: list[int]) -> list[int]:
+    """
+    Merge two sorted lists into a single sorted list.
+
+    Args:
+        left: A sorted list of integers.
+        right: A sorted list of integers.
+
+    Returns:
+        A merged sorted list containing all elements from both input lists.
+
+    Examples:
+        >>> merge([1, 3, 5], [2, 4, 6])
+        [1, 2, 3, 4, 5, 6]
+    """
+    result = []
+    i = j = 0
+
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])  # Fixed: was right[i], should be right[j]
+            j += 1
+
+    result += left[i:]
+    result += right[j:]  # Fixed: was right[:j], should be right[j:]
+
+    return result
+
+
+# Test the implementation
+if __name__ == "__main__":
+    assert merge_sort([]) == []
+    assert merge_sort([1]) == [1]
+    assert merge_sort([3, 1, 2]) == [1, 2, 3]
+    assert merge_sort([5, 3, 8, 1, 2]) == [1, 2, 3, 5, 8]
+    assert merge_sort([1, 1, 1]) == [1, 1, 1]
+    assert merge_sort([4, 2, 2, 1, 3, 3]) == [1, 2, 2, 3, 3, 4]
+    assert merge_sort([-3, -1, -2, 0]) == [-3, -2, -1, 0]
+    assert merge_sort([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    assert merge_sort([1, 2, 3, 4, 5]) == [1, 2, 3, 4, 5]
+    assert merge_sort([2, 1]) == [1, 2]
+    print("All tests passed!")

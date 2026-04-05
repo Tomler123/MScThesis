@@ -1,0 +1,31 @@
+Implement a Python function:
+
+```
+def flatten_dict(d: dict, sep: str = ".") -> dict:
+    """Flatten a nested dictionary by joining keys with `sep`."""
+```
+
+**Requirements:**
+- Recursively flatten nested dictionaries, joining parent and child keys with `sep`.
+- Non-dict values are kept as-is (ints, strings, lists, None, etc.).
+- Empty nested dicts should produce the key mapping to `{}`.
+- Do not use external libraries.
+- Add type hints and a docstring.
+
+**Must pass these tests:**
+```python
+assert flatten_dict({"a": 1, "b": 2}) == {"a": 1, "b": 2}
+assert flatten_dict({"a": {"b": 1, "c": 2}}) == {"a.b": 1, "a.c": 2}
+assert flatten_dict({"a": {"b": {"c": 3}}}) == {"a.b.c": 3}
+assert flatten_dict({"a": {"b": 1}, "c": 2}) == {"a.b": 1, "c": 2}
+assert flatten_dict({}) == {}
+assert flatten_dict({"a": {"b": {"c": {"d": 4}}}}, sep="/") == {"a/b/c/d": 4}
+assert flatten_dict({"a": [1, 2], "b": {"c": None}}) == {"a": [1, 2], "b.c": None}
+assert flatten_dict({"a": {}}) == {"a": {}}
+assert flatten_dict({"x": {"": 1}}) == {"x.": 1}
+assert flatten_dict({"a": {"b": 1, "c": {"d": 2, "e": 3}}, "f": 4}) == {"a.b": 1, "a.c.d": 2, "a.c.e": 3, "f": 4}
+```
+
+After the code, explain in 3–5 sentences how your recursion handles leaf vs. non-leaf values and the empty-dict edge case.
+
+---

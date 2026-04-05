@@ -1,44 +1,39 @@
-def format_user_line(name: str | None, age: int | None, city: str | None) -> str:
-    """
-    Format a user record as a display string.
+def merge_sort(arr: list[int]) -> list[int]:
+    """Sort a list of integers using merge sort (stable, O(n log n)).
 
     Args:
-        name: The user's name. Must be a non-empty, non-blank string.
-        age:  The user's age. Must be a non-negative integer.
-        city: The user's city. Defaults to "Unknown" if missing or blank.
+        arr: The list of integers to sort.
 
     Returns:
-        A formatted string like "Anna (20) - Budapest",
-        or "Invalid user" if name or age are invalid.
+        A new sorted list of integers in ascending order.
     """
-    INVALID = "Invalid user"
-    DEFAULT_CITY = "Unknown"
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    return merge(left, right)
 
-    is_invalid_name = not name or not isinstance(name, str)
-    if is_invalid_name:
-        return INVALID
 
-    is_invalid_age = age is None or not isinstance(age, int) or age < 0
-    if is_invalid_age:
-        return INVALID
+def merge(left: list[int], right: list[int]) -> list[int]:
+    """Merge two sorted lists into one sorted list (stable).
 
-    clean_name = name.strip()
-    if not clean_name:
-        return INVALID
+    Args:
+        left: A sorted list of integers.
+        right: A sorted list of integers.
 
-    clean_city = city.strip() if isinstance(city, str) else ""
-    resolved_city = clean_city if clean_city else DEFAULT_CITY
-
-    return f"{clean_name} ({age}) - {resolved_city}"
-
-assert format_user_line(None, 20, "Budapest") == "Invalid user"
-assert format_user_line("", 20, "Budapest") == "Invalid user"
-assert format_user_line("   ", 20, "Budapest") == "Invalid user"
-assert format_user_line("Anna", None, "Budapest") == "Invalid user"
-assert format_user_line("Anna", "20", "Budapest") == "Invalid user"
-assert format_user_line("Anna", -1, "Budapest") == "Invalid user"
-assert format_user_line(" Anna ", 20, " Budapest ") == "Anna (20) - Budapest"
-assert format_user_line("Anna", 20, None) == "Anna (20) - Unknown"
-assert format_user_line("Anna", 20, "") == "Anna (20) - Unknown"
-assert format_user_line("Anna", 20, "   ") == "Anna (20) - Unknown"
-print("All tests passed!")
+    Returns:
+        A single merged sorted list.
+    """
+    result = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])  # ← Bug 1 fixed
+            j += 1
+    result += left[i:]
+    result += right[j:]              # ← Bug 2 fixed
+    return result

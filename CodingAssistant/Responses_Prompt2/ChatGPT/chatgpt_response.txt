@@ -1,61 +1,59 @@
-Response:
-
-'''
 ```python
-def is_balanced(text: str) -> bool:
-    """Return True if brackets are balanced outside double-quoted regions."""
-    stack: list[str] = []
-    in_quotes = False
-    pairs = {')': '(', ']': '[', '}': '{'}
-    i = 0
+def rle_encode(s: str) -> str:
+    """Compress a string using run-length encoding.
 
-    while i < len(text):
-        ch = text[i]
+    Consecutive runs of the same character are replaced with "<count><char>".
+    Single characters are encoded with a count of 1.
 
-        if ch == '"':
-            # Inside quotes, a quote preceded by an odd number of backslashes is escaped.
-            if in_quotes:
-                backslashes = 0
-                j = i - 1
-                while j >= 0 and text[j] == '\\':
-                    backslashes += 1
-                    j -= 1
-                if backslashes % 2 == 0:
-                    in_quotes = False
-            else:
-                in_quotes = True
+    Examples:
+        "aaabbc" -> "3a2b1c"
+        "a" -> "1a"
+        "" -> ""
+    """
+    if not s:
+        return ""
 
-        elif not in_quotes:
-            if ch in "([{":
-                stack.append(ch)
-            elif ch in ")]}":
-                if not stack or stack[-1] != pairs[ch]:
-                    return False
-                stack.pop()
+    parts: list[str] = []
+    current_char = s[0]
+    count = 1
 
-        i += 1
+    for char in s[1:]:
+        if char == current_char:
+            count += 1
+        else:
+            parts.append(f"{count}{current_char}")
+            current_char = char
+            count = 1
 
-    return not stack
+    parts.append(f"{count}{current_char}")
+    return "".join(parts)
+
+
+def rle_decode(s: str) -> str:
+    """Decompress a run-length encoded string.
+
+    The input is expected to consist of one or more "<count><char>" groups,
+    where count may be multiple digits.
+
+    Examples:
+        "3a2b1c" -> "aaabbc"
+        "12a1b" -> "aaaaaaaaaaaab"
+        "" -> ""
+    """
+    if not s:
+        return ""
+
+    parts: list[str] = []
+    count_str = ""
+
+    for char in s:
+        if char.isdigit():
+            count_str += char
+        else:
+            parts.append(char * int(count_str))
+            count_str = ""
+
+    return "".join(parts)
 ```
 
-This fixes the escaped-quote handling, keeps bracket checking active only outside quotes, and returns `True` even if the string ends while still inside quotes.
-
-'''
-
-Test Results:
-'All tests passed.'
-
-Extra feature:
--    Open in email button
--    Read loud
--    Thinking option
--    Copy button
--    Seperate window for Code
--    Option to Run the code on web based interface
--    Personality Adjustment (Basically deciding the style, tone and formatting of the response that model gives)
-
-Model:
-Free tier chatgpt.com (ChatGPT) using "GPT-5.3" + Thinking
-
-Date:
-3/23/2026
+In decoding, I accumulate consecutive digit characters into `count_str` until I reach a non-digit character. That lets values like `"12a"` be read as the count `12` followed by the character `"a"`, instead of treating `1` and `2` separately. The roundtrip property holds because `rle_encode` writes every run in an unambiguous `<count><char>` format, including runs of length 1. Then `rle_decode` reconstructs each run by repeating the stored character exactly `count` times, so the original letter-only string is recovered exactly.

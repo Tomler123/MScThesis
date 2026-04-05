@@ -1,60 +1,35 @@
-def split_csv_line(line: str) -> list[str]:
+from typing import Any
+
+
+def flatten_dict(d: dict[str, Any], sep: str = ".") -> dict[str, Any]:
+    """Flatten a nested dictionary by joining nested keys with `sep`.
+
+    Nested dictionaries are recursively expanded so that each leaf value is
+    stored under a single key composed of its parent keys joined by `sep`.
+    Non-dictionary values are kept unchanged. Empty nested dictionaries are
+    preserved as leaf values.
+
+    Args:
+        d: The dictionary to flatten.
+        sep: The separator used to join parent and child keys.
+
+    Returns:
+        A new flattened dictionary.
     """
-    Split a single RFC4180-like CSV line into fields.
+    def _flatten(current: dict[str, Any], prefix: str = "") -> dict[str, Any]:
+        flat: dict[str, Any] = {}
 
-    Rules supported:
-    - Fields are separated by commas.
-    - Fields may be quoted with double quotes.
-    - Inside quoted fields, two consecutive double quotes represent one literal quote.
-    - Commas inside quoted fields are treated as data, not separators.
-    - Quotes are removed from quoted fields, and doubled quotes are unescaped.
+        for key, value in current.items():
+            new_key = f"{prefix}{sep}{key}" if prefix else key
 
-    The parser does not use the csv module or any external libraries.
-    """
-    fields: list[str] = []
-    field_chars: list[str] = []
-    in_quotes = False
-    i = 0
-    n = len(line)
-
-    while i < n:
-        ch = line[i]
-
-        if in_quotes:
-            if ch == '"':
-                if i + 1 < n and line[i + 1] == '"':
-                    field_chars.append('"')
-                    i += 2
+            if isinstance(value, dict):
+                if value:
+                    flat.update(_flatten(value, new_key))
                 else:
-                    in_quotes = False
-                    i += 1
+                    flat[new_key] = {}
             else:
-                field_chars.append(ch)
-                i += 1
-        else:
-            if ch == ',':
-                fields.append(''.join(field_chars))
-                field_chars = []
-                i += 1
-            elif ch == '"' and not field_chars:
-                in_quotes = True
-                i += 1
-            else:
-                field_chars.append(ch)
-                i += 1
+                flat[new_key] = value
 
-    if in_quotes:
-        raise ValueError("Unterminated quoted field")
+        return flat
 
-    fields.append(''.join(field_chars))
-    return fields
-
-assert split_csv_line("a,b,c") == ["a", "b", "c"]
-assert split_csv_line('a,"b,c",d') == ["a", "b,c", "d"]
-assert split_csv_line('"a","b","c"') == ["a", "b", "c"]
-assert split_csv_line('"a""b",c') == ['a"b', "c"]
-assert split_csv_line(',"",') == ["", "", ""]
-assert split_csv_line('"  spaced  ",x') == ["  spaced  ", "x"]
-assert split_csv_line('"""",x') == ['"', "x"]
-assert split_csv_line('a,"b""c,d""e",f') == ["a", 'b"c,d"e', "f"]
-print("All tests passed.")
+    return _flatten(d)

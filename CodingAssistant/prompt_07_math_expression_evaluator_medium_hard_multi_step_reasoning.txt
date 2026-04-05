@@ -1,0 +1,70 @@
+Implement a Python function:
+
+```
+def evaluate(expression: str) -> float:
+    """Evaluate a mathematical expression string respecting operator precedence."""
+```
+
+**Requirements:**
+- Support: `+`, `-`, `*`, `/` (true division) and parentheses `()`.
+- Standard operator precedence: `*` and `/` bind tighter than `+` and `-`.
+- Left-to-right associativity for same-precedence operators.
+- Support unary minus: `-3`, `-(2+1)`.
+- Input may have arbitrary whitespace between tokens.
+- Raise `ValueError` for malformed expressions (unmatched parens, empty input, trailing operators, division by zero).
+- Do not use `eval()`, `exec()`, `ast.literal_eval()`, or any expression parsing libraries.
+- Do not use external libraries.
+- Add type hints and a docstring.
+
+**Must pass these tests:**
+```python
+from math import isclose
+
+assert evaluate("2 + 3") == 5.0
+assert evaluate("2 + 3 * 4") == 14.0
+assert evaluate("(2 + 3) * 4") == 20.0
+assert evaluate("10 / 4") == 2.5
+assert evaluate("2 * 3 + 4 * 5") == 26.0
+assert evaluate(" 7 ") == 7.0
+assert evaluate("(((3)))") == 3.0
+assert evaluate("-3") == -3.0
+assert evaluate("-(2 + 3)") == -5.0
+assert evaluate("2 * -3") == -6.0
+assert evaluate("1 + 2 * 3 - 4 / 2") == 5.0
+assert isclose(evaluate("10 / 3"), 10 / 3)
+assert evaluate("(1 + 2) * (3 + 4)") == 21.0
+assert evaluate("2 + 3 * 4 - 1") == 13.0
+assert evaluate("100") == 100.0
+assert evaluate("0 * 999") == 0.0
+
+# Error cases
+import pytest
+# (or use try/except if pytest unavailable)
+try:
+    evaluate("")
+    assert False, "Should have raised ValueError"
+except ValueError:
+    pass
+
+try:
+    evaluate("2 +")
+    assert False, "Should have raised ValueError"
+except ValueError:
+    pass
+
+try:
+    evaluate("(2 + 3")
+    assert False, "Should have raised ValueError"
+except ValueError:
+    pass
+
+try:
+    evaluate("10 / 0")
+    assert False, "Should have raised ValueError"
+except ValueError:
+    pass
+```
+
+After the code, explain your parsing strategy (recursive descent, shunting-yard, or other) in 5–8 sentences, including how you handle precedence and unary minus.
+
+---

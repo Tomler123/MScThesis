@@ -1,0 +1,87 @@
+Received. I'm starting to work on implementing the `SearchIndex` class with the specified `add` and `search` methods.
+
+
+
+I'll implement the `SearchIndex` class with an inverted index data structure. Let me create the file:
+
+
+
+<div data-think="true" data-duration="19">
+Now let me write a test file to verify all the tests pass.
+
+
+</div>
+
+
+
+
+<div data-think="true" data-duration="27">
+Now let me run the tests to make sure they pass.
+
+</div>
+
+
+
+
+<div data-think="true" data-duration="24">
+I need to import SearchIndex correctly in the test file. Let me fix it.
+
+</div>
+
+
+
+
+<div data-think="true" data-duration="29">
+Now let me run the tests again.
+
+</div>
+
+
+
+
+
+All tests passed. Here's the implementation:
+
+<filepath>/workspace/search_index.py</filepath>
+
+---
+
+## Data Structures
+
+### 1. Inverted Index (`_index`)
+A dictionary mapping each **token** to a dictionary of document IDs and their term frequencies:
+```python
+_index: Dict[str, Dict[str, int]]  # token -> {doc_id: frequency}
+```
+
+**Example:** After indexing documents, `_index["fox"]` might be `{"d1": 1, "d3": 3}`
+
+### 2. Document Store (`_doc_store`)
+A dictionary storing each document's token frequencies:
+```python
+_doc_store: Dict[str, Dict[str, int]]  # doc_id -> {token: frequency}
+```
+
+**Example:** `{"d1": {"the": 2, "quick": 1, "brown": 1, ...}}`
+
+---
+
+## Operations
+
+| Operation | Description |
+|-----------|-------------|
+| **`add(doc_id, text)`** | Tokenizes text, counts term frequencies, stores in `_doc_store`, updates `_index`. If doc exists, removes it first (replacement). |
+| **`search(query)`** | Tokenizes query, finds intersection of document sets (AND logic), calculates relevance scores, sorts by score desc then doc_id asc. |
+| **`remove(doc_id)`** | Looks up doc in `_doc_store`, removes doc_id from all token postings in `_index`, cleans empty entries. |
+
+---
+
+## Time Complexity
+
+| Operation | Time Complexity | Explanation |
+|-----------|-----------------|-------------|
+| **`add`** | O(n) | Tokenize text (n = number of tokens in text) + O(1) per token for dictionary updates |
+| **`search`** | O(m + k log k) | m = number of query tokens, k = number of matching docs. Set intersection + sorting |
+| **`remove`** | O(t) | t = number of unique tokens in the document |
+
+**Space Complexity:** O(V + D) where V = total unique tokens across all docs, D = total documents

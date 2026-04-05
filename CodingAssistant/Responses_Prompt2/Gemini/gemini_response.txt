@@ -1,74 +1,70 @@
-Response:
+Here is the implementation of the Run-Length Encoding (RLE) functions using Python's standard library.
 
-'''
-def split_csv_line(line: str) -> list[str]:
+```python
+import re
+
+def rle_encode(s: str) -> str:
     """
-    Split a single CSV line into fields (RFC4180-like), without external libraries.
-    
-    Handles quoted fields, escaped double quotes (""), and literal commas 
-    within quotes while preserving whitespace.
+    Compress a string using run-length encoding.
+    Consecutive characters are replaced with <count><char>.
     """
-    fields = []
-    current_field = []
-    in_quotes = False
+    if not s:
+        return ""
+
+    res = []
     i = 0
-    
-    while i < len(line):
-        char = line[i]
-        
-        if in_quotes:
-            if char == '"':
-                # Check if this is an escaped quote ("")
-                if i + 1 < len(line) and line[i + 1] == '"':
-                    current_field.append('"')
-                    i += 1  # Skip the second quote
-                else:
-                    # Closing quote
-                    in_quotes = False
-            else:
-                # Literal character inside quotes
-                current_field.append(char)
-        else:
-            if char == '"':
-                # Opening quote
-                in_quotes = True
-            elif char == ',':
-                # Field delimiter
-                fields.append("".join(current_field))
-                current_field = []
-            else:
-                # Regular character outside quotes
-                current_field.append(char)
+    while i < len(s):
+        count = 1
+        # Check for consecutive identical characters
+        while i + 1 < len(s) and s[i] == s[i + 1]:
+            i += 1
+            count += 1
+        res.append(f"{count}{s[i]}")
         i += 1
-        
-    # Append the final field after the loop ends
-    fields.append("".join(current_field))
-    return fields
+    
+    return "".join(res)
 
-# Verification Tests
+def rle_decode(s: str) -> str:
+    """
+    Decompress a run-length encoded string.
+    Supports multi-digit counts preceding each character.
+    """
+    if not s:
+        return ""
+
+    # Matches one or more digits followed by a single character
+    # Group 1: (\d+), Group 2: ([a-zA-Z])
+    pairs = re.findall(r"(\d+)([a-zA-Z])", s)
+    
+    return "".join(str(char) * int(count) for count, char in pairs)
+
+# Verification with provided tests
 if __name__ == "__main__":
-    assert split_csv_line("a,b,c") == ["a", "b", "c"]
-    assert split_csv_line('a,"b,c",d') == ["a", "b,c", "d"]
-    assert split_csv_line('"a","b","c"') == ["a", "b", "c"]
-    assert split_csv_line('"a""b",c') == ['a"b', "c"]
-    assert split_csv_line(',"",') == ["", "", ""]
-    assert split_csv_line('"  spaced  ",x') == ["  spaced  ", "x"]
-    assert split_csv_line('"""",x') == ['"', "x"]
-    assert split_csv_line('a,"b""c,d""e",f') == ["a", 'b"c,d"e', "f"]
+    # Encoding tests
+    assert rle_encode("aaabbc") == "3a2b1c"
+    assert rle_encode("a") == "1a"
+    assert rle_encode("") == ""
+    assert rle_encode("abcd") == "1a1b1c1d"
+    assert rle_encode("aaa") == "3a"
+    assert rle_encode("aaaaaaaaaaaab") == "12a1b"
+
+    # Decoding tests
+    assert rle_decode("3a2b1c") == "aaabbc"
+    assert rle_decode("1a") == "a"
+    assert rle_decode("") == ""
+    assert rle_decode("12a1b") == "aaaaaaaaaaaab"
+    assert rle_decode("1a1b1c1d") == "abcd"
+    assert rle_decode("10x") == "xxxxxxxxxx"
+
+    # Roundtrip property
+    for test in ["hello", "aaabbbccc", "x", "", "aabbccdd", "zzzzzzzzzz"]:
+        assert rle_decode(rle_encode(test)) == test
+    
     print("All tests passed!")
-'''
+```
 
-Test Results:
-'All tests passed!'
+---
 
-Extra feature:
--    Extended thinking
--    Draft in Gmail
--    Export to Docs
--    Listen (Clear, outloud reading of the given output)
+### Explanation
 
-Model:
-Free tier gemini.google.com (Gemini) using "Gemini 3" + Extended thinking
-
-Date:
-3/23/2026
+To handle multi-digit counts during decoding, the `re.findall` function uses the regular expression `(\d+)([a-zA-Z])`, which explicitly captures one or more digits as a single group before associating them with the following character. This prevents "12a" from being misread as "1" followed by "2a." The roundtrip property holds because the encoding process is deterministic, creating a unique, non-ambiguous `<count><char>` pair for every distinct run of characters. Since the decoder uses these exact counts to replicate the original character sequences, the transformation is perfectly reversible without any loss of data.

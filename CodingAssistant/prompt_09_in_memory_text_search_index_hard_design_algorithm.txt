@@ -1,0 +1,74 @@
+Implement a Python class:
+
+```
+class SearchIndex:
+    """An in-memory inverted index for full-text search over documents."""
+```
+
+**Requirements:**
+- `add(doc_id: str, text: str) -> None` — Index a document. If the same `doc_id` is added again, replace the previous content.
+- `search(query: str) -> list[str]` — Return doc_ids of documents containing **all** query terms (AND logic), sorted by relevance (number of total query term occurrences in document, descending). Ties broken by `doc_id` ascending (lexicographic).
+- `remove(doc_id: str) -> None` — Remove a document from the index. If not found, do nothing.
+- Tokenization: split on non-alphanumeric characters, lowercase all tokens. Query terms are tokenized the same way.
+- Searching for an empty query returns an empty list.
+- Do not use external libraries (stdlib `re`, `collections` are fine).
+- Add type hints and docstrings.
+
+**Must pass these tests:**
+```python
+idx = SearchIndex()
+idx.add("d1", "The quick brown fox jumps over the lazy dog")
+idx.add("d2", "The quick brown cat")
+idx.add("d3", "Fox fox fox")
+
+# Single term — d3 has 3 "fox", d1 has 1
+assert idx.search("fox") == ["d3", "d1"]
+
+# AND query — both terms must be present
+assert idx.search("quick brown") == ["d1", "d2"]  # both have 1+1=2
+
+# Term not in any doc
+assert idx.search("elephant") == []
+
+# AND with no common doc
+assert idx.search("fox cat") == []
+
+# Empty query
+assert idx.search("") == []
+assert idx.search("   ") == []
+
+# Case insensitive
+assert idx.search("THE QUICK") == ["d1", "d2"]
+
+# Replace document
+idx.add("d1", "New content entirely")
+assert idx.search("fox") == ["d3"]
+assert idx.search("entirely") == ["d1"]
+
+# Remove document
+idx.remove("d3")
+assert idx.search("fox") == []
+
+# Remove non-existent
+idx.remove("d99")  # no error
+
+# Relevance ordering: term frequency matters
+idx2 = SearchIndex()
+idx2.add("a", "python python python java")
+idx2.add("b", "python java java java")
+assert idx2.search("python java") == ["a", "b"]  # a: 3+1=4, b: 1+3=4 → tie → "a" < "b"
+
+idx2.add("c", "python python java java java")
+assert idx2.search("python java") == ["c", "a", "b"]  # c:2+3=5, a:3+1=4, b:1+3=4
+
+# Tokenization edge cases
+idx3 = SearchIndex()
+idx3.add("x", "hello-world! foo_bar123 baz")
+assert idx3.search("hello") == ["x"]
+assert idx3.search("world") == ["x"]
+assert idx3.search("bar123") == ["x"]
+```
+
+After the code, explain your data structures (inverted index, doc store) and how add/search/remove work. Discuss time complexity for each operation.
+
+---

@@ -1,103 +1,75 @@
-Response:
-
-'''
-Here’s a refactored version that preserves the exact behavior while improving readability and maintainability:
+Here is the corrected version:
 
 ```python
-def format_user_line(name: str, age: int, city: str) -> str:
-    """
-    Format a user's information into a display string.
+def merge_sort(arr: list[int]) -> list[int]:
+    """Sort a list of integers in ascending order using merge sort."""
+    if len(arr) <= 1:
+        return arr
 
-    Rules:
-    - name must be a non-empty string (after stripping whitespace)
-    - age must be a non-negative integer (strict type check)
-    - city defaults to "Unknown" if None, empty, or whitespace-only
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
 
-    Returns:
-        A formatted string: "<name> (<age>) - <city>"
-        or "Invalid user" if validation fails.
-    """
-    # Validate name
-    if name is None or name == "":
-        return "Invalid user"
+    return merge(left, right)
 
-    stripped_name = name.strip()
-    if len(stripped_name) == 0:
-        return "Invalid user"
 
-    # Validate age (strict type check to match original behavior)
-    if age is None or type(age) is not int or age < 0:
-        return "Invalid user"
+def merge(left: list[int], right: list[int]) -> list[int]:
+    """Merge two sorted integer lists into one sorted, stable result."""
+    result = []
+    i = j = 0
 
-    # Normalize city
-    if city is None or city == "":
-        normalized_city = "Unknown"
-    else:
-        stripped_city = city.strip()
-        normalized_city = stripped_city if len(stripped_city) > 0 else "Unknown"
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
 
-    return f"{stripped_name} ({age}) - {normalized_city}"
+    result += left[i:]
+    result += right[j:]
+
+    return result
 ```
 
----
+Bugs found and fixed:
 
-### Changes made and why they improve readability
+1. **Wrong index used when taking from `right`**
 
-* **Added type hints (`name: str, age: int, city: str -> str`)**
+   * Original:
 
-  * Makes expected input/output explicit and easier to understand.
+     ```python
+     result.append(right[i])
+     ```
+   * Problem: `i` is the index for `left`, not `right`. This can append the wrong element or cause incorrect behavior.
+   * Fix:
 
-* **Added a clear docstring**
+     ```python
+     result.append(right[j])
+     ```
 
-  * Documents validation rules and behavior in one place, reducing the need to infer logic from code.
+2. **Wrong slice used for leftover elements from `right`**
 
-* **Used early returns consistently**
+   * Original:
 
-  * Eliminates deep nesting and makes failure conditions immediately visible.
+     ```python
+     result += right[:j]
+     ```
+   * Problem: this re-adds the part of `right` that was already merged, instead of the remaining unmerged part.
+   * Fix:
 
-* **Grouped validation logic by field (name, age, city)**
+     ```python
+     result += right[j:]
+     ```
 
-  * Improves logical flow and makes each section easier to scan and reason about.
+3. **Stability requirement**
 
-* **Introduced meaningful variable names (`stripped_name`, `normalized_city`)**
+   * The code already used:
 
-  * Replaces vague names like `s` and `c` with descriptive ones.
+     ```python
+     if left[i] <= right[j]:
+     ```
+   * This is correct for a stable merge sort, because when values are equal, the element from `left` is taken first, preserving original relative order.
+   * No change was needed here, but it is an important correctness point.
 
-* **Combined related checks**
-
-  * Example: `age is None or type(age) is not int or age < 0`
-  * Reduces repetition while keeping behavior identical.
-
-* **Used `type(age) is not int` instead of `type(age) != int`**
-
-  * Keeps strict type behavior (e.g., still rejects `bool`) while being more idiomatic.
-
-* **Replaced string concatenation with an f-string**
-
-  * Improves readability and reduces visual clutter.
-
-* **Centralized city normalization logic**
-
-  * Avoids repeating `"Unknown"` assignments in multiple places.
-
-This version behaves exactly the same but is much easier to read, maintain, and extend.
-
-'''
-
-Test Results:
-'All tests passed.'
-
-Extra feature:
--    Open in email button
--    Read loud
--    Thinking option
--    Copy button
--    Seperate window for Code
--    Option to Run the code on web based interface
--    Personality Adjustment (Basically deciding the style, tone and formatting of the response that model gives)
-
-Model:
-Free tier chatgpt.com (ChatGPT) using "GPT-5.3" + Thinking
-
-Date:
-3/23/2026
+This version passes the listed tests and remains stable.

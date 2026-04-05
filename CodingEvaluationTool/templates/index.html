@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Generation Evaluation Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo-icon">⟨/⟩</div>
+                <div>
+                    <h1>Code Generation Evaluation Tool</h1>
+                    <p class="subtitle">MSc Thesis — Understanding and Comparing Generative AI Models</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="domain-badge">Domain: Coding Assistant</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Step Indicators -->
+    <div class="steps-bar">
+        <div class="step active" data-step="1" onclick="goToStep(1)">
+            <span class="step-num">1</span>
+            <span class="step-label">Setup &amp; Source</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step" data-step="2" onclick="goToStep(2)">
+            <span class="step-num">2</span>
+            <span class="step-label">Model Responses</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step" data-step="3" onclick="goToStep(3)">
+            <span class="step-num">3</span>
+            <span class="step-label">Results &amp; Analysis</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <!-- ══════════ STEP 1: Setup & Source ══════════ -->
+        <section id="step-1" class="step-panel active">
+            <h2 class="section-title">
+                <span class="title-icon">📋</span>
+                Setup &amp; Source Code
+            </h2>
+
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label for="task-type">Task Type</label>
+                    <select id="task-type">
+                        <option value="implementation">Implementation (Write from Scratch)</option>
+                        <option value="debugging">Debugging (Fix Bugs)</option>
+                        <option value="optimization">Optimization / Refactoring</option>
+                        <option value="design">Design / OOP</option>
+                        <option value="algorithm">Algorithm</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="prompt-input">Evaluation Prompt
+                        <span class="label-hint">The exact prompt you gave to AI models</span>
+                    </label>
+                    <textarea id="prompt-input" rows="12"
+                        placeholder="Paste the full prompt you gave to AI models here...&#10;&#10;Example:&#10;Implement a Python function:&#10;def flatten_dict(d: dict, sep: str = '.') -> dict:&#10;    ...&#10;&#10;Requirements:&#10;- Recursively flatten nested dictionaries...&#10;- Add type hints and a docstring.&#10;&#10;Must pass these tests:&#10;assert flatten_dict({'a': 1}) == {'a': 1}"></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="reference-code">Reference / Correct Solution
+                        <span class="label-hint">Optional — used for similarity scoring</span>
+                    </label>
+                    <textarea id="reference-code" rows="10"
+                        placeholder="Paste the reference/correct code here (optional)..."></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="test-cases">Test Cases
+                        <span class="label-hint">Optional — assert statements to run against model code</span>
+                    </label>
+                    <textarea id="test-cases" rows="8"
+                        placeholder="Paste test assertions here (optional)...&#10;&#10;assert flatten_dict({'a': 1, 'b': 2}) == {'a': 1, 'b': 2}&#10;assert flatten_dict({'a': {'b': 1}}) == {'a.b': 1}"></textarea>
+                </div>
+            </div>
+
+            <div class="step-actions">
+                <button class="btn btn-primary" onclick="goToStep(2)">
+                    Next: Add Model Responses →
+                </button>
+            </div>
+        </section>
+
+        <!-- ══════════ STEP 2: Model Responses ══════════ -->
+        <section id="step-2" class="step-panel">
+            <h2 class="section-title">
+                <span class="title-icon">🤖</span>
+                Model Responses
+            </h2>
+
+            <div id="models-container"></div>
+
+            <button class="btn btn-secondary" onclick="addModel()">
+                + Add Model Response
+            </button>
+
+            <div class="step-actions">
+                <button class="btn btn-ghost" onclick="goToStep(1)">← Back</button>
+                <button class="btn btn-primary btn-evaluate" onclick="runEvaluation()">
+                    <span class="btn-icon">▶</span>
+                    Run Evaluation
+                </button>
+            </div>
+        </section>
+
+        <!-- ══════════ STEP 3: Results & Analysis ══════════ -->
+        <section id="step-3" class="step-panel">
+            <h2 class="section-title">
+                <span class="title-icon">📊</span>
+                Results &amp; Analysis
+            </h2>
+
+            <!-- Loading State -->
+            <div id="loading-indicator" class="loading-state" style="display:none;">
+                <div class="spinner"></div>
+                <p>Evaluating model responses...</p>
+            </div>
+
+            <!-- Results Content -->
+            <div id="results-content" style="display:none;">
+
+                <!-- Leaderboard -->
+                <div class="result-card">
+                    <h3 class="card-title">🏆 Leaderboard</h3>
+                    <div class="table-wrapper">
+                        <table id="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Model</th>
+                                    <th>Rank Score</th>
+                                    <th>Overall Quality</th>
+                                    <th>Test Pass Rate</th>
+                                    <th>Constraint Score</th>
+                                    <th>Maintainability</th>
+                                    <th>Complexity</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboard-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="charts-grid">
+                    <div class="result-card">
+                        <h3 class="card-title">Rank Score Comparison</h3>
+                        <canvas id="chart-rank-scores"></canvas>
+                    </div>
+                    <div class="result-card">
+                        <h3 class="card-title">Quality Breakdown (Radar)</h3>
+                        <canvas id="chart-radar"></canvas>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="result-card">
+                        <h3 class="card-title">Metric Comparison</h3>
+                        <canvas id="chart-metrics-comparison"></canvas>
+                    </div>
+                    <div class="result-card">
+                        <h3 class="card-title">Halstead Metrics</h3>
+                        <canvas id="chart-halstead"></canvas>
+                    </div>
+                </div>
+
+                <!-- Heatmap -->
+                <div class="result-card">
+                    <h3 class="card-title">📐 Cross-Model Similarity Heatmap</h3>
+                    <div id="heatmap-container"></div>
+                </div>
+
+                <!-- Detailed Constraint Results per Model -->
+                <div class="result-card">
+                    <h3 class="card-title">✅ Constraint Adherence Details</h3>
+                    <div id="constraint-details"></div>
+                </div>
+
+                <!-- Detailed Metrics per Model -->
+                <div class="result-card">
+                    <h3 class="card-title">📈 Detailed Metrics per Model</h3>
+                    <div id="detailed-metrics"></div>
+                </div>
+
+                <!-- LLM Judge Section -->
+                <div class="result-card llm-section">
+                    <h3 class="card-title">🧠 LLM-as-Judge (Groq — Llama 3.3 70B)</h3>
+                    <p class="card-desc">Qualitative evaluation using an LLM. Click the button next to each model to run.</p>
+
+                    <div class="llm-config">
+                        <div class="form-group">
+                            <label for="groq-api-key">Groq API Key</label>
+                            <input type="password" id="groq-api-key" placeholder="gsk_..." />
+                        </div>
+                    </div>
+
+                    <div id="llm-judge-models"></div>
+                    <div id="llm-judge-results"></div>
+                </div>
+
+                <!-- Export Buttons -->
+                <div class="export-bar">
+                    <button class="btn btn-secondary" onclick="exportCSV()">📥 Export CSV</button>
+                    <button class="btn btn-secondary" onclick="exportJSON()">📥 Export JSON</button>
+                </div>
+            </div>
+
+            <div class="step-actions">
+                <button class="btn btn-ghost" onclick="goToStep(2)">← Back to Models</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <p>Code Generation Evaluation Tool — MSc Thesis Project, ELTE Budapest</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

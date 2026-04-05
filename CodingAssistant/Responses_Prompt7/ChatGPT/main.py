@@ -1,0 +1,134 @@
+def evaluate(expression: str) -> float:
+    """Evaluate a mathematical expression string using recursive descent parsing.
+
+    Supported features:
+    - Binary operators: +, -, *, /
+    - Parentheses: ()
+    - Unary minus: -3, -(2 + 1)
+    - Arbitrary whitespace between tokens
+
+    Operator precedence is standard:
+    - Parentheses
+    - Unary minus
+    - Multiplication and division
+    - Addition and subtraction
+
+    Raises:
+        ValueError: If the expression is empty, malformed, contains unmatched
+            parentheses, has trailing operators/tokens, or attempts division by zero.
+    """
+
+    class Parser:
+        """Recursive descent parser for arithmetic expressions."""
+
+        def __init__(self, text: str) -> None:
+            self.text = text
+            self.pos = 0
+
+        def parse(self) -> float:
+            """Parse the full expression and ensure no extra tokens remain."""
+            self._skip_whitespace()
+            if self._at_end():
+                raise ValueError("Empty expression")
+
+            value = self._parse_expression()
+            self._skip_whitespace()
+
+            if not self._at_end():
+                raise ValueError("Malformed expression")
+
+            return value
+
+        def _parse_expression(self) -> float:
+            """Parse addition and subtraction."""
+            value = self._parse_term()
+
+            while True:
+                self._skip_whitespace()
+                if self._match("+"):
+                    value += self._parse_term()
+                elif self._match("-"):
+                    value -= self._parse_term()
+                else:
+                    break
+
+            return value
+
+        def _parse_term(self) -> float:
+            """Parse multiplication and division."""
+            value = self._parse_factor()
+
+            while True:
+                self._skip_whitespace()
+                if self._match("*"):
+                    value *= self._parse_factor()
+                elif self._match("/"):
+                    divisor = self._parse_factor()
+                    if divisor == 0:
+                        raise ValueError("Division by zero")
+                    value /= divisor
+                else:
+                    break
+
+            return value
+
+        def _parse_factor(self) -> float:
+            """Parse unary minus, parentheses, or a number."""
+            self._skip_whitespace()
+
+            if self._match("-"):
+                return -self._parse_factor()
+
+            if self._match("("):
+                value = self._parse_expression()
+                self._skip_whitespace()
+                if not self._match(")"):
+                    raise ValueError("Unmatched parenthesis")
+                return value
+
+            return self._parse_number()
+
+        def _parse_number(self) -> float:
+            """Parse an integer or decimal number."""
+            self._skip_whitespace()
+            start = self.pos
+            has_digit = False
+            has_dot = False
+
+            while not self._at_end():
+                ch = self.text[self.pos]
+                if ch.isdigit():
+                    has_digit = True
+                    self.pos += 1
+                elif ch == "." and not has_dot:
+                    has_dot = True
+                    self.pos += 1
+                else:
+                    break
+
+            if not has_digit:
+                raise ValueError("Expected number")
+
+            token = self.text[start:self.pos]
+            try:
+                return float(token)
+            except ValueError as exc:
+                raise ValueError("Invalid number") from exc
+
+        def _skip_whitespace(self) -> None:
+            """Advance past any whitespace."""
+            while not self._at_end() and self.text[self.pos].isspace():
+                self.pos += 1
+
+        def _match(self, char: str) -> bool:
+            """Consume the next character if it matches."""
+            if not self._at_end() and self.text[self.pos] == char:
+                self.pos += 1
+                return True
+            return False
+
+        def _at_end(self) -> bool:
+            """Return True if parsing has reached the end of the input."""
+            return self.pos >= len(self.text)
+
+    return Parser(expression).parse()

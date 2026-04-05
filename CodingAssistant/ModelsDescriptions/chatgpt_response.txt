@@ -1,0 +1,14 @@
+Model:
+Free tier chatgpt.com (ChatGPT) using "GPT-5.3" + Thinking
+
+Extra feature:
+-    Open in email button
+-    Read loud
+-    Thinking option
+-    Copy button
+-    Seperate window for Code
+-    Option to Run the code on web based interface
+-    Personality Adjustment (Basically deciding the style, tone and formatting of the response that model gives)
+
+Date:
+4/5/2026

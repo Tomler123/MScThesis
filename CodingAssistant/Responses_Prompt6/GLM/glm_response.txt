@@ -1,0 +1,40 @@
+```python
+from typing import List
+
+def group_anagrams(words: List[str]) -> List[List[str]]:
+    """Group words that are anagrams of each other.
+
+    The groups are returned in the order of the first appearance of each
+    anagram key in the input. Within each group, words keep their original order.
+
+    Args:
+        words: List of strings to be grouped.
+
+    Returns:
+        List of groups, where each group is a list of anagrams.
+    """
+    groups_dict: dict[str, List[str]] = {}
+    key_order: List[str] = []
+
+    for w in words:
+        # The sorted string acts as a canonical key for anagrams.
+        key = ''.join(sorted(w))
+        if key not in groups_dict:
+            groups_dict[key] = []
+            key_order.append(key)
+        groups_dict[key].append(w)
+
+    return [groups_dict[key] for key in key_order]
+```
+
+**Explanation**
+
+1. **Why the brute-force is slow**  
+   The brute-force version compares every pair of words (O(n²) pairs) and sorts each word during comparison (O(k log k) per sort), leading to O(n² · k log k) time complexity. For large n, this becomes prohibitively slow due to the quadratic number of comparisons and redundant sorting.
+
+2. **Data structure used and why**  
+   I used a dictionary mapping a canonical anagram key (`''.join(sorted(word))`) to a list of words that share that key. This allows O(1) lookup per word to find or create its group. To preserve the required order of groups (first appearance of each key), I maintained a separate list `key_order` that records keys in the order they are first encountered. This combination yields both efficient grouping and correct ordering.
+
+3. **Time and space complexity**  
+   - **Time**: For each of the n words, we sort its characters, which takes O(k log k) time where k is the length of the word. All other operations (dictionary look‑up, list appends) are O(1). Hence total time is O(n · k log k).  
+   - **Space**: We store every word exactly once in the dictionary lists, plus the keys themselves. Each key is a string of length at most k, and there are at most n distinct keys. Thus space complexity is O(n · k).

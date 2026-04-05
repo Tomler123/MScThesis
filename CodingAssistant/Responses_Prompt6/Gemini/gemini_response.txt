@@ -1,0 +1,49 @@
+Here is the optimized solution. 
+
+```python
+def group_anagrams(words: list[str]) -> list[list[str]]:
+    """
+    Group words that are anagrams of each other.
+    
+    Maintains the original relative order of the groups based on their first
+    appearance, as well as the relative order of words within each group.
+    
+    Args:
+        words: A list of strings to be grouped.
+        
+    Returns:
+        A list of lists, where each inner list contains anagrams.
+    """
+    anagram_map: dict[str, list[str]] = {}
+    
+    for word in words:
+        # Sort the characters of the word to create a canonical key.
+        # Anagrams will always result in the exact same sorted string.
+        key = "".join(sorted(word))
+        
+        if key not in anagram_map:
+            anagram_map[key] = []
+            
+        anagram_map[key].append(word)
+        
+    # Python 3.7+ dictionaries maintain insertion order.
+    # Yielding the values directly satisfies the group ordering requirement.
+    return list(anagram_map.values())
+```
+
+### **Why the Brute-Force Method is Slow**
+The brute-force approach uses nested loops to compare every word against every other word that hasn't been grouped yet. This results in an `O(n^2)` time complexity just for the loops. Furthermore, inside that nested loop, it sorts the strings (`O(k log k)`) to check if they match. This brings the overall time complexity to roughly `O(n^2 * k log k)`. For a list of 10,000 words, that `n^2` factor means evaluating up to 100,000,000 iterations, which will severely bottleneck your application.
+
+### **Data Structure Used and Why**
+I used a **Hash Map** (a standard Python `dict`). 
+By sorting a word, we create a "canonical" version of it (e.g., both `"eat"` and `"tea"` become `"aet"`). We can use this sorted string as a dictionary key, and append the original words to a list stored as the dictionary's value. 
+
+The hash map provides average `O(1)` time complexity for lookups and insertions, allowing us to group the items in a single pass. Additionally, modern Python dictionaries (Python 3.7+) naturally maintain insertion order. This seamlessly satisfies the requirement to keep the groups in the order they were first encountered without needing any extra data structures. Appending to a list naturally maintains the order of words within the groups.
+
+### **Complexity Analysis**
+* **Time Complexity:** `O(n * k log k)`
+    * `n` is the number of words in the input list.
+    * `k` is the maximum length of a word.
+    * We iterate through the list exactly once (`O(n)`). Inside the loop, sorting each string takes `O(k log k)` time, and joining it into a string takes `O(k)` time. The dictionary insertion takes `O(k)` time to hash the string. The dominant operation per word is the sorting step, resulting in an overall time complexity of `O(n * k log k)`.
+* **Space Complexity:** `O(n * k)`
+    * In the worst-case scenario (where there are no anagrams at all), the dictionary will store `n` distinct keys, each of length `k`. The values will store the original `n` strings, also up to length `k`. The returned list of lists will also take up `O(n * k)` space.

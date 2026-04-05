@@ -1,0 +1,46 @@
+```python
+from typing import List, Tuple
+
+def merge_intervals(intervals: List[Tuple[int, int]]) -> List[Tuple[int, int]]:
+    """
+    Merge all overlapping intervals and return sorted non-overlapping intervals.
+
+    Two intervals overlap if one starts before or at the point the other ends.
+    Intervals are considered closed intervals: [start, end].
+
+    Args:
+        intervals: List of tuples (start, end) with start <= end.
+
+    Returns:
+        List of merged, non-overlapping intervals sorted by start.
+    """
+    if not intervals:
+        return []
+
+    # Sort intervals by start coordinate
+    sorted_intervals = sorted(intervals, key=lambda x: x[0])
+
+    merged: List[Tuple[int, int]] = [sorted_intervals[0]]
+
+    for start, end in sorted_intervals[1:]:
+        last_start, last_end = merged[-1]
+
+        # Overlap if current start <= last end (including touching)
+        if start <= last_end:
+            # Merge: extend the end if necessary
+            merged[-1] = (last_start, max(last_end, end))
+        else:
+            merged.append((start, end))
+
+    return merged
+```
+
+### Time Complexity
+
+- **Sorting**: The initial sort by start takes \(O(n \log n)\) time where \(n\) is the number of intervals.
+- **Merging**: The subsequent linear scan performs a constant amount of work per interval, \(O(n)\).
+- **Overall**: \(O(n \log n)\).
+
+### Why Sorting Is Essential
+
+Sorting the intervals by their start coordinate guarantees that any interval that could overlap with a previously processed interval will be adjacent in the sorted order. Without sorting, checking for overlaps would require comparing each interval with every other interval, leading to \(O(n^2)\) complexity. Sorting groups potential overlaps together, allowing a single pass to merge them efficiently.

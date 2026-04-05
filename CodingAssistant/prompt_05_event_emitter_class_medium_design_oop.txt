@@ -1,0 +1,87 @@
+Implement a Python class:
+
+```
+class EventEmitter:
+    """A simple event emitter supporting on, off, once, and emit."""
+```
+
+**Requirements:**
+- `on(event: str, callback: Callable) -> None` — Register a callback for an event. The same callback can be registered multiple times (and should fire that many times).
+- `off(event: str, callback: Callable) -> None` — Remove **one** registration of the callback for the event. If not registered, do nothing.
+- `once(event: str, callback: Callable) -> None` — Register a callback that fires at most once, then auto-removes itself.
+- `emit(event: str, *args, **kwargs) -> None` — Call all registered callbacks for the event with the given arguments, in registration order.
+- Emitting an event with no listeners does nothing (no error).
+- Do not use external libraries.
+- Add type hints and docstrings.
+
+**Must pass these tests:**
+```python
+# Basic on/emit
+results = []
+em = EventEmitter()
+em.on("data", lambda x: results.append(x))
+em.emit("data", 1)
+em.emit("data", 2)
+assert results == [1, 2]
+
+# Multiple listeners
+results.clear()
+em2 = EventEmitter()
+em2.on("e", lambda: results.append("a"))
+em2.on("e", lambda: results.append("b"))
+em2.emit("e")
+assert results == ["a", "b"]
+
+# off removes one registration
+results.clear()
+em3 = EventEmitter()
+def handler(x): results.append(x)
+em3.on("e", handler)
+em3.on("e", handler)
+em3.emit("e", 1)
+assert results == [1, 1]
+em3.off("e", handler)
+results.clear()
+em3.emit("e", 2)
+assert results == [2]
+
+# off on non-existent does nothing
+em4 = EventEmitter()
+em4.off("nope", lambda: None)  # no error
+
+# once fires only once
+results.clear()
+em5 = EventEmitter()
+em5.once("e", lambda x: results.append(x))
+em5.emit("e", 10)
+em5.emit("e", 20)
+assert results == [10]
+
+# emit with no listeners
+em6 = EventEmitter()
+em6.emit("nothing")  # no error
+
+# once + on together
+results.clear()
+em7 = EventEmitter()
+em7.on("e", lambda: results.append("on"))
+em7.once("e", lambda: results.append("once"))
+em7.emit("e")
+em7.emit("e")
+assert results == ["on", "once", "on"]
+
+# emit unknown event
+em8 = EventEmitter()
+em8.emit("x", 1, 2, key="val")  # no error, no crash
+
+# kwargs forwarding
+results.clear()
+em9 = EventEmitter()
+em9.on("e", lambda a, b=0: results.append(a + b))
+em9.emit("e", 3, b=7)
+assert results == [10]
+```
+
+After the code, explain in 4–6 sentences how you handled `once` (auto-removal during iteration) and duplicate callback registrations.
+
+---

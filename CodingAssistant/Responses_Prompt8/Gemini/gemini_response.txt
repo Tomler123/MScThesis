@@ -1,0 +1,72 @@
+Here is the corrected code. It implements a robust depth-first search (DFS) with a three-state tracking system to correctly identify cycles and ensure tasks are executed in the proper topological order.
+
+```python
+def schedule_tasks(tasks: dict[str, list[str]]) -> list[str]:
+    """
+    Return task execution order respecting dependencies, or raise ValueError if cyclic.
+    
+    Args:
+        tasks: A dictionary where keys are task names, and values are lists of 
+               dependency task names that must be completed first.
+               
+    Returns:
+        A list of task names in a valid topological execution order.
+        
+    Raises:
+        ValueError: If a cyclic dependency is detected in the graph.
+    """
+    order = []
+    visiting = set()
+    visited = set()
+    
+    def dfs(task):
+        # If the task is currently on the recursion stack, we've found a cycle
+        if task in visiting:
+            raise ValueError(f"Cycle detected involving {task}")
+            
+        # If the task has already been fully processed, skip it to avoid duplicates
+        if task in visited:
+            return
+            
+        # Mark as currently being processed
+        visiting.add(task)
+        
+        # Traverse dependencies. Use .get() to safely handle external dependencies 
+        # that are not explicitly defined as keys in the tasks dictionary.
+        for dep in tasks.get(task, []):
+            dfs(dep)
+            
+        # Move from 'visiting' to 'visited' as all dependencies are resolved
+        visiting.remove(task)
+        visited.add(task)
+        
+        # Append to order only after all dependencies have been appended
+        order.append(task)
+        
+    # Initiate DFS for every task defined in the graph
+    for task in tasks:
+        dfs(task)
+        
+    return order
+```
+
+### Bugs Fixed and Explanations
+
+1. **Bug: False Cycle Detection (Treating Shared Dependencies as Cycles)**
+   * **What was wrong:** The original code used a single `visited` set to track nodes. If it encountered a node already in `visited`, it immediately raised a `ValueError`. In a valid Directed Acyclic Graph (DAG) with a "diamond dependency" (e.g., `B` and `C` both depend on `A`), `A` will be reached multiple times through different valid paths. The original code would falsely flag this shared dependency as a cycle.
+   * **The Fix:** Introduced two separate sets: `visiting` and `visited`. A cycle is now correctly identified *only* if we encounter a node that is currently in the `visiting` set (meaning we looped back on our current path).
+
+2. **Bug: Duplicate Tasks in Output**
+   * **What was wrong:** The original code never skipped nodes that were already successfully processed. If a shared dependency was called multiple times without crashing, it would append that task and all its dependencies to the `order` list multiple times, violating the requirement that tasks appear exactly once.
+   * **The Fix:** Added the `if task in visited: return` check. Once a task is fully processed and added to `order`, subsequent paths requiring that dependency will immediately return, reusing the work already done.
+
+3. **Bug (Code Style/Safety): Inelegant handling of implicit dependencies**
+   * **What was wrong:** The original code relied on `if task in tasks: for dep in tasks[task]:` to avoid a `KeyError` when looking up dependencies that weren't keys in the dictionary. While functional, it nested the logic unnecessarily. 
+   * **The Fix:** Simplified graph traversal using the dictionary's `.get(task, [])` method, which provides a clean default empty list for implicit tasks without dependencies.
+
+### "Currently Being Processed" vs. "Fully Processed"
+
+In graph theory and DFS traversal (often referred to as coloring nodes Gray and Black):
+
+* **Currently being processed (`visiting`):** The task is currently active on the recursion stack. We have started evaluating it, but we are still traversing its dependency branches. If DFS encounters a task in this state, it means we followed a path of dependencies and arrived right back at an ancestor we haven't finished yet. This proves a structural **cycle** (e.g., A needs B, B needs C, C needs A).
+* **Fully processed (`visited`):** The task, along with its entire dependency tree, has been completely resolved, validated, and appended to the final execution order. It has been popped off the recursion stack. If DFS encounters a task in this state later, it simply means another task shares this dependency (a valid cross-edge). It is structurally safe to ignore and skip.

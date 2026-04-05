@@ -1,66 +1,46 @@
-Response:
+# Solution: Flatten Nested Dictionary
 
-'''
 ```python
-def split_csv_line(line: str) -> list[str]:
-    """Split a single CSV line into fields according to RFC4180-like rules.
-
-    Fields are separated by commas. Fields may be quoted with double quotes.
-    Inside quoted fields, a double quote is escaped as two double quotes.
-    Commas inside quoted fields do not split fields. Whitespace is preserved exactly.
-    Returns a list of field strings with quotes removed and escaped quotes unescaped.
+def flatten_dict(d: dict, sep: str = ".") -> dict:
+    """Flatten a nested dictionary by joining keys with `sep`.
+    
+    Args:
+        d: The dictionary to flatten.
+        sep: The separator to use when joining keys. Defaults to ".".
+    
+    Returns:
+        A flattened dictionary where nested keys are joined with `sep`.
     """
-    fields: list[str] = []
-    current: list[str] = []
-    in_quotes = False
-    i = 0
-    n = len(line)
+    result = {}
+    
+    for key, value in d.items():
+        if isinstance(value, dict):
+            if value:  # Non-empty dict - recurse
+                flattened = flatten_dict(value, sep)
+                for nested_key, nested_value in flattened.items():
+                    result[f"{key}{sep}{nested_key}"] = nested_value
+            else:  # Empty dict - keep as-is
+                result[key] = {}
+        else:  # Leaf value - keep as-is
+            result[key] = value
+    
+    return result
 
-    while i < n:
-        ch = line[i]
-        if not in_quotes:
-            if ch == ',':
-                fields.append(''.join(current))
-                current = []
-                i += 1
-            elif ch == '"':
-                in_quotes = True
-                i += 1
-            else:
-                current.append(ch)
-                i += 1
-        else:  # inside a quoted field
-            if ch == '"':
-                # Look ahead for escaped double quote
-                if i + 1 < n and line[i + 1] == '"':
-                    current.append('"')
-                    i += 2
-                else:
-                    # Closing quote
-                    in_quotes = False
-                    i += 1
-            else:
-                current.append(ch)
-                i += 1
 
-    # Append the last field
-    fields.append(''.join(current))
-    return fields
+# Test cases
+assert flatten_dict({"a": 1, "b": 2}) == {"a": 1, "b": 2}
+assert flatten_dict({"a": {"b": 1, "c": 2}}) == {"a.b": 1, "a.c": 2}
+assert flatten_dict({"a": {"b": {"c": 3}}}) == {"a.b.c": 3}
+assert flatten_dict({"a": {"b": 1}, "c": 2}) == {"a.b": 1, "c": 2}
+assert flatten_dict({}) == {}
+assert flatten_dict({"a": {"b": {"c": {"d": 4}}}}, sep="/") == {"a/b/c/d": 4}
+assert flatten_dict({"a": [1, 2], "b": {"c": None}}) == {"a": [1, 2], "b.c": None}
+assert flatten_dict({"a": {}}) == {"a": {}}
+assert flatten_dict({"x": {"": 1}}) == {"x.": 1}
+assert flatten_dict({"a": {"b": 1, "c": {"d": 2, "e": 3}}, "f": 4}) == {"a.b": 1, "a.c.d": 2, "a.c.e": 3, "f": 4}
+print("All tests passed!")
 ```
 
-The parser uses a simple state machine with a boolean `in_quotes` to track whether it is inside a quoted field. When not inside quotes, a comma ends the current field, and a double quote signals the start of a quoted field. Inside a quoted field, characters are taken literally except for double quotes: if two double quotes appear consecutively, they are collapsed into one double quote (escaped quote); a lone double quote terminates the quoted field. This approach correctly handles empty fields, escaped quotes, commas inside quotes, and preserves whitespace exactly. The algorithm assumes well-formed input as per the given tests and RFC4180 guidelines.
-'''
+## Explanation
 
-Test Results:
-'All tests passed.'
-
-Extra feature:
--    Thinking option
--    Copy button
--    Seperate window for Code
-
-Model:
-Free tier chat.z.ai (GLM) using "GLM-5" + Expert thinking
-
-Date:
-3/23/2026
+The recursion distinguishes between **leaf values** (non-dict types like ints, strings, lists, None) and **non-leaf values** (nested dictionaries). Leaf values are added directly to the result with their current key, while non-leaf values trigger a recursive call that returns a flattened sub-dictionary, whose keys are then prefixed with the parent key and separator. The **empty-dict edge case** is handled explicitly by checking `if value:` — an empty dict `{} ` is treated as a leaf value and preserved as-is in the result rather than being recursively processed or discarded, satisfying the requirement that `{"a": {}}` maps to `{"a": {}}`.

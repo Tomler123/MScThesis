@@ -1,84 +1,50 @@
-Response:
-
-'''
-Here is the implementation of the CSV line parser using a state-machine approach to handle the RFC4180 requirements without external dependencies.
+Here is the implementation of the `flatten_dict` function, complete with type hints and a docstring to meet your requirements.
 
 ```python
-def split_csv_line(line: str) -> list[str]:
-    """
-    Split a single CSV line into fields (RFC4180-like), without external libraries.
-    
-    Handles quoted fields, escaped double quotes (""), and literal commas 
-    within quotes while preserving whitespace.
-    """
-    fields = []
-    current_field = []
-    in_quotes = False
-    i = 0
-    
-    while i < len(line):
-        char = line[i]
-        
-        if in_quotes:
-            if char == '"':
-                # Check if this is an escaped quote ("")
-                if i + 1 < len(line) and line[i + 1] == '"':
-                    current_field.append('"')
-                    i += 1  # Skip the second quote
-                else:
-                    # Closing quote
-                    in_quotes = False
-            else:
-                # Literal character inside quotes
-                current_field.append(char)
-        else:
-            if char == '"':
-                # Opening quote
-                in_quotes = True
-            elif char == ',':
-                # Field delimiter
-                fields.append("".join(current_field))
-                current_field = []
-            else:
-                # Regular character outside quotes
-                current_field.append(char)
-        i += 1
-        
-    # Append the final field after the loop ends
-    fields.append("".join(current_field))
-    return fields
+from typing import Any, Dict
 
-# Verification Tests
-if __name__ == "__main__":
-    assert split_csv_line("a,b,c") == ["a", "b", "c"]
-    assert split_csv_line('a,"b,c",d') == ["a", "b,c", "d"]
-    assert split_csv_line('"a","b","c"') == ["a", "b", "c"]
-    assert split_csv_line('"a""b",c') == ['a"b', "c"]
-    assert split_csv_line(',"",') == ["", "", ""]
-    assert split_csv_line('"  spaced  ",x') == ["  spaced  ", "x"]
-    assert split_csv_line('"""",x') == ['"', "x"]
-    assert split_csv_line('a,"b""c,d""e",f') == ["a", 'b"c,d"e', "f"]
-    print("All tests passed!")
+def flatten_dict(d: Dict[str, Any], sep: str = ".") -> Dict[str, Any]:
+    """
+    Flatten a nested dictionary by joining keys with `sep`.
+    
+    Args:
+        d: The dictionary to flatten.
+        sep: The string used to separate joined keys (defaults to ".").
+        
+    Returns:
+        A new dictionary where all nested keys have been flattened.
+    """
+    result: Dict[str, Any] = {}
+    
+    for key, value in d.items():
+        if isinstance(value, dict):
+            # Handle the empty dictionary edge case
+            if not value:
+                result[key] = {}
+            else:
+                # Recursively flatten non-empty dictionaries
+                flattened_child = flatten_dict(value, sep=sep)
+                for child_key, child_value in flattened_child.items():
+                    result[f"{key}{sep}{child_key}"] = child_value
+        else:
+            # Handle leaf values (ints, strings, lists, None, etc.)
+            result[key] = value
+            
+    return result
+
+# --- Tests ---
+assert flatten_dict({"a": 1, "b": 2}) == {"a": 1, "b": 2}
+assert flatten_dict({"a": {"b": 1, "c": 2}}) == {"a.b": 1, "a.c": 2}
+assert flatten_dict({"a": {"b": {"c": 3}}}) == {"a.b.c": 3}
+assert flatten_dict({"a": {"b": 1}, "c": 2}) == {"a.b": 1, "c": 2}
+assert flatten_dict({}) == {}
+assert flatten_dict({"a": {"b": {"c": {"d": 4}}}}, sep="/") == {"a/b/c/d": 4}
+assert flatten_dict({"a": [1, 2], "b": {"c": None}}) == {"a": [1, 2], "b.c": None}
+assert flatten_dict({"a": {}}) == {"a": {}}
+assert flatten_dict({"x": {"": 1}}) == {"x.": 1}
+assert flatten_dict({"a": {"b": 1, "c": {"d": 2, "e": 3}}, "f": 4}) == {"a.b": 1, "a.c.d": 2, "a.c.e": 3, "f": 4}
 ```
 
-### How the Parser Works
-The parser employs a **state-machine approach**, iterating through each character while tracking whether the current position is inside a quoted string using the `in_quotes` flag. When the flag is active, commas are treated as literal text and the parser looks specifically for double-quote characters to determine if it should exit the quoted state. If it encounters two consecutive double quotes (`""`), it interprets them as a single escaped quote and appends it to the buffer while skipping the second character. When the parser is outside of quotes, a comma serves as the primary delimiter to finalize the current field and reset the buffer for the next one. This logic handles edge cases like empty quoted strings (`""`) and trailing commas by ensuring that every segment—even an empty one—is appended to the final list. By processing the string character-by-character, the function accurately preserves whitespace and handles complex nested quotes without the need for complex regular expressions.
+### How the Recursion Works
 
-**Would you like me to extend this function to handle multi-line CSV files or add support for different delimiters like tabs?**
-'''
-
-Test Results:
-'All tests passed!'
-
-Extra feature:
--    Extended thinking
--    Draft in Gmail
--    Export to Docs
--    Seperate window for Code
--    Listen (Clear, outloud reading of the given output)
-
-Model:
-Free tier gemini.google.com (Gemini) using "Gemini 3" + Extended thinking
-
-Date:
-3/23/2026
+The function iterates through the key-value pairs of the dictionary, immediately treating any non-dictionary value as a leaf node and assigning it directly to the result. When it encounters a nested dictionary, it calls itself recursively to flatten that child structure, subsequently prepending the parent's key and the separator to every key returned from the recursive call. To manage the empty-dictionary edge case safely, an explicit check (`if not value:`) ensures empty dictionaries are treated as intact leaf values and mapped appropriately, preventing them from being implicitly dropped during iteration.

@@ -1,0 +1,38 @@
+from typing import Callable, Dict, List
+
+
+class EventEmitter:
+    """A simple event emitter supporting on, off, once, and emit."""
+    
+    def __init__(self) -> None:
+        """Initialize an empty event emitter."""
+        self._listeners: Dict[str, List[Callable]] = {}
+    
+    def on(self, event: str, callback: Callable) -> None:
+        """Register a callback for an event. The same callback can be registered multiple times."""
+        if event not in self._listeners:
+            self._listeners[event] = []
+        self._listeners[event].append(callback)
+    
+    def off(self, event: str, callback: Callable) -> None:
+        """Remove one registration of the callback for the event. Does nothing if not found."""
+        if event in self._listeners:
+            listeners = self._listeners[event]
+            for i, cb in enumerate(listeners):
+                if cb is callback:
+                    listeners.pop(i)
+                    break
+    
+    def once(self, event: str, callback: Callable) -> None:
+        """Register a callback that fires at most once, then auto-removes itself."""
+        def wrapper(*args, **kwargs) -> None:
+            self.off(event, wrapper)
+            callback(*args, **kwargs)
+        self.on(event, wrapper)
+    
+    def emit(self, event: str, *args, **kwargs) -> None:
+        """Call all registered callbacks for the event with given arguments, in registration order."""
+        if event not in self._listeners:
+            return
+        for callback in list(self._listeners[event]):  # Iterate over a copy
+            callback(*args, **kwargs)

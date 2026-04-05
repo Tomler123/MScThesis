@@ -1,0 +1,153 @@
+Received. I am now working on fixing the bugs in the provided Python function for task scheduling.
+
+I'll analyze the buggy code and fix all the issues.
+
+## Bug Analysis
+
+Let me trace through the code to identify the bugs:
+
+### Bug 1: Incorrect Cycle Detection
+The code uses a single `visited` set for both "currently being processed" and "fully processed" states. When it encounters a visited node, it raises a cycle error - but this is wrong because a visited node could already be fully processed (not a cycle).
+
+### Bug 2: Wrong Execution Order (for some cases)
+The post-order append means dependencies end up in the wrong order when there are shared dependencies across different branches.
+
+Let me write the fixed version:
+
+
+
+<div data-think="true" data-duration="587">
+Now let me run the tests to verify the fix works.
+
+</div>
+
+
+
+All tests pass. Here's the complete explanation:
+
+---
+
+## Bug Analysis and Fixes
+
+### Bug 1: Incorrect Cycle Detection
+
+**What was wrong:**
+```python
+# Original buggy code
+if task in visited:
+    raise ValueError(f"Cycle detected involving {task}")
+```
+
+The code used a single `visited` set for both purposes. When DFS encountered a visited node, it immediately raised a cycle error — but this is incorrect because a visited node could already be **fully processed** (not a cycle).
+
+**Example of the bug:**
+```python
+schedule_tasks({"d": ["b", "c"], "b": ["a"], "c": ["a"], "a": []})
+```
+- After processing `["b", "a"]`, node `"a"` is in `visited`
+- When DFS later reaches `"c"` and tries to visit `"a"` again, it incorrectly raises a cycle error
+- `"a"` is actually already fully processed, not currently being processed
+
+**The fix:**
+```python
+# Track nodes currently on recursion stack (detecting cycles)
+visiting = set()
+# Track nodes fully processed (avoid reprocessing)
+visited = set()
+
+def dfs(task):
+    if task in visiting:      # Currently being processed → CYCLE!
+        raise ValueError(...)
+    if task in visited:       # Already done → skip, no cycle
+        return
+    visiting.add(task)
+    # ... process dependencies ...
+    visiting.remove(task)
+    visited.add(task)
+```
+
+---
+
+### Bug 2: Missing Early Return for Fully Processed Nodes
+
+**What was wrong:**
+After the incorrect cycle detection raised an error, the function never got a chance to return early for already-processed nodes. Without proper cycle detection, even if we fixed Bug 1, the function would either error on reprocessing or produce duplicate entries.
+
+---
+
+## "Currently Being Processed" vs "Fully Processed" in DFS Cycle Detection
+
+Understanding these two states is crucial for correct cycle detection:
+
+| State | Meaning | Data Structure |
+|-------|---------|----------------|
+| **Currently being processed** | Node is on the current DFS call stack (recursion path from root to current node) | `visiting` (or "in_stack") set |
+| **Fully processed** | DFS has finished exploring this node and all its descendants | `visited` set |
+
+**Why both are needed:**
+
+1. **Cycle detection**: If we encounter a node that's *currently being processed*, we've found a back-edge → **CYCLE EXISTS**
+2. **Duplicate prevention**: If we encounter a node that's *fully processed*, we simply skip it → **NO CYCLE**
+
+**Visual example with cycle `a → b → a`:**
+```
+dfs(a):
+  visiting = {a}
+  dfs(b):
+    visiting = {a, b}
+    dfs(a):
+      a is in visiting → CYCLE DETECTED! ✓
+```
+
+**Visual example without cycle (diamond `d → b,c → a`):**
+```
+dfs(d):
+  visiting = {d}
+  dfs(b):
+    visiting = {d, b}
+    dfs(a):
+      visiting = {d, b, a}
+      order.append(a)
+      visiting.remove(a), visited.add(a)
+    visiting = {d, b}
+    order.append(b)
+    visiting.remove(b), visited.add(b)
+  visiting = {d}
+  dfs(c):
+    visiting = {d, c}
+    dfs(a):
+      a is in visited → SKIP (no cycle) ✓
+    order.append(c)
+  order.append(d)
+```
+
+---
+
+## Final Fixed Code Summary
+
+```python
+def schedule_tasks(tasks: dict[str, list[str]]) -> list[str]:
+    order = []
+    visiting = set()  # Nodes currently on recursion stack
+    visited = set()    # Nodes fully processed
+
+    def dfs(task):
+        if task in visiting:   # Cycle: back-edge found
+            raise ValueError(f"Cycle detected involving {task}")
+        if task in visited:    # Already done: skip
+            return
+        visiting.add(task)
+        for dep in tasks.get(task, []):
+            dfs(dep)
+        visiting.remove(task)
+        visited.add(task)
+        order.append(task)
+
+    for task in tasks:
+        dfs(task)
+    return order
+```
+
+<deliver_assets>
+<item><path>schedule_tasks.py</path></item>
+</deliver_assets>

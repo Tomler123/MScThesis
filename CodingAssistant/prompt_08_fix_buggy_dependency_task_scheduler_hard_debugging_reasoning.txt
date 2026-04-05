@@ -1,0 +1,99 @@
+The function below should execute tasks in dependency order (topological sort). Tasks are given as a dict mapping task name to its list of dependencies. It contains **multiple subtle bugs** including an incorrect cycle detection and wrong execution order. Fix all bugs.
+
+```python
+def schedule_tasks(tasks: dict[str, list[str]]) -> list[str]:
+    """Return task execution order respecting dependencies, or raise ValueError if cyclic."""
+    order = []
+    visited = set()
+    
+    def dfs(task):
+        if task in visited:
+            raise ValueError(f"Cycle detected involving {task}")
+        visited.add(task)
+        if task in tasks:
+            for dep in tasks[task]:
+                dfs(dep)
+        order.append(task)
+    
+    for task in tasks:
+        dfs(task)
+    
+    return order
+```
+
+**Requirements:**
+- Fix all bugs so the function returns a valid topological order (every task appears after all of its dependencies).
+- Correctly detect cycles and raise `ValueError`.
+- Tasks not in the dict but listed as dependencies are assumed to have no dependencies themselves (they should still appear in the output).
+- Each task should appear exactly once in the output.
+- Do not change the function signature.
+- Add a docstring.
+
+**Must pass these tests:**
+```python
+# Simple linear dependency
+result = schedule_tasks({"c": ["b"], "b": ["a"], "a": []})
+assert result.index("a") < result.index("b") < result.index("c")
+assert set(result) == {"a", "b", "c"}
+
+# Independent tasks — all should appear
+result = schedule_tasks({"a": [], "b": [], "c": []})
+assert set(result) == {"a", "b", "c"}
+
+# Diamond dependency
+result = schedule_tasks({"d": ["b", "c"], "b": ["a"], "c": ["a"], "a": []})
+assert result.index("a") < result.index("b")
+assert result.index("a") < result.index("c")
+assert result.index("b") < result.index("d")
+assert result.index("c") < result.index("d")
+
+# External dependencies (not keys in dict)
+result = schedule_tasks({"b": ["a"]})
+assert result.index("a") < result.index("b")
+assert set(result) == {"a", "b"}
+
+# Single task, no deps
+assert schedule_tasks({"a": []}) == ["a"]
+
+# Empty input
+assert schedule_tasks({}) == []
+
+# Cycle detection
+try:
+    schedule_tasks({"a": ["b"], "b": ["a"]})
+    assert False, "Should raise ValueError"
+except ValueError:
+    pass
+
+try:
+    schedule_tasks({"a": ["b"], "b": ["c"], "c": ["a"]})
+    assert False, "Should raise ValueError"
+except ValueError:
+    pass
+
+# Self-dependency
+try:
+    schedule_tasks({"a": ["a"]})
+    assert False, "Should raise ValueError"
+except ValueError:
+    pass
+
+# Complex: multiple roots, shared deps
+result = schedule_tasks({
+    "e": ["c", "d"],
+    "d": ["b"],
+    "c": ["a", "b"],
+    "b": [],
+    "a": [],
+})
+assert result.index("a") < result.index("c")
+assert result.index("b") < result.index("c")
+assert result.index("b") < result.index("d")
+assert result.index("c") < result.index("e")
+assert result.index("d") < result.index("e")
+assert set(result) == {"a", "b", "c", "d", "e"}
+```
+
+After fixing, list each bug, explain what was wrong, and describe how your fix addresses it. Explain the difference between the "currently being processed" and "fully processed" states in DFS-based cycle detection.
+
+---

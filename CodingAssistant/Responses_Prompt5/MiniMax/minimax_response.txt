@@ -1,0 +1,26 @@
+Received! I'm starting to work on implementing the `EventEmitter` class based on your requirements.
+
+I'll implement the `EventEmitter` class with the required functionality.
+
+
+
+<div data-think="true" data-duration="524">
+Now let me run the tests to make sure everything passes.
+
+</div>
+
+
+
+All tests pass. Here's the implementation:
+
+## Key Design Decisions
+
+### Handling `once` (Auto-Removal During Iteration)
+The `once` method wraps the user's callback in a `wrapper` function. When `emit` calls this wrapper, it:
+1. Invokes the original callback with the provided arguments
+2. Removes itself from the listener list
+
+To safely handle removal during iteration, `emit` iterates over a **copy of the list** (`self._listeners[event][:]`). This means when a `once` callback removes itself mid-execution, the iteration continues over the original list while the copy remains stable. This prevents iterator invalidation issues.
+
+### Duplicate Callback Registrations
+The implementation stores callbacks in a simple list, allowing the **same callback object to appear multiple times**. When `on` is called, the callback is simply appended. When `off` is called, it uses `list.remove()` which removes **only the first occurrence** of the callback. This matches the expected behavior where duplicate registrations fire that many times and `off` removes one registration at a time.

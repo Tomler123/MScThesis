@@ -1,46 +1,50 @@
-def is_balanced(text: str) -> bool:
-    """
-    Return True if all bracket pairs ( ), [ ], { } in *text* are balanced.
+def rle_encode(s: str) -> str:
+    """Compress a string using run-length encoding.
 
-    Brackets that appear inside double-quoted regions are ignored.
-    A backslash immediately before a double quote (\\") is treated as an
-    escaped quote and does NOT open or close a quoted region.
-    """
-    stack: list[str] = []
-    in_quotes: bool = False
-    pairs: dict[str, str] = {')': '(', ']': '[', '}': '{'}
+    Each run of consecutive identical characters is replaced by
+    <count><char>, where count is always present (even for single chars).
 
+    Args:
+        s: The input string to encode.
+
+    Returns:
+        The run-length encoded string, e.g. "aaabbc" -> "3a2b1c".
+    """
+    if not s:
+        return ""
+    result = []
+    count = 1
+    for i in range(1, len(s)):
+        if s[i] == s[i - 1]:
+            count += 1
+        else:
+            result.append(f"{count}{s[i - 1]}")
+            count = 1
+    result.append(f"{count}{s[-1]}")
+    return "".join(result)
+
+
+def rle_decode(s: str) -> str:
+    """Decompress a run-length encoded string.
+
+    Parses alternating sequences of digits (multi-digit supported) and
+    a single character, expanding each pair into a repeated character run.
+
+    Args:
+        s: The run-length encoded string, e.g. "3a2b1c".
+
+    Returns:
+        The decoded original string, e.g. "aaabbc".
+    """
+    if not s:
+        return ""
+    result = []
     i = 0
-    while i < len(text):
-        ch = text[i]
-
-        if ch == '\\' and in_quotes:
-            i += 2          # skip the escaped character (e.g. \") wholesale
-            continue
-
-        if ch == '"':
-            in_quotes = not in_quotes
-        elif not in_quotes:
-            if ch in "([{":
-                stack.append(ch)
-            elif ch in ")]}":
-                if not stack or stack[-1] != pairs[ch]:
-                    return False
-                stack.pop()
-
-        i += 1
-
-    return stack == []
-
-assert is_balanced("") is True
-assert is_balanced("([]){}") is True
-assert is_balanced("(]") is False
-assert is_balanced("([)]") is False
-assert is_balanced('"(]"') is True
-assert is_balanced('"("') is True
-assert is_balanced('(")")') is True
-assert is_balanced('(")")(') is False
-assert is_balanced('"a \\" b"') is True
-assert is_balanced('"a \\" ( ]"') is True
-assert is_balanced('"unclosed') is True
-print("All tests passed.")
+    while i < len(s):
+        j = i
+        while j < len(s) and s[j].isdigit():
+            j += 1
+        count = int(s[i:j])
+        result.append(s[j] * count)
+        i = j + 1
+    return "".join(result)

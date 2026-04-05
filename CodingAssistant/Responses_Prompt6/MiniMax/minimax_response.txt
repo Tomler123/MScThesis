@@ -1,0 +1,79 @@
+Received. I'm starting to work on rewriting the brute-force anagram grouping function to be more efficient.
+
+
+
+I'll write an efficient anagram grouping function and test it. Let me create the solution:
+
+
+
+
+<div data-think="true" data-duration="23">
+Let me run the tests to verify the implementation works correctly.
+
+</div>
+
+
+
+
+
+All tests passed! Here's the optimized implementation:
+
+```python
+"""Efficient anagram grouping algorithm."""
+
+
+def group_anagrams(words: list[str]) -> list[list[str]]:
+    """Group words that are anagrams of each other.
+
+    Uses sorted characters as a canonical key for each anagram group.
+    Time complexity: O(n * k log k) where n = number of words,
+                     k = max word length.
+    Space complexity: O(n * k) for storing all words.
+    """
+    if not words:
+        return []
+
+    # Dictionary to group words by their anagram key
+    # Keys are sorted character strings, values are lists of words
+    anagram_groups: dict[str, list[str]] = {}
+
+    for word in words:
+        # Create a key by sorting the word's characters
+        key = ''.join(sorted(word))
+        if key not in anagram_groups:
+            anagram_groups[key] = []
+        anagram_groups[key].append(word)
+
+    # Return groups in the order they first appeared
+    return list(anagram_groups.values())
+```
+
+---
+
+## Explanations
+
+### 1. Why the brute-force is slow
+The brute-force approach has **O(n² × k)** complexity:
+- **Nested loops**: The outer loop iterates through all words, and for each word, the inner loop checks every remaining word.
+- **Repeated sorting**: Each pair comparison calls `sorted()` twice (once for each word), which is **O(k log k)** per comparison.
+- **No memoization**: Even words that have been compared before are re-compared multiple times.
+
+For 1,000 words with average length 10, this means ~1 million comparisons, each costing sorting overhead.
+
+### 2. Data structure used
+I used a **dictionary (hash map)** where:
+- **Key**: The sorted string of characters from a word (the "canonical form")
+- **Value**: A list of words that share that key
+
+**Why this works**: Words that are anagrams always produce the same sorted character sequence. This serves as a perfect hash key since anagrams always map to the same key, and non-anagrams map to different keys.
+
+### 3. Time and Space Complexity
+
+**Time Complexity: O(n × k log k)**
+- We process each of the n words once, calling `sorted()` on each word
+- Sorting takes O(k log k) where k is the word length
+- Total: n × O(k log k) = **O(n × k log k)**
+
+**Space Complexity: O(n × k)**
+- We store all words in the dictionary (n words, each up to k characters)
+- The sorted key for each word also takes O(k) space

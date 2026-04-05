@@ -1,55 +1,42 @@
-def split_csv_line(line: str) -> list[str]:
-    """
-    Split a single CSV line into fields (RFC4180-like), without external libraries.
-    
-    Handles quoted fields, escaped double quotes (""), and literal commas 
-    within quotes while preserving whitespace.
-    """
-    fields = []
-    current_field = []
-    in_quotes = False
-    i = 0
-    
-    while i < len(line):
-        char = line[i]
-        
-        if in_quotes:
-            if char == '"':
-                # Check if this is an escaped quote ("")
-                if i + 1 < len(line) and line[i + 1] == '"':
-                    current_field.append('"')
-                    i += 1  # Skip the second quote
-                else:
-                    # Closing quote
-                    in_quotes = False
-            else:
-                # Literal character inside quotes
-                current_field.append(char)
-        else:
-            if char == '"':
-                # Opening quote
-                in_quotes = True
-            elif char == ',':
-                # Field delimiter
-                fields.append("".join(current_field))
-                current_field = []
-            else:
-                # Regular character outside quotes
-                current_field.append(char)
-        i += 1
-        
-    # Append the final field after the loop ends
-    fields.append("".join(current_field))
-    return fields
+from typing import Any, Dict
 
-# Verification Tests
-if __name__ == "__main__":
-    assert split_csv_line("a,b,c") == ["a", "b", "c"]
-    assert split_csv_line('a,"b,c",d') == ["a", "b,c", "d"]
-    assert split_csv_line('"a","b","c"') == ["a", "b", "c"]
-    assert split_csv_line('"a""b",c') == ['a"b', "c"]
-    assert split_csv_line(',"",') == ["", "", ""]
-    assert split_csv_line('"  spaced  ",x') == ["  spaced  ", "x"]
-    assert split_csv_line('"""",x') == ['"', "x"]
-    assert split_csv_line('a,"b""c,d""e",f') == ["a", 'b"c,d"e', "f"]
-    print("All tests passed!")
+def flatten_dict(d: Dict[str, Any], sep: str = ".") -> Dict[str, Any]:
+    """
+    Flatten a nested dictionary by joining keys with `sep`.
+    
+    Args:
+        d: The dictionary to flatten.
+        sep: The string used to separate joined keys (defaults to ".").
+        
+    Returns:
+        A new dictionary where all nested keys have been flattened.
+    """
+    result: Dict[str, Any] = {}
+    
+    for key, value in d.items():
+        if isinstance(value, dict):
+            # Handle the empty dictionary edge case
+            if not value:
+                result[key] = {}
+            else:
+                # Recursively flatten non-empty dictionaries
+                flattened_child = flatten_dict(value, sep=sep)
+                for child_key, child_value in flattened_child.items():
+                    result[f"{key}{sep}{child_key}"] = child_value
+        else:
+            # Handle leaf values (ints, strings, lists, None, etc.)
+            result[key] = value
+            
+    return result
+
+# --- Tests ---
+assert flatten_dict({"a": 1, "b": 2}) == {"a": 1, "b": 2}
+assert flatten_dict({"a": {"b": 1, "c": 2}}) == {"a.b": 1, "a.c": 2}
+assert flatten_dict({"a": {"b": {"c": 3}}}) == {"a.b.c": 3}
+assert flatten_dict({"a": {"b": 1}, "c": 2}) == {"a.b": 1, "c": 2}
+assert flatten_dict({}) == {}
+assert flatten_dict({"a": {"b": {"c": {"d": 4}}}}, sep="/") == {"a/b/c/d": 4}
+assert flatten_dict({"a": [1, 2], "b": {"c": None}}) == {"a": [1, 2], "b.c": None}
+assert flatten_dict({"a": {}}) == {"a": {}}
+assert flatten_dict({"x": {"": 1}}) == {"x.": 1}
+assert flatten_dict({"a": {"b": 1, "c": {"d": 2, "e": 3}}, "f": 4}) == {"a.b": 1, "a.c.d": 2, "a.c.e": 3, "f": 4}

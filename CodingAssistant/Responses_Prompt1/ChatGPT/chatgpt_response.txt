@@ -1,77 +1,39 @@
-Response:
-
-'''
 ```python
-def split_csv_line(line: str) -> list[str]:
+from typing import Any
+
+
+def flatten_dict(d: dict[str, Any], sep: str = ".") -> dict[str, Any]:
+    """Flatten a nested dictionary by joining nested keys with `sep`.
+
+    Nested dictionaries are recursively expanded so that each leaf value is
+    stored under a single key composed of its parent keys joined by `sep`.
+    Non-dictionary values are kept unchanged. Empty nested dictionaries are
+    preserved as leaf values.
+
+    Args:
+        d: The dictionary to flatten.
+        sep: The separator used to join parent and child keys.
+
+    Returns:
+        A new flattened dictionary.
     """
-    Split a single RFC4180-like CSV line into fields.
+    def _flatten(current: dict[str, Any], prefix: str = "") -> dict[str, Any]:
+        flat: dict[str, Any] = {}
 
-    Rules supported:
-    - Fields are separated by commas.
-    - Fields may be quoted with double quotes.
-    - Inside quoted fields, two consecutive double quotes represent one literal quote.
-    - Commas inside quoted fields are treated as data, not separators.
-    - Quotes are removed from quoted fields, and doubled quotes are unescaped.
+        for key, value in current.items():
+            new_key = f"{prefix}{sep}{key}" if prefix else key
 
-    The parser does not use the csv module or any external libraries.
-    """
-    fields: list[str] = []
-    field_chars: list[str] = []
-    in_quotes = False
-    i = 0
-    n = len(line)
-
-    while i < n:
-        ch = line[i]
-
-        if in_quotes:
-            if ch == '"':
-                if i + 1 < n and line[i + 1] == '"':
-                    field_chars.append('"')
-                    i += 2
+            if isinstance(value, dict):
+                if value:
+                    flat.update(_flatten(value, new_key))
                 else:
-                    in_quotes = False
-                    i += 1
+                    flat[new_key] = {}
             else:
-                field_chars.append(ch)
-                i += 1
-        else:
-            if ch == ',':
-                fields.append(''.join(field_chars))
-                field_chars = []
-                i += 1
-            elif ch == '"' and not field_chars:
-                in_quotes = True
-                i += 1
-            else:
-                field_chars.append(ch)
-                i += 1
+                flat[new_key] = value
 
-    if in_quotes:
-        raise ValueError("Unterminated quoted field")
+        return flat
 
-    fields.append(''.join(field_chars))
-    return fields
+    return _flatten(d)
 ```
 
-This parser walks the line one character at a time and keeps track of whether it is currently inside a quoted field. When it is inside quotes, commas are treated as ordinary characters, and a doubled `""` sequence is converted into a single literal `"` in the output. When it is outside quotes, a comma ends the current field, and a quote only starts a quoted field if it appears at the beginning of that field. Empty fields are preserved naturally, including leading, trailing, and consecutive commas. Whitespace is never trimmed, so whatever appears inside a field is returned exactly as written. If the input ends while still inside a quoted field, the function raises `ValueError` because the CSV line is malformed.
-
-'''
-
-Test Results:
-'All tests passed.'
-
-Extra feature:
--    Open in email button
--    Read loud
--    Thinking option
--    Copy button
--    Seperate window for Code
--    Option to Run the code on web based interface
--    Personality Adjustment (Basically deciding the style, tone and formatting of the response that model gives)
-
-Model:
-Free tier chatgpt.com (ChatGPT) using "GPT-5.3" + Thinking
-
-Date:
-3/23/2026
+The recursion walks through each key-value pair and builds the full key path as it goes. If the value is a dictionary and it is non-empty, the function recurses deeper and keeps extending the key path. If the value is not a dictionary, it is treated as a leaf and copied directly into the result. The empty-dictionary case is handled separately: instead of recursing, it stores that key with `{}` so the structure is preserved exactly as required.

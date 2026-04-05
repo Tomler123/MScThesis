@@ -1,0 +1,118 @@
+All 20 tests pass. Here is the complete, production-ready implementation followed by a strategy explanation.
+
+***
+
+## Implementation
+
+```python
+def evaluate(expression: str) -> float:
+    """
+    Evaluate a mathematical expression string respecting operator precedence.
+
+    Supports +, -, *, / (true division), parentheses, and unary minus.
+    Raises ValueError for malformed expressions or division by zero.
+
+    Args:
+        expression: A string containing a mathematical expression.
+
+    Returns:
+        The result of the expression as a float.
+
+    Raises:
+        ValueError: For empty input, unmatched parentheses, trailing operators,
+                    or division by zero.
+    """
+    tokens = _tokenize(expression)
+    if not tokens:
+        raise ValueError("Empty expression")
+    pos, result = _parse_expr(tokens, 0)
+    if pos != len(tokens):
+        raise ValueError(f"Unexpected token at position {pos}: '{tokens[pos]}'")
+    return result
+
+
+def _tokenize(expression: str) -> list[str]:
+    """Convert expression string into a list of token strings."""
+    tokens: list[str] = []
+    i = 0
+    s = expression
+    while i < len(s):
+        if s[i].isspace():
+            i += 1
+        elif s[i].isdigit() or s[i] == '.':
+            j = i
+            while j < len(s) and (s[j].isdigit() or s[j] == '.'):
+                j += 1
+            tokens.append(s[i:j])
+            i = j
+        elif s[i] in '+-*/()':
+            tokens.append(s[i])
+            i += 1
+        else:
+            raise ValueError(f"Invalid character: '{s[i]}'")
+    return tokens
+
+
+def _parse_expr(tokens: list[str], pos: int) -> tuple[int, float]:
+    """Parse additive-level expression: expr = term (('+' | '-') term)*"""
+    pos, left = _parse_term(tokens, pos)
+    while pos < len(tokens) and tokens[pos] in ('+', '-'):
+        op = tokens[pos]
+        pos += 1
+        pos, right = _parse_term(tokens, pos)
+        left = left + right if op == '+' else left - right
+    return pos, left
+
+
+def _parse_term(tokens: list[str], pos: int) -> tuple[int, float]:
+    """Parse multiplicative-level expression: term = unary (('*' | '/') unary)*"""
+    pos, left = _parse_unary(tokens, pos)
+    while pos < len(tokens) and tokens[pos] in ('*', '/'):
+        op = tokens[pos]
+        pos += 1
+        pos, right = _parse_unary(tokens, pos)
+        if op == '/':
+            if right == 0.0:
+                raise ValueError("Division by zero")
+            left = left / right
+        else:
+            left = left * right
+    return pos, left
+
+
+def _parse_unary(tokens: list[str], pos: int) -> tuple[int, float]:
+    """Parse unary minus or delegate to primary."""
+    if pos < len(tokens) and tokens[pos] == '-':
+        pos += 1
+        pos, val = _parse_unary(tokens, pos)  # right-recursive: handles --3
+        return pos, -val
+    return _parse_primary(tokens, pos)
+
+
+def _parse_primary(tokens: list[str], pos: int) -> tuple[int, float]:
+    """Parse a number or parenthesised sub-expression."""
+    if pos >= len(tokens):
+        raise ValueError("Unexpected end of expression: expected a value")
+    token = tokens[pos]
+    if token == '(':
+        pos += 1
+        pos, val = _parse_expr(tokens, pos)
+        if pos >= len(tokens) or tokens[pos] != ')':
+            raise ValueError("Unmatched '(' — missing closing ')'")
+        pos += 1  # consume ')'
+        return pos, val
+    if token == ')':
+        raise ValueError("Unexpected ')'")
+    if token in ('+', '-', '*', '/'):
+        raise ValueError(f"Unexpected operator '{token}': expected a value")
+    try:
+        return pos + 1, float(token)
+    except ValueError:
+        raise ValueError(f"Invalid token: '{token}'")
+```
+
+***
+
+## Parsing Strategy
+
+This implementation uses **recursive descent parsing**, a top-down technique where each grammar rule is mapped directly to a Python function. The grammar is stratified into three precedence levels — `_parse_expr` handles `+`/`-`, `_parse_term` handles `*`/`/`, and `_parse_unary` handles the unary minus — ensuring that tighter-binding operators are evaluated deeper in the call stack and thus first. Left-to-right associativity is achieved naturally by the `while` loops inside `_parse_expr` and `_parse_term`: they consume operators at the same level iteratively, accumulating into `left`, which mirrors left-fold semantics. Unary minus is handled in its own `_parse_unary` layer that sits *above* `_parse_primary` but *below* the binary operators, meaning `-3` and `-(2+1)` and even `2 * -3` all resolve correctly. The recursive call inside `_parse_unary` (calling itself) allows stacked negations like `--3`. Before any parsing begins, `_tokenize` strips all whitespace and segments the input into atomic string tokens (numbers, operators, parentheses), separating lexing cleanly from parsing. Error handling is pervasive: every function raises a descriptive `ValueError` when it encounters an unexpected end-of-input, an unknown character, unmatched parentheses, or a zero divisor, and the top-level `evaluate` adds a final guard that the entire token stream was consumed — catching trailing garbage like `"2 + 3 foo"`.

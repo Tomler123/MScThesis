@@ -1,0 +1,52 @@
+Got it. I've received your request and am now working on implementing the Python `evaluate` function as described.
+
+I'll implement a mathematical expression evaluator using a recursive descent parser. Let me create the code directly.
+
+
+Now let me run the tests to verify the implementation:
+
+
+All tests pass. Here's the implementation with an explanation of the parsing strategy:
+
+---
+
+## Implementation Summary
+
+The `evaluate` function uses a **Recursive Descent Parser** with the following approach:
+
+### Parsing Strategy
+
+**Tokenization**: First, the expression string is tokenized into a stream of tokens (numbers, operators, parentheses), skipping whitespace and validating each character.
+
+**Recursive Descent**: The parser implements a grammar with explicitly separated precedence levels:
+
+1. **`_expression()`** - lowest precedence, handles `+` and `-`
+2. **`_term()`** - handles `*` and `/` (higher precedence)
+3. **`_unary()`** - handles unary minus by recursively calling itself when a minus is encountered
+4. **`_primary()`** - handles numbers and parenthesized expressions
+
+### Operator Precedence
+Each precedence level is implemented as a separate function. When parsing `2 + 3 * 4`, `_expression()` calls `_term()` which parses `3 * 4` as a unit before handling the `+`. This ensures `*` and `/` bind tighter than `+` and `-`.
+
+### Unary Minus Handling
+The `_unary()` function checks for a leading minus token and recursively calls itself, effectively treating `-x` as `-(x)`. This allows chained unary operators like `--3` and works correctly with parenthesized expressions like `-(2+3)`.
+
+### Left-to-Right Associativity
+Both `_expression()` and `_term()` use `while` loops that consume operators as long as they match, ensuring operators at the same precedence level are evaluated left-to-right (e.g., `8/4/2 = (8/4)/2 = 1`).
+
+### Error Handling
+- Empty/whitespace input → `ValueError`
+- Trailing operators → `ValueError`  
+- Unmatched parentheses → `ValueError` (via `_consume('RPAREN')`)
+- Division by zero → `ValueError`
+- Invalid characters → `ValueError`
+
+---
+
+**Summary**: Expression Evaluator
+
+**Description**: A recursive descent parser implementation supporting +, -, *, /, parentheses, and unary minus with proper operator precedence and left-to-right associativity.
+
+<deliver_assets>
+<item><path>evaluate.py</path></item>
+</deliver_assets>

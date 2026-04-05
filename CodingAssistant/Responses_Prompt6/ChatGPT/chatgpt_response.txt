@@ -1,0 +1,38 @@
+```python
+from collections import OrderedDict
+
+
+def group_anagrams(words: list[str]) -> list[list[str]]:
+    """Group words that are anagrams of each other efficiently.
+
+    Words are grouped by a canonical key formed by sorting their characters.
+    Within each group, words keep their original input order.
+    The order of groups matches the first time each anagram class appears.
+    Matching is case-sensitive, so uppercase and lowercase letters differ.
+    Empty strings are treated as anagrams of each other.
+    """
+    groups: OrderedDict[str, list[str]] = OrderedDict()
+
+    for word in words:
+        key = "".join(sorted(word))
+        if key not in groups:
+            groups[key] = []
+        groups[key].append(word)
+
+    return list(groups.values())
+```
+
+The brute-force version is slow because for each word it scans many later words and repeatedly sorts both words during comparison. That creates a nested-loop pattern, so it does a large number of redundant comparisons as the input grows.
+
+I used an ordered dictionary keyed by the sorted-character form of each word. For example, `"eat"`, `"tea"`, and `"ate"` all map to `"aet"`. This lets us place each word directly into its correct group in one pass, while preserving both required orders:
+
+* words stay in input order inside each group because we append as we read them,
+* groups stay in first-appearance order because keys are inserted the first time that anagram class appears.
+
+Complexity:
+
+* Let `n` be the number of words and `k` the maximum word length.
+* For each word, sorting its characters costs `O(k log k)`.
+* Doing that for all words gives `O(n * k log k)`.
+* Dictionary insertion/lookup is `O(1)` on average, so it does not change the overall bound.
+* Space complexity is `O(n * k)` in the worst case, because we store all words in groups and also keep one canonical key per group.

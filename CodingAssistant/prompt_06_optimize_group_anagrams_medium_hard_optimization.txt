@@ -1,0 +1,54 @@
+Below is a brute-force function that groups anagrams from a list of strings. It works correctly but is very slow for large inputs. Rewrite it to be efficient.
+
+```python
+def group_anagrams_brute(words: list[str]) -> list[list[str]]:
+    """Group words that are anagrams of each other (SLOW — O(n^2 * k))."""
+    used = [False] * len(words)
+    groups = []
+    for i in range(len(words)):
+        if used[i]:
+            continue
+        group = [words[i]]
+        used[i] = True
+        for j in range(i + 1, len(words)):
+            if not used[j] and sorted(words[i]) == sorted(words[j]):
+                group.append(words[j])
+                used[j] = True
+        groups.append(group)
+    return groups
+```
+
+Implement the optimized version:
+
+```
+def group_anagrams(words: list[str]) -> list[list[str]]:
+    """Group words that are anagrams of each other. Must be efficient."""
+```
+
+**Requirements:**
+- Return a list of groups, where each group is a list of words that are anagrams of each other.
+- **Within each group**, words must appear in the same order as in the input.
+- The **order of groups** must match the order in which each group's first word appears in the input.
+- Case-sensitive: `"Tea"` and `"eat"` are NOT anagrams.
+- Empty strings are anagrams of each other.
+- Target time complexity: O(n * k log k) where n = number of words, k = max word length. Explain your complexity.
+- Do not use external libraries (stdlib `collections` is fine).
+- Add type hints and a docstring.
+
+**Must pass these tests:**
+```python
+assert group_anagrams([]) == []
+assert group_anagrams(["a"]) == [["a"]]
+assert group_anagrams(["eat", "tea", "tan", "ate", "nat", "bat"]) == [
+    ["eat", "tea", "ate"], ["tan", "nat"], ["bat"]
+]
+assert group_anagrams(["", "", "x"]) == [["", ""], ["x"]]
+assert group_anagrams(["abc", "def", "ghi"]) == [["abc"], ["def"], ["ghi"]]
+assert group_anagrams(["listen", "silent", "enlist"]) == [["listen", "silent", "enlist"]]
+assert group_anagrams(["Tea", "eat"]) == [["Tea"], ["eat"]]  # case-sensitive
+assert group_anagrams(["a", "b", "a"]) == [["a", "a"], ["b"]]
+```
+
+After the code, explain: (1) why the brute-force is slow, (2) what data structure you used and why, and (3) your time/space complexity.
+
+---

@@ -1,0 +1,123 @@
+All 7 test cases pass. Here's the complete implementation followed by the design decisions explained.
+
+***
+
+## Implementation
+
+```python
+import re
+import copy
+
+def parse_config(text: str) -> dict:
+    """Parse a simple configuration language into a nested dictionary."""
+
+    def convert_value(raw: str):
+        s = raw.strip()
+        if s == "":
+            return ""
+        if s.lower() == "null":
+            return None
+        if s.lower() == "true":
+            return True
+        if s.lower() == "false":
+            return False
+        if re.fullmatch(r"-?\d+", s):
+            return int(s)
+        if re.fullmatch(r"-?\d+\.\d+", s):
+            return float(s)
+        return s
+
+    def set_nested(d: dict, keys: list, value):
+        for k in keys[:-1]:
+            if k not in d or not isinstance(d[k], dict):
+                d[k] = {}
+            d = d[k]
+        d[keys[-1]] = value
+
+    result = {}
+    sections_flat = {}       # dotted section name → its dict in `result`
+    current_section_keys = None
+    current_flat = result
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        # Section header
+        m = re.fullmatch(r"\[([^\]]+)\]", stripped)
+        if m:
+            header = m.group(1)
+            parent_name = None
+            if ":" in header:
+                section_name, _, parent_name = header.partition(":")
+                section_name = section_name.strip()
+                parent_name = parent_name.strip()
+            else:
+                section_name = header.strip()
+
+            current_section_keys = [k.strip() for k in section_name.split(".")]
+
+            # Navigate/create nested dicts
+            d = result
+            for k in current_section_keys[:-1]:
+                if k not in d or not isinstance(d[k], dict):
+                    d[k] = {}
+                d = d[k]
+
+            last_key = current_section_keys[-1]
+            if last_key not in d or not isinstance(d[last_key], dict):
+                d[last_key] = {}
+
+            if parent_name is not None:
+                parent_flat = sections_flat.get(parent_name, {})
+                d[last_key].update(copy.deepcopy(parent_flat))
+
+            current_flat = d[last_key]
+            sections_flat[section_name] = current_flat
+            continue
+
+        # Key-value pair
+        if "=" in line:
+            key, _, raw_val = line.partition("=")
+            key = key.strip()
+            value = convert_value(raw_val)
+            current_flat[key] = value
+
+    return result
+```
+
+***
+
+## Design Decisions & Edge Cases
+
+### 1. Section Inheritance
+
+Inheritance copies all key-value pairs from the parent section at the moment the child section is declared, using `copy.deepcopy`. Own keys written afterward override inherited ones — matching the spec's "copies all key-values from parent_section, then overrides with own keys" intent.
+
+**Undefined parent section:** If `[child : ghost]` is declared but `ghost` was never defined, `sections_flat.get("ghost", {})` returns an empty dict, so the child section simply starts empty. This is the most sensible silent-fail behavior — raising an error could be appropriate in strict contexts, but the spec doesn't mandate it.
+
+**Inheritance from a forward-declared section** (i.e., the parent appears *after* the child in the file) is **not supported**. The parser is single-pass and inheritance is applied eagerly at the `[section : parent]` line. Supporting forward references would require a two-pass approach.
+
+**Nested sections as inheritance targets:** Inheritance uses the full dotted name stored in `sections_flat`, so `[foo : a.b]` would correctly copy from the `a.b` section if it exists.
+
+***
+
+### 2. Nested Section Name Resolution
+
+Dotted names like `[a.b.c]` are split on `.` into a key path. The parser walks (and creates) nested dicts one level at a time. A critical subtlety: when `[a.b.c]` is processed after `[a.b]`, the existing `a.b` dict is reused rather than overwritten — only the final key `c` is inserted into it. This is what makes `config4` work: `a.b` already has `{x: 1}`, and adding `c` inside it yields `{x: 1, c: {y: 2}}`.
+
+The guard `if k not in d or not isinstance(d[k], dict)` ensures that a plain value at an intermediate key is upgraded to a dict when a deeper section path tries to traverse it.
+
+***
+
+### 3. Ambiguous Spec Decisions
+
+| Ambiguity | Decision |
+|---|---|
+| **Value with `=` in it** (e.g., `url = http://a.com?x=1`) | `str.partition("=")` splits only on the *first* `=`, so everything after is the value — handles embedded `=` correctly. |
+| **Float format** | Only `[-]digits.digits` is matched (e.g., `3.14`, `-0.5`). Edge cases like `1e5`, `.5`, `3.` are treated as plain strings, keeping the regex conservative per "simple decimal number" in the spec. |
+| **Whitespace in values** | Leading/trailing whitespace is stripped; internal whitespace is preserved. So `greeting = hello world` → `"hello world"`. |
+| **Empty value (`empty =`)** | Returns `""` (empty string) rather than `None`, since `null` is the explicit null keyword. |
+| **Global keys before any section** | Keys before the first `[section]` header are written directly into the top-level `result` dict (not nested under any key). |
+| **Duplicate section declaration** | Reopening an existing section (e.g., `[database]` twice) merges into the same dict — later keys win, earlier ones persist. This is consistent with "last key wins" semantics. |

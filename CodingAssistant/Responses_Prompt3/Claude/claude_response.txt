@@ -1,74 +1,66 @@
-Response:
+All 10 tests pass. Here is the corrected code and a breakdown of every bug.
 
-'''
-Here's the refactored function:
+## Fixed Code
 
 ```python
-def format_user_line(name: str | None, age: int | None, city: str | None) -> str:
-    """
-    Format a user record as a display string.
+def merge_sort(arr: list[int]) -> list[int]:
+    """Sort a list of integers using merge sort (stable, O(n log n)).
 
     Args:
-        name: The user's name. Must be a non-empty, non-blank string.
-        age:  The user's age. Must be a non-negative integer.
-        city: The user's city. Defaults to "Unknown" if missing or blank.
+        arr: The list of integers to sort.
 
     Returns:
-        A formatted string like "Anna (20) - Budapest",
-        or "Invalid user" if name or age are invalid.
+        A new sorted list of integers in ascending order.
     """
-    INVALID = "Invalid user"
-    DEFAULT_CITY = "Unknown"
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    return merge(left, right)
 
-    is_invalid_name = not name or not isinstance(name, str)
-    if is_invalid_name:
-        return INVALID
 
-    is_invalid_age = age is None or not isinstance(age, int) or age < 0
-    if is_invalid_age:
-        return INVALID
+def merge(left: list[int], right: list[int]) -> list[int]:
+    """Merge two sorted lists into one sorted list (stable).
 
-    clean_name = name.strip()
-    if not clean_name:
-        return INVALID
+    Args:
+        left: A sorted list of integers.
+        right: A sorted list of integers.
 
-    clean_city = city.strip() if isinstance(city, str) else ""
-    resolved_city = clean_city if clean_city else DEFAULT_CITY
-
-    return f"{clean_name} ({age}) - {resolved_city}"
+    Returns:
+        A single merged sorted list.
+    """
+    result = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])  # ← Bug 1 fixed
+            j += 1
+    result += left[i:]
+    result += right[j:]              # ← Bug 2 fixed
+    return result
 ```
 
----
+## Bugs Found & Fixed
 
-**Changes made and why:**
+### Bug 1 — Wrong index in the `else` branch
+| | Detail |
+|---|---|
+| **Location** | `merge()`, inside the `while` loop's `else` block |
+| **Buggy line** | `result.append(right[i])` |
+| **Fixed line** | `result.append(right[j])` |
+| **What went wrong** | When `right[j]` is smaller, the code correctly increments `j` — but it was indexing with `i` (the *left* pointer) instead of `j`. This reads the wrong element from `right`, causes an `IndexError` whenever `i >= len(right)`, and produces an incorrect sort order otherwise. |
 
-- **Named constants `INVALID` and `DEFAULT_CITY`** — eliminates repeated magic strings `"Invalid user"` and `"Unknown"`, making future changes a one-line edit and signalling intent clearly.
+### Bug 2 — Wrong slice for the `right` remainder
+| | Detail |
+|---|---|
+| **Location** | `merge()`, after the `while` loop |
+| **Buggy line** | `result += right[:j]` |
+| **Fixed line** | `result += right[j:]` |
+| **What went wrong** | `right[:j]` appends the *already-consumed* prefix of `right` — elements that were already added during the loop — effectively duplicating them and discarding the unprocessed tail. The correct slice is `right[j:]`, which appends everything from the current position `j` to the end (the remaining, unmerged elements). The analogous line `left[i:]` on the previous line was correct all along. |
 
-- **Consolidated validation into boolean expressions** — the four separate `if` checks for `name` and the four for `age` are each collapsed into a single descriptive expression (`is_invalid_name`, `is_invalid_age`). This reduces the vertical footprint and reads like plain English.
-
-- **Used `is None` instead of `== None`** — idiomatic Python; `==` can be overridden by `__eq__`, `is None` is always safe and signals identity, not equality.
-
-- **Meaningful variable names** — `s` → `clean_name`, `c` → `clean_city`/`resolved_city`. These immediately communicate what the variable holds and what transformation was applied.
-
-- **f-string instead of string concatenation** — `f"{clean_name} ({age}) - {resolved_city}"` is easier to read and edit than `s+" ("+str(age)+") - "+c`, and handles the `str(age)` cast implicitly.
-
-- **Early returns throughout** — validation failures exit immediately at the top, so by the time you reach the formatting logic at the bottom, all inputs are guaranteed valid. This eliminates nested `if`/`else` chains and keeps the "happy path" visually separate.
-
-- **Docstring** — documents the contract (valid inputs, what each arg means, the return value) so callers don't need to read the implementation to understand how to use it.
-'''
-
-Test Result:
-'All tests passed.'
-
-Extra feature:
--    Extended thinking option
--    Copy button
--    In the response, generated email had its own separate section/window.
--    Get notified when Claude finishes response
--    Seperate window for Code
-
-Model:
-Free tier claude.ai using "Sonnet 4.6" + Extended thinking
-
-Date:
-3/23/2026
+### Stability Note
+The fix in Bug 1 also preserves **sort stability**. The condition `left[i] <= right[j]` (using `<=`) ensures that when two elements are equal, the one from the *left* subarray (which appeared earlier in the original list) is always placed first. If the condition were `<` instead, equal elements from the right would "jump ahead," breaking stability.

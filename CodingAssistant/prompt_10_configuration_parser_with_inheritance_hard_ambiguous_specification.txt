@@ -1,0 +1,109 @@
+Implement a Python function:
+
+```
+def parse_config(text: str) -> dict:
+    """Parse a simple configuration language into a nested dictionary."""
+```
+
+**Language specification (intentionally somewhat vague — use good judgment on edge cases):**
+
+```
+# Lines starting with # are comments (ignore them).
+# Blank lines are ignored.
+# Key-value pairs: key = value
+# Values are strings by default, but auto-convert:
+#   - integers if the value is all digits (possibly with leading minus)
+#   - floats if the value matches a simple decimal number (e.g. 3.14, -0.5)
+#   - booleans: "true" -> True, "false" -> False (case-insensitive)
+#   - the word "null" (case-insensitive) -> None
+# Sections: [section_name] starts a section. Keys below belong to it.
+# Nested sections: [parent.child] creates nested dicts.
+# Sections can inherit: [section : parent_section] copies all key-values
+#   from parent_section, then overrides with own keys.
+# Keys and section names are trimmed of whitespace.
+# Values are trimmed of whitespace.
+# Duplicate keys in the same section: last one wins.
+```
+
+**Must pass these tests:**
+```python
+config1 = """
+# Database settings
+[database]
+host = localhost
+port = 5432
+debug = true
+
+[server]
+host = 0.0.0.0
+port = 8080
+"""
+result = parse_config(config1)
+assert result == {
+    "database": {"host": "localhost", "port": 5432, "debug": True},
+    "server": {"host": "0.0.0.0", "port": 8080},
+}
+
+config2 = """
+name = MyApp
+version = 2.5
+verbose = FALSE
+"""
+result = parse_config(config2)
+assert result == {"name": "MyApp", "version": 2.5, "verbose": False}
+
+config3 = """
+[defaults]
+timeout = 30
+retries = 3
+log = true
+
+[production : defaults]
+timeout = 60
+host = prod.example.com
+
+[staging : defaults]
+host = staging.example.com
+debug = true
+"""
+result = parse_config(config3)
+assert result == {
+    "defaults": {"timeout": 30, "retries": 3, "log": True},
+    "production": {"timeout": 60, "retries": 3, "log": True, "host": "prod.example.com"},
+    "staging": {"timeout": 30, "retries": 3, "log": True, "host": "staging.example.com", "debug": True},
+}
+
+config4 = """
+[a.b]
+x = 1
+
+[a.b.c]
+y = 2
+"""
+result = parse_config(config4)
+assert result == {"a": {"b": {"x": 1, "c": {"y": 2}}}}
+
+config5 = """
+key = null
+empty =
+num = -42
+pi = 3.14
+"""
+result = parse_config(config5)
+assert result == {"key": None, "empty": "", "num": -42, "pi": 3.14}
+
+# Duplicate key: last wins
+config6 = """
+[s]
+a = 1
+a = 2
+"""
+result = parse_config(config6)
+assert result == {"s": {"a": 2}}
+
+# Empty input
+assert parse_config("") == {}
+assert parse_config("   \n\n  # just comments\n") == {}
+```
+
+After the code, explain: (1) how you handle section inheritance including potential edge cases like inheriting from a section that hasn't been defined yet, (2) how nested section names are resolved into dicts, and (3) any design decisions you made where the spec was ambiguous.

@@ -1,0 +1,34 @@
+Implement a Python function:
+
+```
+def merge_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:
+    """Merge all overlapping intervals and return sorted non-overlapping intervals."""
+```
+
+**Requirements:**
+- Each interval is a tuple `(start, end)` where `start <= end`.
+- Two intervals overlap if one starts before or at the point the other ends: `[1,3]` and `[3,5]` overlap → `[1,5]`.
+- Return a new sorted list of non-overlapping intervals covering the same ranges.
+- Handle empty input, single intervals, and fully nested intervals.
+- Do not use external libraries.
+- Add type hints and a docstring.
+
+**Must pass these tests:**
+```python
+assert merge_intervals([]) == []
+assert merge_intervals([(1, 3)]) == [(1, 3)]
+assert merge_intervals([(1, 3), (5, 7)]) == [(1, 3), (5, 7)]
+assert merge_intervals([(1, 3), (2, 5)]) == [(1, 5)]
+assert merge_intervals([(1, 3), (3, 5)]) == [(1, 5)]
+assert merge_intervals([(1, 10), (2, 5), (3, 7)]) == [(1, 10)]
+assert merge_intervals([(5, 7), (1, 3), (2, 6)]) == [(1, 7)]  # unsorted input
+assert merge_intervals([(1, 2), (3, 4), (5, 6)]) == [(1, 2), (3, 4), (5, 6)]
+assert merge_intervals([(1, 5), (2, 3)]) == [(1, 5)]  # fully nested
+assert merge_intervals([(1, 4), (2, 5), (7, 9), (8, 11), (13, 15)]) == [(1, 5), (7, 11), (13, 15)]
+assert merge_intervals([(0, 0), (1, 1)]) == [(0, 0), (1, 1)]  # point intervals
+assert merge_intervals([(0, 0), (0, 0)]) == [(0, 0)]
+```
+
+After the code, explain the time complexity and why sorting the intervals first is essential.
+
+---

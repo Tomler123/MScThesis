@@ -1,0 +1,12 @@
+Model:
+Free tier gemini.google.com (Gemini) using "Gemini 3" + Extended thinking
+
+Extra feature:
+-    Extended thinking
+-    Draft in Gmail
+-    Export to Docs
+-    Seperate window for Code
+-    Listen (Clear, outloud reading of the given output)
+
+Date:
+4/5/2026

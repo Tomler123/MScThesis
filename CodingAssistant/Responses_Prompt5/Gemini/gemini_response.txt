@@ -1,0 +1,49 @@
+```python
+from typing import Callable, Any
+
+class EventEmitter:
+    """A simple event emitter supporting on, off, once, and emit."""
+
+    def __init__(self) -> None:
+        # Stores a list of (callback, is_once_flag) tuples for each event
+        self._events: dict[str, list[tuple[Callable[..., Any], bool]]] = {}
+
+    def on(self, event: str, callback: Callable[..., Any]) -> None:
+        """Register a callback for an event."""
+        self._events.setdefault(event, []).append((callback, False))
+
+    def off(self, event: str, callback: Callable[..., Any]) -> None:
+        """Remove one registration of the callback for the event."""
+        if event not in self._events:
+            return
+        
+        for i, (cb, _) in enumerate(self._events[event]):
+            if cb == callback:
+                del self._events[event][i]
+                break
+
+    def once(self, event: str, callback: Callable[..., Any]) -> None:
+        """Register a callback that fires at most once, then auto-removes itself."""
+        self._events.setdefault(event, []).append((callback, True))
+
+    def emit(self, event: str, *args: Any, **kwargs: Any) -> None:
+        """Call all registered callbacks for the event with the given arguments."""
+        if event not in self._events:
+            return
+        
+        # Iterate over a shallow copy to safely handle removals during iteration
+        for item in list(self._events[event]):
+            cb, is_once = item
+            cb(*args, **kwargs)
+            
+            if is_once:
+                try:
+                    self._events[event].remove(item)
+                except ValueError:
+                    # Ignore if the callback already removed itself via .off()
+                    pass
+```
+
+### **Implementation Details**
+
+To support duplicate callback registrations, the internal `_events` dictionary stores a list of `(callback, is_once_flag)` tuples, naturally allowing the exact same function to be appended and executed multiple times. When `off` is called, it searches this list and uses the `break` keyword to delete only the very first matching callback it encounters, leaving any intentional duplicates intact. To handle `once` auto-removal reliably, the `emit` method iterates over a *shallow copy* of the listener list using `list()`. Iterating over a copy is critical because it ensures that removing items from the original list mid-iteration doesn't shift indices and cause the loop to skip the next scheduled callback. After a callback executes, if its boolean flag indicates it was registered via `once`, the `emit` method immediately removes that specific tuple from the original backing list.

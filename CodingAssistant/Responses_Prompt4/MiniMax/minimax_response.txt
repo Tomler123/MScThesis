@@ -1,0 +1,57 @@
+Received. I'm starting to work on implementing the `merge_intervals` function according to your specifications.
+
+I'll implement the `merge_intervals` function, test it with the provided test cases, and explain the time complexity.
+
+
+All 12 tests passed. Here's the complete implementation:
+
+```python
+def merge_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:
+    """
+    Merge all overlapping intervals and return sorted non-overlapping intervals.
+    
+    Args:
+        intervals: A list of tuples where each tuple (start, end) represents an interval.
+    
+    Returns:
+        A new sorted list of non-overlapping intervals covering the same ranges.
+    
+    Note:
+        Two intervals [a, b] and [c, d] overlap if c <= b (one starts before/at the other ends).
+    """
+    # Handle empty input
+    if not intervals:
+        return []
+    
+    # Sort intervals by start time
+    sorted_intervals = sorted(intervals, key=lambda x: (x[0], x[1]))
+    
+    # Initialize result with the first interval
+    merged = [sorted_intervals[0]]
+    
+    for current_start, current_end in sorted_intervals[1:]:
+        last_start, last_end = merged[-1]
+        
+        if current_start <= last_end:
+            merged[-1] = (last_start, max(last_end, current_end))
+        else:
+            merged.append((current_start, current_end))
+    
+    return merged
+```
+
+## Time Complexity Analysis
+
+**Overall: O(n log n)**
+- **Sorting**: O(n log n) where n is the number of intervals
+- **Merging pass**: O(n) - single pass through sorted intervals
+
+## Why Sorting is Essential
+
+1. **Deterministic merging order**: Sorting ensures we process intervals in a predictable sequence. Without sorting, we'd need to check every interval against every other interval (O(n²)).
+
+2. **Local merging works**: After sorting by start time, if two intervals overlap, the current one will always be adjacent to its potential merge target in our result list. We only need to compare each interval with the *last* merged interval, not all previous ones.
+
+3. **Edge case handling**: Sorting by `(start, end)` handles point intervals correctly (e.g., `[0,0]` before `[1,1]`), and ensures nested intervals merge properly (e.g., `[1,5]` containing `[2,3]`).
+
+Without sorting, we'd need a more complex algorithm comparing all pairs, making it O(n²) vs O(n log n).

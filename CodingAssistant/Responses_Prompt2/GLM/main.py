@@ -1,50 +1,65 @@
-def is_balanced(text: str) -> bool:
+def rle_encode(s: str) -> str:
+    """Compress a string using run-length encoding.
+    
+    Replaces consecutive runs of the same character with <count><char>.
+    Single characters still get a count of 1.
+    
+    Args:
+        s: The input string to compress.
+        
+    Returns:
+        The run-length encoded string, or empty string if input is empty.
     """
-    Check if brackets (), [], {} are balanced in the string, ignoring brackets
-    inside double quotes. Handles escaped quotes (\\") inside quoted regions.
+    if not s:
+        return ""
+    
+    result = []
+    count = 1
+    prev_char = s[0]
+    
+    for char in s[1:]:
+        if char == prev_char:
+            count += 1
+        else:
+            result.append(f"{count}{prev_char}")
+            count = 1
+            prev_char = char
+    
+    # Append the final run
+    result.append(f"{count}{prev_char}")
+    
+    return "".join(result)
+
+
+def rle_decode(s: str) -> str:
+    """Decompress a run-length encoded string.
+    
+    Reverses the encoding performed by rle_encode. Handles multi-digit counts.
+    
+    Args:
+        s: The run-length encoded string to decompress.
+        
+    Returns:
+        The original decompressed string, or empty string if input is empty.
     """
-    stack = []
-    in_quotes = False
-    pairs = {')': '(', ']': '[', '}': '{'}
-
-    for i, ch in enumerate(text):
-        # Handle quote toggling and escaping
-        if ch == '"':
-            # Check if the quote is escaped by a backslash
-            # We check the count of consecutive backslashes preceding the quote.
-            # If odd, it's escaped; if even (including 0), it's not.
-            is_escaped = False
-            if i > 0:
-                backslash_count = 0
-                j = i - 1
-                while j >= 0 and text[j] == '\\':
-                    backslash_count += 1
-                    j -= 1
-                is_escaped = (backslash_count % 2 == 1)
-
-            if not is_escaped:
-                in_quotes = not in_quotes
-
-        # Process brackets only if we are not inside quotes
-        if not in_quotes:
-            if ch in "([{":
-                stack.append(ch)
-            elif ch in ")]}":
-                if not stack or stack[-1] != pairs[ch]:
-                    return False
-                stack.pop()
-
-    return stack == []
-
-assert is_balanced("") is True
-assert is_balanced("([]){}") is True
-assert is_balanced("(]") is False
-assert is_balanced("([)]") is False
-assert is_balanced('"(]"') is True                  # brackets inside quotes ignored
-assert is_balanced('"("') is True                   # ignored
-assert is_balanced('(")")') is True                 # inside quotes ignored, outside balanced
-assert is_balanced('(")")(') is False               # outside has extra '('
-assert is_balanced('"a \\" b"') is True             # escaped quote inside quotes
-assert is_balanced('"a \\" ( ]"') is True           # brackets inside quotes ignored
-assert is_balanced('"unclosed') is True             # treat as: in_quotes at end -> still ignore inside (no bracket constraint)
-print("All Tests Passed!")
+    if not s:
+        return ""
+    
+    result = []
+    i = 0
+    
+    while i < len(s):
+        # Accumulate all consecutive digits to form the count
+        count_str = ""
+        while i < len(s) and s[i].isdigit():
+            count_str += s[i]
+            i += 1
+        
+        # The next character is what to repeat
+        if i < len(s):
+            char = s[i]
+            count = int(count_str)
+            result.append(char * count)
+            i += 1
+    
+    return "".join(result)

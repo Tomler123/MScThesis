@@ -1,0 +1,10 @@
+Model:
+Free tier chat.z.ai (GLM) using "GLM-5" + Expert thinking
+
+Extra feature:
+-    Thinking option
+-    Copy button
+-    Seperate window for Code
+
+Date:
+4/5/2026

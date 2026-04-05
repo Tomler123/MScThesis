@@ -1,0 +1,61 @@
+All 12 tests pass. Here's the complete implementation with its analysis.
+
+## Implementation
+
+```python
+def merge_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:
+    """
+    Merge all overlapping intervals and return sorted non-overlapping intervals.
+
+    Two intervals overlap if one starts before or at the point the other ends,
+    e.g. [1, 3] and [3, 5] merge into [1, 5].
+
+    Args:
+        intervals: A list of (start, end) tuples where start <= end.
+
+    Returns:
+        A new sorted list of non-overlapping (start, end) tuples covering the
+        same ranges as the input.
+    """
+    if not intervals:
+        return []
+
+    sorted_intervals = sorted(intervals, key=lambda iv: (iv[0], iv[1]))
+
+    merged: list[tuple[int, int]] = [sorted_intervals[0]]
+
+    for start, end in sorted_intervals[1:]:
+        current_start, current_end = merged[-1]
+        if start <= current_end:          # overlap or touching
+            merged[-1] = (current_start, max(current_end, end))
+        else:
+            merged.append((start, end))
+
+    return merged
+```
+
+## How It Works
+
+After sorting, each new interval can only possibly overlap with the **last interval in `merged`** — never with any earlier one. This lets the algorithm make a single left-to-right pass:
+
+- **Overlap / touching** (`start <= current_end`): extend the last merged interval's end to `max(current_end, end)`. The `max` handles fully nested intervals like `(1,10)` containing `(2,5)`.
+- **No overlap** (`start > current_end`): the new interval is disjoint — append it as a new entry.
+
+## Time Complexity
+
+| Step | Cost |
+|---|---|
+| Sorting | \(O(n \log n)\) |
+| Single merge pass | \(O(n)\) |
+| **Total** | **\(O(n \log n)\)** |
+
+Space complexity is \(O(n)\) for the output list (and \(O(n)\) or \(O(\log n)\) depending on the sort implementation's auxiliary space).
+
+## Why Sorting First Is Essential
+
+Without sorting, you cannot use the single-pass greedy approach. Consider `[(5,7), (1,3), (2,6)]`:
+
+- **Unsorted**: When you process `(5,7)` first and then see `(1,3)`, you have no way of knowing `(1,3)` belongs *before* `(5,7)` without scanning the entire accumulated result — turning the algorithm into \(O(n^2)\).
+- **Sorted** → `[(1,3), (2,6), (5,7)]`: each interval's start is ≥ the previous one's start, so the only candidate for merging is always the **tail** of `merged`. This locality guarantee is what reduces the merge pass from \(O(n^2)\) to \(O(n)\).
+
+Sorting by start (with end as a tiebreaker) also correctly handles edge cases like point intervals `(0,0)` and duplicate intervals `(0,0),(0,0)` — they sort adjacent to each other and the overlap check `start <= current_end` collapses duplicates naturally.

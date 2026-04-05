@@ -1,0 +1,43 @@
+Implement two Python functions:
+
+```
+def rle_encode(s: str) -> str:
+    """Compress a string using run-length encoding."""
+
+def rle_decode(s: str) -> str:
+    """Decompress a run-length encoded string."""
+```
+
+**Requirements:**
+- `rle_encode`: Replace consecutive runs of the same character with `<count><char>`. Single characters should still get a count of `1`.
+  - Example: `"aaabbc"` → `"3a2b1c"`
+- `rle_decode`: Reverse the encoding. Counts may be multi-digit.
+  - Example: `"12a3b"` → `"aaaaaaaaaaaabbb"`
+- For any string `s` containing only letters: `rle_decode(rle_encode(s)) == s` must hold.
+- Do not use external libraries (`re` is allowed since it's stdlib).
+- Add type hints and docstrings.
+
+**Must pass these tests:**
+```python
+assert rle_encode("aaabbc") == "3a2b1c"
+assert rle_encode("a") == "1a"
+assert rle_encode("") == ""
+assert rle_encode("abcd") == "1a1b1c1d"
+assert rle_encode("aaa") == "3a"
+assert rle_encode("aaaaaaaaaaaab") == "12a1b"
+
+assert rle_decode("3a2b1c") == "aaabbc"
+assert rle_decode("1a") == "a"
+assert rle_decode("") == ""
+assert rle_decode("12a1b") == "aaaaaaaaaaaab"
+assert rle_decode("1a1b1c1d") == "abcd"
+assert rle_decode("10x") == "xxxxxxxxxx"
+
+# Roundtrip property
+for test in ["hello", "aaabbbccc", "x", "", "aabbccdd", "zzzzzzzzzz"]:
+    assert rle_decode(rle_encode(test)) == test
+```
+
+After the code, explain in 3–5 sentences how you handle multi-digit counts in decoding and why the roundtrip property holds.
+
+---

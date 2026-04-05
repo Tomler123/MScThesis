@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Generation Evaluation Tool — MSc Thesis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1a2235;
+            --bg-input: #0f1623;
+            --border: #2a3548;
+            --border-hover: #3d5a80;
+            --text-primary: #e8edf5;
+            --text-secondary: #8899b4;
+            --text-muted: #556480;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --cyan: #06b6d4;
+            --pink: #ec4899;
+            --orange: #f97316;
+            --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --gradient-2: linear-gradient(135deg, #06b6d4, #3b82f6);
+            --shadow: 0 4px 24px rgba(0,0,0,0.3);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background grid effect */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 0 32px;
+            position: relative;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: var(--gradient-1);
+            border-radius: 1px;
+        }
+        .header h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .header .subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            font-weight: 300;
+        }
+        .header .domain-badge {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 4px 16px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(59,130,246,0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.3s;
+        }
+        .card:hover { border-color: var(--border-hover); }
+        .card-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-title .icon { font-size: 16px; }
+
+        /* Form Elements */
+        textarea, input[type="text"], input[type="password"] {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            padding: 12px 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            resize: vertical;
+        }
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        textarea { min-height: 120px; }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-primary {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        /* Model Entry */
+        .model-entries { display: flex; flex-direction: column; gap: 12px; }
+        .model-entry {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+        }
+        .model-entry input[type="text"] {
+            flex: 0 0 200px;
+            margin: 0;
+        }
+        .model-entry .file-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+        .model-entry input[type="file"] {
+            width: 100%;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        input[type="file"]::file-selector-button {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            margin-right: 8px;
+            transition: all 0.2s;
+        }
+        input[type="file"]::file-selector-button:hover {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+        .remove-model {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .remove-model:hover { background: rgba(239,68,68,0.1); }
+
+        /* Actions bar */
+        .actions-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        /* Results Section */
+        #results-section { display: none; }
+
+        /* Leaderboard */
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .leaderboard-table th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        .leaderboard-table td {
+            padding: 14px 16px;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(42,53,72,0.5);
+        }
+        .leaderboard-table tr:hover td {
+            background: rgba(59,130,246,0.05);
+        }
+        .rank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .rank-1 { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; }
+        .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
+        .rank-3 { background: linear-gradient(135deg, #d97706, #b45309); color: #fff; }
+        .rank-other { background: var(--bg-input); color: var(--text-secondary); border: 1px solid var(--border); }
+
+        .score-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .score-excellent { background: rgba(16,185,129,0.15); color: #10b981; }
+        .score-good { background: rgba(59,130,246,0.15); color: #3b82f6; }
+        .score-average { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .score-poor { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+        /* Score bar */
+        .score-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .score-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .score-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .score-bar-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            min-width: 42px;
+            text-align: right;
+        }
+
+        /* Charts grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 20px;
+        }
+        .chart-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+        .chart-container canvas {
+            max-height: 350px;
+        }
+
+        /* Model detail cards */
+        .model-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        .model-detail-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        .model-detail-header {
+            padding: 16px 20px;
+            background: var(--bg-input);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .model-detail-header img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+        .model-detail-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .model-detail-header .model-score {
+            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .model-detail-body { padding: 20px; }
+
+        .metric-group {
+            margin-bottom: 16px;
+        }
+        .metric-group-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(42,53,72,0.5);
+        }
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            font-size: 13px;
+        }
+        .metric-row .metric-name { color: var(--text-secondary); }
+        .metric-row .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+        }
+
+        /* Color palette display */
+        .palette-display {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+        .palette-swatch {
+            flex: 1;
+            height: 32px;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+        .palette-swatch:hover::after {
+            content: attr(data-info);
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            white-space: nowrap;
+            border: 1px solid var(--border);
+            z-index: 10;
+        }
+
+        /* Constraint chips */
+        .constraint-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .constraint-chip {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+        }
+        .constraint-chip.found { border-color: var(--success); color: var(--success); }
+        .constraint-chip.missing { border-color: var(--danger); color: var(--danger); }
+
+        /* LLM Judge Section */
+        .llm-judge-card {
+            border-color: var(--purple);
+            background: linear-gradient(135deg, rgba(139,92,246,0.05), var(--bg-card));
+        }
+        .llm-judge-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .llm-result-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+        }
+        .llm-result-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--purple);
+        }
+        .llm-feedback {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10,14,23,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .loading-overlay.active { display: flex; }
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--accent);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0;
+        }
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+        }
+        .tab:hover { color: var(--text-secondary); }
+        .tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Heatmap */
+        .heatmap-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 3px;
+        }
+        .heatmap-table th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            padding: 8px;
+            text-align: center;
+        }
+        .heatmap-table td {
+            padding: 10px 8px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: transform 0.2s;
+        }
+        .heatmap-table td:hover { transform: scale(1.05); }
+        .heatmap-table td.model-label {
+            text-align: right;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 12px; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .model-details-grid { grid-template-columns: 1fr; }
+            .model-entry { flex-direction: column; align-items: stretch; }
+            .model-entry input[type="text"] { flex: auto; }
+            .header h1 { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loadingText">Computing metrics…</div>
+</div>
+
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h1>⬡ Image Generation Evaluation Tool</h1>
+        <div class="subtitle">MSc Thesis — Understanding and Comparing Generative AI Models</div>
+        <div class="domain-badge">Domain: Image Generation</div>
+    </div>
+
+    <!-- Input Section -->
+    <div class="card">
+        <div class="card-title"><span class="icon">📝</span> Evaluation Prompt</div>
+        <label for="promptInput">Paste the prompt given to AI models</label>
+        <textarea id="promptInput" placeholder="E.g.: Create a photorealistic studio product photo of a matte-black reusable water bottle..."></textarea>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">🖼️</span> Model Outputs</div>
+        <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">Upload generated images from each AI model. Provide a custom model name for each.</p>
+
+        <div class="model-entries" id="modelEntries">
+            <div class="model-entry">
+                <input type="text" placeholder="Model name (e.g. DALL·E 3)" class="model-name">
+                <div class="file-input-wrapper">
+                    <input type="file" accept="image/*" class="model-image">
+                </div>
+                <button class="remove-model" onclick="removeModel(this)" title="Remove">×</button>
+            </div>
+            <div class="model-entry">
+                <input type="text" placeholder="Model name (e.g. Midjourney)" class="model-name">
+                <div class="file-input-wrapper">
+                    <input type="file" accept="image/*" class="model-image">
+                </div>
+                <button class="remove-model" onclick="removeModel(this)" title="Remove">×</button>
+            </div>
+            <div class="model-entry">
+                <input type="text" placeholder="Model name (e.g. Stable Diffusion)" class="model-name">
+                <div class="file-input-wrapper">
+                    <input type="file" accept="image/*" class="model-image">
+                </div>
+                <button class="remove-model" onclick="removeModel(this)" title="Remove">×</button>
+            </div>
+        </div>
+
+        <div style="margin-top:12px;">
+            <button class="btn btn-secondary btn-sm" onclick="addModelEntry()">+ Add Model</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">🎯</span> Reference Image (Optional)</div>
+        <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">Upload an ideal/reference image for SSIM, PSNR, and feature comparison metrics.</p>
+        <input type="file" accept="image/*" id="referenceImage">
+    </div>
+
+    <div class="actions-bar">
+        <button class="btn btn-primary" id="evaluateBtn" onclick="runEvaluation()">
+            ▶ Run Deterministic Evaluation
+        </button>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results-section">
+        <!-- Tabs -->
+        <div class="tabs" style="margin-top:32px;">
+            <button class="tab active" onclick="switchTab('leaderboard')">🏆 Leaderboard</button>
+            <button class="tab" onclick="switchTab('charts')">📊 Charts</button>
+            <button class="tab" onclick="switchTab('heatmap')">🌡️ Heatmap</button>
+            <button class="tab" onclick="switchTab('details')">🔍 Details</button>
+            <button class="tab" onclick="switchTab('llm-judge')">🤖 LLM Judge</button>
+            <button class="tab" onclick="switchTab('export')">💾 Export</button>
+        </div>
+
+        <!-- Leaderboard Tab -->
+        <div class="tab-content active" id="tab-leaderboard">
+            <div class="card">
+                <div class="card-title"><span class="icon">🏆</span> Model Leaderboard</div>
+                <div id="leaderboardContainer"></div>
+            </div>
+        </div>
+
+        <!-- Charts Tab -->
+        <div class="tab-content" id="tab-charts">
+            <div class="charts-grid" id="chartsContainer"></div>
+        </div>
+
+        <!-- Heatmap Tab -->
+        <div class="tab-content" id="tab-heatmap">
+            <div class="card">
+                <div class="card-title"><span class="icon">🌡️</span> Score Heatmap</div>
+                <div id="heatmapContainer" style="overflow-x:auto;"></div>
+            </div>
+        </div>
+
+        <!-- Details Tab -->
+        <div class="tab-content" id="tab-details">
+            <div class="model-details-grid" id="detailsContainer"></div>
+        </div>
+
+        <!-- LLM Judge Tab -->
+        <div class="tab-content" id="tab-llm-judge">
+            <div class="card llm-judge-card">
+                <div class="card-title"><span class="icon">🤖</span> LLM-as-Judge (Groq — Llama 3.3 70B)</div>
+                <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">
+                    Activate qualitative evaluation using Groq's free API. <strong>Vision mode</strong> sends the actual image to Llama 4 Scout (recommended). <strong>Text mode</strong> sends a programmatic description to Llama 3.3 70B as fallback.
+                </p>
+                <div style="display:flex; gap:12px; align-items:end; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:300px;">
+                        <label for="groqApiKey">Groq API Key</label>
+                        <input type="password" id="groqApiKey" placeholder="gsk_...">
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;padding-bottom:4px;">
+                        <label style="margin:0;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                            <input type="checkbox" id="useVision" checked style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer;">
+                            <span style="font-size:13px;color:var(--text-secondary);">Vision mode</span>
+                        </label>
+                    </div>
+                    <button class="btn btn-success" onclick="runLLMJudge()" id="llmJudgeBtn">
+                        🤖 Run LLM Judge
+                    </button>
+                </div>
+                <div id="llmJudgeResults" class="llm-judge-results" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- Export Tab -->
+        <div class="tab-content" id="tab-export">
+            <div class="card">
+                <div class="card-title"><span class="icon">💾</span> Export Results</div>
+                <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">
+                    Download the full evaluation results in your preferred format.
+                </p>
+                <div class="actions-bar">
+                    <button class="btn btn-secondary" onclick="exportResults('json')">📄 Export JSON</button>
+                    <button class="btn btn-secondary" onclick="exportResults('csv')">📊 Export CSV</button>
+                </div>
+            </div>
+
+            <!-- Parsed Constraints -->
+            <div class="card" id="constraintsCard" style="display:none;">
+                <div class="card-title"><span class="icon">📋</span> Parsed Prompt Constraints</div>
+                <div id="constraintsDisplay"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ──────────────────────────────────────────
+// STATE
+// ──────────────────────────────────────────
+let evaluationResults = null;
+let chartInstances = [];
+
+// ──────────────────────────────────────────
+// MODEL ENTRY MANAGEMENT
+// ──────────────────────────────────────────
+function addModelEntry() {
+    const container = document.getElementById('modelEntries');
+    const entry = document.createElement('div');
+    entry.className = 'model-entry';
+    entry.innerHTML = `
+        <input type="text" placeholder="Model name" class="model-name">
+        <div class="file-input-wrapper">
+            <input type="file" accept="image/*" class="model-image">
+        </div>
+        <button class="remove-model" onclick="removeModel(this)" title="Remove">×</button>
+    `;
+    container.appendChild(entry);
+}
+
+function removeModel(btn) {
+    const entries = document.querySelectorAll('.model-entry');
+    if (entries.length > 1) {
+        btn.closest('.model-entry').remove();
+    }
+}
+
+// ──────────────────────────────────────────
+// TAB SWITCHING
+// ──────────────────────────────────────────
+function switchTab(tabName) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tabName).classList.add('active');
+    event.target.classList.add('active');
+}
+
+// ──────────────────────────────────────────
+// EVALUATION
+// ──────────────────────────────────────────
+async function runEvaluation() {
+    const prompt = document.getElementById('promptInput').value.trim();
+    if (!prompt) { alert('Please enter a prompt.'); return; }
+
+    const entries = document.querySelectorAll('.model-entry');
+    const formData = new FormData();
+    formData.append('prompt', prompt);
+
+    let validCount = 0;
+    entries.forEach(entry => {
+        const nameInput = entry.querySelector('.model-name');
+        const fileInput = entry.querySelector('.model-image');
+        if (fileInput.files.length > 0) {
+            formData.append('model_names[]', nameInput.value || `Model ${validCount + 1}`);
+            formData.append('model_images[]', fileInput.files[0]);
+            validCount++;
+        }
+    });
+
+    if (validCount === 0) { alert('Please upload at least one model image.'); return; }
+
+    const refInput = document.getElementById('referenceImage');
+    if (refInput.files.length > 0) {
+        formData.append('reference_image', refInput.files[0]);
+    }
+
+    showLoading('Analyzing images & computing metrics…');
+    document.getElementById('evaluateBtn').disabled = true;
+
+    try {
+        const resp = await fetch('/evaluate', { method: 'POST', body: formData });
+        const data = await resp.json();
+
+        if (data.error) {
+            alert('Error: ' + data.error);
+            return;
+        }
+
+        evaluationResults = data;
+        renderResults(data);
+        document.getElementById('results-section').style.display = 'block';
+        document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+
+    } catch (err) {
+        alert('Evaluation failed: ' + err.message);
+    } finally {
+        hideLoading();
+        document.getElementById('evaluateBtn').disabled = false;
+    }
+}
+
+// ──────────────────────────────────────────
+// RENDER RESULTS
+// ──────────────────────────────────────────
+function renderResults(data) {
+    renderLeaderboard(data.leaderboard, data.models);
+    renderCharts(data.models, data.leaderboard);
+    renderHeatmap(data.models);
+    renderDetails(data.models);
+    renderConstraints(data.constraints);
+}
+
+function getScoreClass(score) {
+    if (score >= 75) return 'score-excellent';
+    if (score >= 55) return 'score-good';
+    if (score >= 35) return 'score-average';
+    return 'score-poor';
+}
+
+function getScoreColor(score) {
+    if (score >= 75) return '#10b981';
+    if (score >= 55) return '#3b82f6';
+    if (score >= 35) return '#f59e0b';
+    return '#ef4444';
+}
+
+function getRankClass(rank) {
+    if (rank === 1) return 'rank-1';
+    if (rank === 2) return 'rank-2';
+    if (rank === 3) return 'rank-3';
+    return 'rank-other';
+}
+
+// ──────────────────────────────────────────
+// LEADERBOARD
+// ──────────────────────────────────────────
+function renderLeaderboard(leaderboard, models) {
+    const categories = Object.keys(leaderboard[0].category_scores);
+    let html = `<table class="leaderboard-table">
+        <thead><tr>
+            <th>Rank</th><th>Model</th><th>Overall</th>
+            ${categories.map(c => `<th>${c}</th>`).join('')}
+        </tr></thead><tbody>`;
+
+    leaderboard.forEach((entry, i) => {
+        const modelData = models[entry.model];
+        html += `<tr>
+            <td><span class="rank ${getRankClass(i+1)}">${i+1}</span></td>
+            <td style="display:flex;align-items:center;gap:8px;">
+                <img src="data:image/png;base64,${modelData.thumbnail}" style="width:36px;height:36px;border-radius:6px;object-fit:cover;border:1px solid var(--border);">
+                <strong>${entry.model}</strong>
+            </td>
+            <td><span class="score-badge ${getScoreClass(entry.overall_score)}">${entry.overall_score}</span></td>
+            ${categories.map(c => `<td>
+                <div class="score-bar-container">
+                    <div class="score-bar"><div class="score-bar-fill" style="width:${entry.category_scores[c]}%;background:${getScoreColor(entry.category_scores[c])}"></div></div>
+                    <span class="score-bar-label" style="color:${getScoreColor(entry.category_scores[c])}">${entry.category_scores[c]}</span>
+                </div>
+            </td>`).join('')}
+        </tr>`;
+    });
+
+    html += '</tbody></table>';
+    document.getElementById('leaderboardContainer').innerHTML = html;
+}
+
+// ──────────────────────────────────────────
+// CHARTS
+// ──────────────────────────────────────────
+function renderCharts(models, leaderboard) {
+    // Destroy previous charts
+    chartInstances.forEach(c => c.destroy());
+    chartInstances = [];
+
+    const container = document.getElementById('chartsContainer');
+    container.innerHTML = '';
+
+    const modelNames = leaderboard.map(e => e.model);
+    const categories = Object.keys(leaderboard[0].category_scores);
+    const colors = ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#f97316'];
+
+    // 1. Radar Chart
+    const radarDiv = document.createElement('div');
+    radarDiv.className = 'chart-container';
+    radarDiv.innerHTML = '<canvas id="radarChart"></canvas>';
+    container.appendChild(radarDiv);
+
+    const radarDatasets = modelNames.map((name, i) => ({
+        label: name,
+        data: categories.map(c => models[name].category_scores[c]),
+        borderColor: colors[i % colors.length],
+        backgroundColor: colors[i % colors.length] + '20',
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: colors[i % colors.length],
+    }));
+
+    chartInstances.push(new Chart(document.getElementById('radarChart'), {
+        type: 'radar',
+        data: { labels: categories, datasets: radarDatasets },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Category Score Comparison (Radar)', color: '#8899b4', font: { family: 'JetBrains Mono', size: 12 } },
+                legend: { labels: { color: '#8899b4', font: { family: 'Space Grotesk', size: 11 } } }
+            },
+            scales: {
+                r: {
+                    beginAtZero: true, max: 100,
+                    ticks: { color: '#556480', backdropColor: 'transparent', font: { size: 10 } },
+                    grid: { color: 'rgba(42,53,72,0.5)' },
+                    pointLabels: { color: '#8899b4', font: { family: 'JetBrains Mono', size: 10 } },
+                    angleLines: { color: 'rgba(42,53,72,0.5)' }
+                }
+            }
+        }
+    }));
+
+    // 2. Bar Chart — Overall Scores
+    const barDiv = document.createElement('div');
+    barDiv.className = 'chart-container';
+    barDiv.innerHTML = '<canvas id="barChart"></canvas>';
+    container.appendChild(barDiv);
+
+    chartInstances.push(new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: modelNames,
+            datasets: [{
+                label: 'Overall Score',
+                data: modelNames.map(n => models[n].overall_score),
+                backgroundColor: modelNames.map((_, i) => colors[i % colors.length] + 'cc'),
+                borderColor: modelNames.map((_, i) => colors[i % colors.length]),
+                borderWidth: 1,
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            plugins: {
+                title: { display: true, text: 'Overall Scores', color: '#8899b4', font: { family: 'JetBrains Mono', size: 12 } },
+                legend: { display: false }
+            },
+            scales: {
+                x: { beginAtZero: true, max: 100, ticks: { color: '#556480' }, grid: { color: 'rgba(42,53,72,0.3)' } },
+                y: { ticks: { color: '#8899b4', font: { family: 'Space Grotesk', size: 12 } }, grid: { display: false } }
+            }
+        }
+    }));
+
+    // 3. Grouped Bar — Category Comparison
+    const groupedDiv = document.createElement('div');
+    groupedDiv.className = 'chart-container';
+    groupedDiv.innerHTML = '<canvas id="groupedBarChart"></canvas>';
+    container.appendChild(groupedDiv);
+
+    chartInstances.push(new Chart(document.getElementById('groupedBarChart'), {
+        type: 'bar',
+        data: {
+            labels: categories,
+            datasets: modelNames.map((name, i) => ({
+                label: name,
+                data: categories.map(c => models[name].category_scores[c]),
+                backgroundColor: colors[i % colors.length] + 'bb',
+                borderColor: colors[i % colors.length],
+                borderWidth: 1,
+                borderRadius: 4,
+            }))
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Category Breakdown (Grouped Bar)', color: '#8899b4', font: { family: 'JetBrains Mono', size: 12 } },
+                legend: { labels: { color: '#8899b4', font: { family: 'Space Grotesk', size: 11 } } }
+            },
+            scales: {
+                x: { ticks: { color: '#8899b4', font: { size: 10 } }, grid: { display: false } },
+                y: { beginAtZero: true, max: 100, ticks: { color: '#556480' }, grid: { color: 'rgba(42,53,72,0.3)' } }
+            }
+        }
+    }));
+
+    // 4. Sharpness & Noise comparison (Polar Area)
+    const polarDiv = document.createElement('div');
+    polarDiv.className = 'chart-container';
+    polarDiv.innerHTML = '<canvas id="polarChart"></canvas>';
+    container.appendChild(polarDiv);
+
+    const technicalMetrics = ['Sharpness', 'Noise Level', 'Edge Density', 'Resolution'];
+    chartInstances.push(new Chart(document.getElementById('polarChart'), {
+        type: 'polarArea',
+        data: {
+            labels: modelNames.map(n => n + ' (Tech. Quality)'),
+            datasets: [{
+                data: modelNames.map(n => models[n].category_scores['Technical Quality']),
+                backgroundColor: modelNames.map((_, i) => colors[i % colors.length] + '88'),
+                borderColor: modelNames.map((_, i) => colors[i % colors.length]),
+                borderWidth: 2,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Technical Quality (Polar)', color: '#8899b4', font: { family: 'JetBrains Mono', size: 12 } },
+                legend: { labels: { color: '#8899b4', font: { family: 'Space Grotesk', size: 11 } } }
+            },
+            scales: {
+                r: {
+                    beginAtZero: true, max: 100,
+                    ticks: { color: '#556480', backdropColor: 'transparent' },
+                    grid: { color: 'rgba(42,53,72,0.3)' }
+                }
+            }
+        }
+    }));
+}
+
+// ──────────────────────────────────────────
+// HEATMAP
+// ──────────────────────────────────────────
+function renderHeatmap(models) {
+    const modelNames = Object.keys(models);
+    if (!modelNames.length) return;
+
+    const categories = Object.keys(models[modelNames[0]].category_scores);
+
+    let html = '<table class="heatmap-table"><thead><tr><th></th>';
+    categories.forEach(c => { html += `<th>${c}</th>`; });
+    html += '<th>Overall</th></tr></thead><tbody>';
+
+    modelNames.forEach(name => {
+        html += `<tr><td class="model-label">${name}</td>`;
+        categories.forEach(c => {
+            const score = models[name].category_scores[c];
+            const bg = heatmapColor(score);
+            html += `<td style="background:${bg}; color:${score > 50 ? '#fff' : '#e8edf5'}">${score}</td>`;
+        });
+        const overall = models[name].overall_score;
+        html += `<td style="background:${heatmapColor(overall)};color:#fff;font-weight:700">${overall}</td>`;
+        html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+    document.getElementById('heatmapContainer').innerHTML = html;
+}
+
+function heatmapColor(score) {
+    if (score >= 80) return 'rgba(16,185,129,0.7)';
+    if (score >= 60) return 'rgba(59,130,246,0.6)';
+    if (score >= 40) return 'rgba(245,158,11,0.5)';
+    if (score >= 20) return 'rgba(239,68,68,0.5)';
+    return 'rgba(239,68,68,0.7)';
+}
+
+// ──────────────────────────────────────────
+// DETAILS
+// ──────────────────────────────────────────
+function renderDetails(models) {
+    const container = document.getElementById('detailsContainer');
+    container.innerHTML = '';
+
+    Object.entries(models).forEach(([name, data]) => {
+        const card = document.createElement('div');
+        card.className = 'model-detail-card';
+
+        const scoreColor = getScoreColor(data.overall_score);
+
+        // Color palette swatches
+        let paletteHtml = '<div class="palette-display">';
+        if (data.color_palette && data.color_palette.palette) {
+            data.color_palette.palette.forEach(c => {
+                paletteHtml += `<div class="palette-swatch" style="background:${c.hex}" data-info="${c.name} ${c.hex} (${c.percentage}%)"></div>`;
+            });
+        }
+        paletteHtml += '</div>';
+
+        // Constraint adherence chips
+        let constraintHtml = '';
+        if (data.constraint_adherence) {
+            const ca = data.constraint_adherence;
+            if (ca.background_color) {
+                const cls = ca.background_color.score >= 50 ? 'found' : 'missing';
+                constraintHtml += `<span class="constraint-chip ${cls}">BG: ${ca.background_color.expected} (${ca.background_color.score})</span>`;
+            }
+            if (ca.style_adherence && ca.style_adherence.checks) {
+                ca.style_adherence.checks.forEach(s => {
+                    const cls = s.score >= 50 ? 'found' : 'missing';
+                    constraintHtml += `<span class="constraint-chip ${cls}">${s.style}: ${s.score}</span>`;
+                });
+            }
+            if (ca.color_presence && ca.color_presence.checks) {
+                ca.color_presence.checks.forEach(c => {
+                    const cls = c.found ? 'found' : 'missing';
+                    constraintHtml += `<span class="constraint-chip ${cls}">${c.color}: ${c.found ? '✓' : '✗'}</span>`;
+                });
+            }
+        }
+
+        // Reference metrics
+        let refHtml = '';
+        if (data.reference_comparison) {
+            const rc = data.reference_comparison;
+            refHtml = `
+                <div class="metric-group">
+                    <div class="metric-group-title">Reference Comparison</div>
+                    <div class="metric-row"><span class="metric-name">SSIM</span><span class="metric-value">${rc.ssim}</span></div>
+                    <div class="metric-row"><span class="metric-name">PSNR</span><span class="metric-value">${rc.psnr} dB</span></div>
+                    <div class="metric-row"><span class="metric-name">MSE</span><span class="metric-value">${rc.mse}</span></div>
+                    <div class="metric-row"><span class="metric-name">Histogram Correlation</span><span class="metric-value">${rc.histogram_correlation.mean}</span></div>
+                    <div class="metric-row"><span class="metric-name">Perceptual Hash Similarity</span><span class="metric-value">${rc.perceptual_hash_similarity}</span></div>
+                    <div class="metric-row"><span class="metric-name">Feature Match Score</span><span class="metric-value">${rc.feature_match_score}</span></div>
+                    <div class="metric-row"><span class="metric-name">Overall Ref. Score</span><span class="metric-value" style="color:${getScoreColor(rc.reference_similarity_score)}">${rc.reference_similarity_score}</span></div>
+                </div>`;
+        }
+
+        card.innerHTML = `
+            <div class="model-detail-header">
+                <img src="data:image/png;base64,${data.thumbnail}" alt="${name}">
+                <div>
+                    <h3>${name}</h3>
+                    <div style="font-size:12px;color:var(--text-muted)">${data.resolution.width}×${data.resolution.height} • ${data.resolution.megapixels} MP</div>
+                </div>
+                <div class="model-score" style="color:${scoreColor}">${data.overall_score}</div>
+            </div>
+            <div class="model-detail-body">
+                <div class="metric-group">
+                    <div class="metric-group-title">Resolution & Format</div>
+                    <div class="metric-row"><span class="metric-name">Resolution</span><span class="metric-value">${data.resolution.width}×${data.resolution.height}</span></div>
+                    <div class="metric-row"><span class="metric-name">Aspect Ratio</span><span class="metric-value">${data.resolution.aspect_ratio} (${data.resolution.closest_standard_ratio})</span></div>
+                    <div class="metric-row"><span class="metric-name">Orientation</span><span class="metric-value">${data.resolution.orientation}</span></div>
+                    <div class="metric-row"><span class="metric-name">Resolution Score</span><span class="metric-value" style="color:${getScoreColor(data.resolution.resolution_score)}">${data.resolution.resolution_score}</span></div>
+                </div>
+
+                <div class="metric-group">
+                    <div class="metric-group-title">Brightness / Contrast / Saturation</div>
+                    <div class="metric-row"><span class="metric-name">Mean Brightness</span><span class="metric-value">${data.brightness_contrast_saturation.mean_brightness}</span></div>
+                    <div class="metric-row"><span class="metric-name">RMS Contrast</span><span class="metric-value">${data.brightness_contrast_saturation.rms_contrast}</span></div>
+                    <div class="metric-row"><span class="metric-name">Michelson Contrast</span><span class="metric-value">${data.brightness_contrast_saturation.michelson_contrast}</span></div>
+                    <div class="metric-row"><span class="metric-name">Dynamic Range</span><span class="metric-value">${data.brightness_contrast_saturation.dynamic_range}</span></div>
+                    <div class="metric-row"><span class="metric-name">Mean Saturation</span><span class="metric-value">${data.brightness_contrast_saturation.mean_saturation}</span></div>
+                </div>
+
+                <div class="metric-group">
+                    <div class="metric-group-title">Sharpness & Noise</div>
+                    <div class="metric-row"><span class="metric-name">Laplacian Variance</span><span class="metric-value">${data.sharpness.laplacian_variance}</span></div>
+                    <div class="metric-row"><span class="metric-name">Tenengrad</span><span class="metric-value">${data.sharpness.tenengrad}</span></div>
+                    <div class="metric-row"><span class="metric-name">High Freq. Ratio</span><span class="metric-value">${data.sharpness.high_freq_ratio}</span></div>
+                    <div class="metric-row"><span class="metric-name">Blur Detected</span><span class="metric-value">${data.sharpness.blur_detected ? '⚠️ Yes' : '✅ No'}</span></div>
+                    <div class="metric-row"><span class="metric-name">Noise σ</span><span class="metric-value">${data.noise.estimated_noise_sigma}</span></div>
+                    <div class="metric-row"><span class="metric-name">SNR</span><span class="metric-value">${data.noise.signal_to_noise_ratio}</span></div>
+                </div>
+
+                <div class="metric-group">
+                    <div class="metric-group-title">Edge Density & Texture</div>
+                    <div class="metric-row"><span class="metric-name">Canny Edge Density</span><span class="metric-value">${data.edge_density.edge_density_canny}</span></div>
+                    <div class="metric-row"><span class="metric-name">Mean Gradient</span><span class="metric-value">${data.edge_density.mean_gradient_magnitude}</span></div>
+                    <div class="metric-row"><span class="metric-name">Texture Complexity</span><span class="metric-value">${data.edge_density.texture_complexity}</span></div>
+                    <div class="metric-row"><span class="metric-name">Detail Ratio</span><span class="metric-value">${data.edge_density.detail_ratio}</span></div>
+                </div>
+
+                <div class="metric-group">
+                    <div class="metric-group-title">Composition</div>
+                    <div class="metric-row"><span class="metric-name">Rule of Thirds</span><span class="metric-value">${data.composition.rule_of_thirds_adherence}</span></div>
+                    <div class="metric-row"><span class="metric-name">H-Symmetry</span><span class="metric-value">${data.composition.horizontal_symmetry}</span></div>
+                    <div class="metric-row"><span class="metric-name">V-Symmetry</span><span class="metric-value">${data.composition.vertical_symmetry}</span></div>
+                    <div class="metric-row"><span class="metric-name">Quadrant Balance</span><span class="metric-value">${data.composition.quadrant_balance}</span></div>
+                    <div class="metric-row"><span class="metric-name">Visual Center</span><span class="metric-value">(${data.composition.visual_center_x}, ${data.composition.visual_center_y})</span></div>
+                </div>
+
+                <div class="metric-group">
+                    <div class="metric-group-title">Color Palette</div>
+                    <div class="metric-row"><span class="metric-name">Color Entropy</span><span class="metric-value">${data.color_histogram.color_entropy}</span></div>
+                    <div class="metric-row"><span class="metric-name">Color Harmony</span><span class="metric-value">${data.color_palette.color_harmony_score}</span></div>
+                    ${paletteHtml}
+                </div>
+
+                <div class="metric-group">
+                    <div class="metric-group-title">Perceptual Hashes</div>
+                    <div class="metric-row"><span class="metric-name">Average Hash</span><span class="metric-value" style="font-size:11px">${data.perceptual_hash.average_hash}</span></div>
+                    <div class="metric-row"><span class="metric-name">Difference Hash</span><span class="metric-value" style="font-size:11px">${data.perceptual_hash.difference_hash}</span></div>
+                    <div class="metric-row"><span class="metric-name">Perceptual Hash</span><span class="metric-value" style="font-size:11px">${data.perceptual_hash.perceptual_hash}</span></div>
+                </div>
+
+                ${refHtml}
+
+                ${constraintHtml ? `
+                <div class="metric-group">
+                    <div class="metric-group-title">Constraint Adherence</div>
+                    <div class="constraint-chips">${constraintHtml}</div>
+                    <div class="metric-row" style="margin-top:8px"><span class="metric-name">Overall Constraint Score</span><span class="metric-value" style="color:${getScoreColor(data.constraint_adherence.overall_constraint_score)}">${data.constraint_adherence.overall_constraint_score}</span></div>
+                </div>` : ''}
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// ──────────────────────────────────────────
+// CONSTRAINTS DISPLAY
+// ──────────────────────────────────────────
+function renderConstraints(constraints) {
+    if (!constraints) return;
+    const card = document.getElementById('constraintsCard');
+    const display = document.getElementById('constraintsDisplay');
+
+    let html = '';
+    if (constraints.style_keywords && constraints.style_keywords.length) {
+        html += `<div class="metric-group"><div class="metric-group-title">Detected Styles</div>
+            <div class="constraint-chips">${constraints.style_keywords.map(s => `<span class="constraint-chip">${s}</span>`).join('')}</div></div>`;
+    }
+    if (constraints.required_colors && constraints.required_colors.length) {
+        html += `<div class="metric-group"><div class="metric-group-title">Required Colors</div>
+            <div class="constraint-chips">${constraints.required_colors.map(c => `<span class="constraint-chip">${c}</span>`).join('')}</div></div>`;
+    }
+    if (constraints.background_colors && constraints.background_colors.length) {
+        html += `<div class="metric-group"><div class="metric-group-title">Background</div>
+            <div class="constraint-chips">${constraints.background_colors.map(b => `<span class="constraint-chip">${b}</span>`).join('')}</div></div>`;
+    }
+    if (constraints.required_objects && constraints.required_objects.length) {
+        html += `<div class="metric-group"><div class="metric-group-title">Required Objects</div>
+            <div class="constraint-chips">${constraints.required_objects.map(o => `<span class="constraint-chip">${o}</span>`).join('')}</div></div>`;
+    }
+    if (constraints.composition_type) {
+        html += `<div class="metric-group"><div class="metric-group-title">Composition Type</div>
+            <div class="constraint-chips"><span class="constraint-chip">${constraints.composition_type}</span></div></div>`;
+    }
+    if (constraints.lighting_type) {
+        html += `<div class="metric-group"><div class="metric-group-title">Lighting</div>
+            <div class="constraint-chips"><span class="constraint-chip">${constraints.lighting_type}</span></div></div>`;
+    }
+    if (constraints.count_requirements && constraints.count_requirements.length) {
+        html += `<div class="metric-group"><div class="metric-group-title">Count Requirements</div>
+            <div class="constraint-chips">${constraints.count_requirements.map(c => `<span class="constraint-chip">${c.count}× ${c.object}</span>`).join('')}</div></div>`;
+    }
+
+    if (html) {
+        display.innerHTML = html;
+        card.style.display = 'block';
+    }
+}
+
+// ──────────────────────────────────────────
+// LLM JUDGE
+// ──────────────────────────────────────────
+async function runLLMJudge() {
+    const apiKey = document.getElementById('groqApiKey').value.trim();
+    if (!apiKey || !apiKey.startsWith('gsk_')) {
+        alert('Please enter a valid Groq API key (starts with gsk_)');
+        return;
+    }
+
+    const prompt = document.getElementById('promptInput').value.trim();
+    if (!prompt) { alert('Please enter a prompt first.'); return; }
+
+    const entries = document.querySelectorAll('.model-entry');
+    const formData = new FormData();
+    formData.append('groq_api_key', apiKey);
+    formData.append('prompt', prompt);
+    formData.append('use_vision', document.getElementById('useVision').checked ? 'true' : 'false');
+
+    let validCount = 0;
+    entries.forEach(entry => {
+        const nameInput = entry.querySelector('.model-name');
+        const fileInput = entry.querySelector('.model-image');
+        if (fileInput.files.length > 0) {
+            formData.append('model_names[]', nameInput.value || `Model ${validCount + 1}`);
+            formData.append('model_images[]', fileInput.files[0]);
+            validCount++;
+        }
+    });
+
+    if (validCount === 0) { alert('Please upload model images first.'); return; }
+
+    showLoading('Sending to LLM Judge (Groq)…');
+    document.getElementById('llmJudgeBtn').disabled = true;
+
+    try {
+        const resp = await fetch('/llm-judge', { method: 'POST', body: formData });
+        const data = await resp.json();
+
+        if (data.error) { alert('LLM Judge error: ' + data.error); return; }
+
+        renderLLMResults(data.judge_results);
+
+    } catch (err) {
+        alert('LLM Judge failed: ' + err.message);
+    } finally {
+        hideLoading();
+        document.getElementById('llmJudgeBtn').disabled = false;
+    }
+}
+
+function renderLLMResults(results) {
+    const container = document.getElementById('llmJudgeResults');
+    container.style.display = 'grid';
+    container.innerHTML = '';
+
+    Object.entries(results).forEach(([modelName, result]) => {
+        const card = document.createElement('div');
+        card.className = 'llm-result-card';
+
+        if (!result.success) {
+            card.innerHTML = `<h4>${modelName}</h4><p style="color:var(--danger);">Error: ${result.error}</p>`;
+        } else {
+            const s = result.scores;
+            const categories = [
+                ['Prompt Adherence', s.prompt_adherence],
+                ['Technical Quality', s.technical_quality],
+                ['Style Accuracy', s.style_accuracy],
+                ['Composition', s.composition],
+                ['Color Accuracy', s.color_accuracy],
+                ['Detail & Realism', s.detail_realism],
+                ['Overall Quality', s.overall_quality],
+            ];
+
+            let scoresHtml = categories.map(([label, score]) => `
+                <div class="metric-row">
+                    <span class="metric-name">${label}</span>
+                    <div class="score-bar-container" style="flex:1;margin-left:12px;">
+                        <div class="score-bar"><div class="score-bar-fill" style="width:${score}%;background:${getScoreColor(score)}"></div></div>
+                        <span class="score-bar-label" style="color:${getScoreColor(score)}">${score}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            let feedbackHtml = '';
+            if (s.summary) feedbackHtml += `<p>${s.summary}</p>`;
+            if (s.strengths && s.strengths.length) feedbackHtml += `<p><strong style="color:var(--success)">Strengths:</strong> ${s.strengths.join(', ')}</p>`;
+            if (s.weaknesses && s.weaknesses.length) feedbackHtml += `<p><strong style="color:var(--danger)">Weaknesses:</strong> ${s.weaknesses.join(', ')}</p>`;
+
+            card.innerHTML = `
+                <h4>${modelName}</h4>
+                ${scoresHtml}
+                <div class="llm-feedback">${feedbackHtml}</div>
+            `;
+        }
+
+        container.appendChild(card);
+    });
+}
+
+// ──────────────────────────────────────────
+// EXPORT
+// ──────────────────────────────────────────
+async function exportResults(format) {
+    if (!evaluationResults) { alert('Run evaluation first.'); return; }
+
+    try {
+        const resp = await fetch('/export', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ format, results: evaluationResults })
+        });
+
+        if (!resp.ok) { alert('Export failed'); return; }
+
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `image_eval_results.${format}`;
+        a.click();
+        URL.revokeObjectURL(url);
+    } catch (err) {
+        alert('Export error: ' + err.message);
+    }
+}
+
+// ──────────────────────────────────────────
+// LOADING
+// ──────────────────────────────────────────
+function showLoading(text) {
+    document.getElementById('loadingText').textContent = text;
+    document.getElementById('loadingOverlay').classList.add('active');
+}
+function hideLoading() {
+    document.getElementById('loadingOverlay').classList.remove('active');
+}
+</script>
+</body>
+</html>

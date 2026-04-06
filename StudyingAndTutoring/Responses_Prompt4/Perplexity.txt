@@ -1,0 +1,36 @@
+### (a) Recurrence Relation
+The running time \(T(n)\) satisfies \(T(n) = T(\lceil n/2 \rceil) + T(n - \lceil n/2 \rceil) + \Theta(n)\) for \(n > 1\), with \(T(1) = \Theta(1)\). [dev](https://dev.to/downey/using-the-master-theorem-to-solve-recurrences-4pdb)
+
+The base case \(n \leq 1\) takes constant time. [dev](https://dev.to/downey/using-the-master-theorem-to-solve-recurrences-4pdb)
+
+The recursive calls process subarrays of sizes roughly \(n/2\) each (precisely \(\lfloor n/2 \rfloor\) and \(\lceil n/2 \rceil\)), and the merge step scans all \(n\) elements, taking \(\Theta(n)\) time. [stackoverflow](https://stackoverflow.com/questions/70071286/how-to-find-the-recurrence-relation-and-calculate-master-theorem-of-a-merge-sor)
+
+For asymptotic analysis, this simplifies to \(T(n) = 2T(n/2) + \Theta(n)\). [tildesites.bowdoin](https://tildesites.bowdoin.edu/~ltoma/teaching/cs231/fall14/Lectures/02-recurrences/recurrences.pdf)
+
+### (b) Solving the Recurrence
+The Master Theorem applies to recurrences \(T(n) = a T(n/b) + f(n)\) where \(a \geq 1\), \(b > 1\), and \(f(n)\) is asymptotically positive. [en.wikipedia](https://en.wikipedia.org/wiki/Master_theorem_(analysis_of_algorithms))
+
+**Case 1:** If \(f(n) = O(n^{\log_b a - \epsilon})\) for some \(\epsilon > 0\), then \(T(n) = \Theta(n^{\log_b a})\). [dcs.gla.ac](https://www.dcs.gla.ac.uk/~pat/ads2/papers/Master%20theorem.pdf)
+
+**Case 2:** If \(f(n) = \Theta(n^{\log_b a} \log^k n)\) for \(k \geq 0\), then \(T(n) = \Theta(n^{\log_b a} \log^{k+1} n)\). [en.wikipedia](https://en.wikipedia.org/wiki/Master_theorem_(analysis_of_algorithms))
+
+**Case 3:** If \(f(n) = \Omega(n^{\log_b a + \epsilon})\) for some \(\epsilon > 0\) and \(a f(n/b) \leq c f(n)\) for some \(c < 1\) and large \(n\) (regularity condition), then \(T(n) = \Theta(f(n))\). [dcs.gla.ac](https://www.dcs.gla.ac.uk/~pat/ads2/papers/Master%20theorem.pdf)
+
+Here, \(a=2\), \(b=2\), \(f(n) = \Theta(n)\), so \(\log_b a = 1\). [dev](https://dev.to/downey/using-the-master-theorem-to-solve-recurrences-4pdb)
+
+Since \(f(n) = \Theta(n^{\log_b a})\) (with \(k=0\)), Case 2 applies: \(T(n) = \Theta(n \log n)\). [en.wikipedia](https://en.wikipedia.org/wiki/Master_theorem_(analysis_of_algorithms))
+
+### (c) Intuitive Explanation
+Merge sort divides the array into two halves at each level, creating a balanced binary tree of depth \(\log n\). [dev](https://dev.to/downey/using-the-master-theorem-to-solve-recurrences-4pdb)
+
+Each level performs \(\Theta(n)\) work total from merging across all subproblems. [dev](https://dev.to/downey/using-the-master-theorem-to-solve-recurrences-4pdb)
+
+With \(\Theta(\log n)\) levels, the total time is \(\Theta(n \log n)\). [youtube](https://www.youtube.com/watch?v=gvfWeX8GCS8)
+
+**Practice Exercise 1:** Find the complexity of \(T(n) = 4T(n/2) + n\).
+
+**Solution:** \(a=4\), \(b=2\), \(\log_b a = 2\), \(f(n)=n = \Theta(n^1)\). Case 1 (\(1 < 2\)): \(T(n) = \Theta(n^2)\). [dev](https://dev.to/downey/using-the-master-theorem-to-solve-recurrences-4pdb)
+
+**Practice Exercise 2:** Find the complexity of \(T(n) = 2T(n/3) + n\).
+
+**Solution:** \(a=2\), \(b=3\), \(\log_b a = \log_3 2 \approx 0.63\), \(f(n)=n = \Theta(n^1)\). Case 3 (\(1 > 0.63\), regularity holds): \(T(n) = \Theta(n)\). [dcs.gla.ac](https://www.dcs.gla.ac.uk/~pat/ads2/papers/Master%20theorem.pdf)

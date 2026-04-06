@@ -1,0 +1,124 @@
+## 1. Key Ideas
+
+An **eigenvector** of a square matrix $A$ is a non-zero vector $\mathbf{v}$ that, when multiplied by $A$, does not change direction — it is only scaled. The **eigenvalue** $\lambda$ is the scalar factor by which it is scaled. This relationship is captured exactly by:
+
+$$A\mathbf{v} = \lambda\mathbf{v}$$
+
+Geometrically, matrix multiplication typically rotates and stretches a vector. An eigenvector is special: it lies along an axis that $A$ leaves invariant — $A$ may stretch or flip it, but never rotates it off that axis. The eigenvalue $\lambda$ tells you by how much: $\lambda = 2$ means the vector doubles in length; $\lambda = -1$ means it flips direction but keeps its magnitude; $\lambda = 0$ means it collapses to zero.
+
+Eigenvalues and eigenvectors appear throughout mathematics and its applications because they expose the fundamental structure of a linear transformation — the natural axes along which it acts, and the scaling along each. They are essential in systems of differential equations, principal component analysis, quantum mechanics, Google's PageRank algorithm, and stability analysis, among many other areas.
+
+---
+
+Here is a geometric illustration of the key idea — how a regular vector gets rotated and stretched, while an eigenvector only gets scaled:---
+
+## 2. Worked Example
+
+Find all eigenvalues and eigenvectors of:
+
+$$A = \begin{pmatrix} 3 & 1 \\ 0 & 2 \end{pmatrix}$$
+
+### Step 1 — Set up the characteristic equation
+
+The eigenvalues satisfy $\det(A - \lambda I) = 0$. Compute $A - \lambda I$:
+
+$$A - \lambda I = \begin{pmatrix} 3 - \lambda & 1 \\ 0 & 2 - \lambda \end{pmatrix}$$
+
+The determinant of a 2×2 matrix $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ is $ad - bc$, so:
+
+$$\det(A - \lambda I) = (3 - \lambda)(2 - \lambda) - (1)(0) = (3 - \lambda)(2 - \lambda)$$
+
+### Step 2 — Solve the characteristic polynomial
+
+Setting the characteristic polynomial equal to zero:
+
+$$(3 - \lambda)(2 - \lambda) = 0$$
+
+This gives the eigenvalues directly:
+
+$$\lambda_1 = 3 \qquad \lambda_2 = 2$$
+
+### Step 3 — Find the eigenvector for $\lambda_1 = 3$
+
+Substitute $\lambda = 3$ into $(A - \lambda I)\mathbf{v} = \mathbf{0}$:
+
+$$\begin{pmatrix} 0 & 1 \\ 0 & -1 \end{pmatrix} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix}$$
+
+Both rows give the same equation: $v_2 = 0$. The variable $v_1$ is free, so take $v_1 = 1$.
+
+$$\mathbf{v}_1 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$$
+
+Any non-zero scalar multiple of this is also a valid eigenvector.
+
+### Step 4 — Find the eigenvector for $\lambda_2 = 2$
+
+Substitute $\lambda = 2$ into $(A - \lambda I)\mathbf{v} = \mathbf{0}$:
+
+$$\begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix}$$
+
+The only non-trivial row gives: $v_1 + v_2 = 0$, so $v_1 = -v_2$. Take $v_2 = 1$, giving $v_1 = -1$.
+
+$$\mathbf{v}_2 = \begin{pmatrix} -1 \\ 1 \end{pmatrix}$$
+
+### Summary
+
+| Eigenvalue | Eigenvector |
+|---|---|
+| $\lambda_1 = 3$ | $\mathbf{v}_1 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$ |
+| $\lambda_2 = 2$ | $\mathbf{v}_2 = \begin{pmatrix} -1 \\ 1 \end{pmatrix}$ |
+
+You can verify: $A\mathbf{v}_1 = \begin{pmatrix}3\\0\end{pmatrix} = 3\mathbf{v}_1$ ✓ and $A\mathbf{v}_2 = \begin{pmatrix}-2\\2\end{pmatrix} = 2\mathbf{v}_2$ ✓
+
+---
+
+## 3. Practice Exercises
+
+---
+
+**Exercise 1.** Find all eigenvalues and eigenvectors of:
+
+$$B = \begin{pmatrix} 4 & 0 \\ 0 & -1 \end{pmatrix}$$
+
+**Solution.**
+
+*Characteristic equation:*
+
+$$\det(B - \lambda I) = (4 - \lambda)(-1 - \lambda) = 0$$
+
+*Eigenvalues:* $\lambda_1 = 4$, $\lambda_2 = -1$.
+
+*Eigenvector for $\lambda_1 = 4$:*
+
+$$B - 4I = \begin{pmatrix} 0 & 0 \\ 0 & -5 \end{pmatrix} \implies -5v_2 = 0 \implies v_2 = 0,\ v_1 \text{ free}$$
+
+$$\mathbf{v}_1 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$$
+
+*Eigenvector for $\lambda_2 = -1$:*
+
+$$B + I = \begin{pmatrix} 5 & 0 \\ 0 & 0 \end{pmatrix} \implies 5v_1 = 0 \implies v_1 = 0,\ v_2 \text{ free}$$
+
+$$\mathbf{v}_2 = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$$
+
+Note that $B$ is a diagonal matrix. For any diagonal matrix, the eigenvalues are the diagonal entries and the eigenvectors are the standard basis vectors. This is a general rule worth remembering.
+
+---
+
+**Exercise 2.** Find all eigenvalues and eigenvectors of:
+
+$$C = \begin{pmatrix} 2 & 3 \\ 0 & 2 \end{pmatrix}$$
+
+**Solution.**
+
+*Characteristic equation:*
+
+$$\det(C - \lambda I) = (2 - \lambda)(2 - \lambda) = (2 - \lambda)^2 = 0$$
+
+*Eigenvalue:* $\lambda = 2$ (a repeated eigenvalue of algebraic multiplicity 2).
+
+*Eigenvector for $\lambda = 2$:*
+
+$$C - 2I = \begin{pmatrix} 0 & 3 \\ 0 & 0 \end{pmatrix} \implies 3v_2 = 0 \implies v_2 = 0,\ v_1 \text{ free}$$
+
+$$\mathbf{v} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$$
+
+Despite $\lambda = 2$ being a double root of the characteristic polynomial, there is only **one linearly independent eigenvector**. This is an important phenomenon: a repeated eigenvalue does not automatically yield multiple independent eigenvectors, and this matrix cannot be diagonalized as a result.

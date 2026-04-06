@@ -1,0 +1,31 @@
+Simple harmonic motion describes the back-and-forth oscillation of an object around an equilibrium position, like a mass on a spring.
+
+## Key Ideas
+
+Simple harmonic motion (SHM) occurs when a restoring force acts on an object, proportional to its displacement from equilibrium and directed opposite to it. This force follows Hooke's law: \( F = -kx \), where \( k \) is the spring constant and \( x \) is displacement.
+
+Applying Newton's second law \( F = m \ddot{x} \) yields the differential equation \( m \ddot{x} = -kx \), or \( \ddot{x} + \frac{k}{m} x = 0 \).
+
+The general solution is \( x(t) = A \cos(\omega t + \phi) \), where \( A \) is the amplitude (maximum displacement), \( \omega = \sqrt{\frac{k}{m}} \) is the angular frequency, \( \phi \) is the phase constant, and the period is \( T = \frac{2\pi}{\omega} \).
+
+## Worked Example
+
+For a 0.5 kg block attached to a spring with \( k = 8 \) N/m, pulled 0.1 m from equilibrium and released from rest.
+
+Angular frequency: \( \omega = \sqrt{\frac{k}{m}} = \sqrt{\frac{8}{0.5}} = \sqrt{16} = 4 \) rad/s.
+
+Period: \( T = \frac{2\pi}{\omega} = \frac{2\pi}{4} = \frac{\pi}{2} \) s (about 1.57 s).
+
+For \( x(t) \), use initial conditions: at \( t = 0 \), \( x(0) = 0.1 \) m and \( \dot{x}(0) = 0 \). So \( x(t) = A \cos(\omega t + \phi) \). Then \( x(0) = A \cos \phi = 0.1 \), and \( \dot{x}(t) = -A \omega \sin(\omega t + \phi) \) gives \( \dot{x}(0) = -A \omega \sin \phi = 0 \), so \( \sin \phi = 0 \) and \( \cos \phi = 1 \) (thus \( \phi = 0 \), \( A = 0.1 \)). Hence \( x(t) = 0.1 \cos(4t) \) m.
+
+## Practice Exercise 1
+
+A 0.2 kg mass on a spring with \( k = 50 \) N/m is displaced 0.05 m and released from rest. Find \( \omega \), \( T \), and \( x(t) \).
+
+**Solution:** \( \omega = \sqrt{\frac{50}{0.2}} = \sqrt{250} \approx 15.81 \) rad/s. \( T = \frac{2\pi}{15.81} \approx 0.397 \) s. With same initial conditions, \( x(t) = 0.05 \cos(15.81 t) \) m.
+
+## Practice Exercise 2
+
+A 1 kg mass on a spring with \( k = 4\pi^2 \) N/m starts at equilibrium (\( x=0 \)) with initial velocity 0.2 m/s to the right.
+
+**Solution:** \( \omega = \sqrt{\frac{4\pi^2}{1}} = 2\pi \) rad/s. \( T = \frac{2\pi}{2\pi} = 1 \) s. Here \( x(0) = 0 = A \cos \phi \), \( \dot{x}(0) = 0.2 = -A \omega \sin \phi \). So \( \cos \phi = 0 \), \( \sin \phi = -1 \) (\( \phi = -\pi/2 \)), \( A = 0.2 / (2\pi) \approx 0.032 \) m. Thus \( x(t) = 0.032 \cos(2\pi t - \pi/2) \) m, or equivalently \( x(t) = 0.032 \sin(2\pi t) \) m.

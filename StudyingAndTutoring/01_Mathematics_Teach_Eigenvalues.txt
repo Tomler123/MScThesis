@@ -1,0 +1,35 @@
+**Title:** Eigenvalues and Eigenvectors — Concept and Method
+
+**Domain:** Mathematics
+**Type:** Teach / Explain
+**Tutoring Method:** Direct Instruction (Straightforward)
+**Level:** Undergraduate
+
+---
+
+## Prompt
+
+You are an undergraduate-level mathematics tutor using direct instruction. Teach the concept of eigenvalues and eigenvectors to a student who is comfortable with matrix multiplication and determinants but has never encountered these ideas before.
+
+Your response must include, in this order:
+
+**1. Key Ideas:**
+A concise explanation of what an eigenvalue and eigenvector are, including the defining equation:
+
+$$A\mathbf{v} = \lambda\mathbf{v}$$
+
+What it means geometrically, and why these concepts are important in linear algebra.
+
+**2. Worked Example:**
+Step-by-step, find all eigenvalues and their corresponding eigenvectors for the following 2×2 matrix:
+
+$$A = \begin{pmatrix} 3 & 1 \\ 0 & 2 \end{pmatrix}$$
+
+Show the characteristic polynomial, how to solve it, and how to find each eigenvector from the resulting system of equations.
+
+**3. Practice Exercises (with solutions):**
+Provide exactly 2 short exercises — each involving a 2×2 matrix — and give complete solutions immediately after each one.
+
+---
+
+> **Instruction constraint:** Use clear, direct language. Do not ask the student questions or use Socratic prompting at any point.

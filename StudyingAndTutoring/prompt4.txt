@@ -1,7 +1,0 @@
-Role: You are a senior university physics tutor specializing in Quantum Mechanics.
-
-Task: Explain the concept of "Quantum Entanglement" and help me derive the Bell Inequality violation. Do not provide the full derivation immediately.
-
-Context: I am a junior physics major who understands basic wave functions but struggles with the statistical implications of non-locality.
-
-Format: Use a Socratic approach. Start by asking me two foundational questions to check my understanding of superposition. Then, provide a structured report including a summary of common misconceptions, three suggested improvements to my logic, and three deeper Socratic questions.

@@ -1,0 +1,134 @@
+# Big-O Notation and Asymptotic Complexity
+
+---
+
+## 1. Key Ideas
+
+### What Big-O Measures
+
+When you write an algorithm, you want to know: *how does its runtime scale as the input gets larger?* Big-O notation answers this by capturing the **worst-case growth rate** of an algorithm's runtime as a function of input size $n$. It deliberately ignores hardware speed, compiler optimizations, and other machine-specific details — it focuses purely on *how the number of operations grows*.
+
+### Formal Definition
+
+We say $f(n) = O(g(n))$ if there exist positive constants $c$ and $n_0$ such that:
+
+$$f(n) \leq c \cdot g(n) \quad \text{for all } n \geq n_0$$
+
+In plain terms: beyond some threshold input size $n_0$, the function $f(n)$ is always bounded above by some constant multiple of $g(n)$. The function $g(n)$ is the **upper-bound growth rate** — the "shape" of the worst-case scaling.
+
+### Why Constants and Lower-Order Terms Are Dropped
+
+Suppose an algorithm performs $3n^2 + 5n + 12$ operations. For large $n$, the $n^2$ term dominates completely — the $5n$ and $12$ become negligible in comparison. Similarly, the coefficient $3$ just stretches the curve vertically, but doesn't change its fundamental shape. Since Big-O characterizes growth rate, not exact count, we drop both: $3n^2 + 5n + 12 = O(n^2)$.
+
+This is the core philosophy: **Big-O captures the dominant term only.**
+
+### Common Complexity Classes (Slowest to Fastest Growing)
+
+| Complexity | Name | Example |
+|---|---|---|
+| $O(1)$ | Constant | Array index lookup |
+| $O(\log n)$ | Logarithmic | Binary search |
+| $O(n)$ | Linear | Single loop over input |
+| $O(n \log n)$ | Linearithmic | Merge sort |
+| $O(n^2)$ | Quadratic | Nested loops over input |
+| $O(2^n)$ | Exponential | Brute-force subset enumeration |
+
+Each step up this table represents a dramatic increase in how badly the algorithm scales. An $O(n^2)$ algorithm on $n = 10{,}000$ performs roughly $10^8$ operations; an $O(2^n)$ algorithm on $n = 50$ performs over $10^{15}$.
+
+---
+
+## 2. Worked Example
+
+```
+for i from 1 to n:
+    for j from i to n:
+        print(i, j)
+```
+
+**Step 1 — Identify the structure.**
+There is an outer loop controlled by $i$ and an inner loop controlled by $j$. The only operation inside is `print(i, j)`, which costs $O(1)$ per call.
+
+**Step 2 — Count inner loop iterations for each value of $i$.**
+For a fixed $i$, $j$ runs from $i$ to $n$, which is $(n - i + 1)$ iterations.
+
+| $i$ | Inner loop runs |
+|---|---|
+| $1$ | $n$ times |
+| $2$ | $n - 1$ times |
+| $3$ | $n - 2$ times |
+| $\vdots$ | $\vdots$ |
+| $n$ | $1$ time |
+
+**Step 3 — Sum over all values of $i$.**
+
+$$T(n) = \sum_{i=1}^{n}(n - i + 1) = n + (n-1) + (n-2) + \cdots + 1 = \sum_{k=1}^{n} k$$
+
+This is the well-known triangular sum:
+
+$$T(n) = \frac{n(n+1)}{2} = \frac{n^2 + n}{2}$$
+
+**Step 4 — Apply Big-O simplification.**
+Drop the lower-order term $n$ and the constant factor $\frac{1}{2}$:
+
+$$T(n) = \frac{n^2 + n}{2} = O(n^2)$$
+
+**Conclusion:** The algorithm runs in $O(n^2)$ time. Even though the inner loop doesn't always run $n$ times, it runs *on the order of* $n$ times on average, giving a quadratic result overall.
+
+---
+
+## 3. Practice Exercises
+
+---
+
+### Exercise 1
+
+```
+total = 0
+for i from 1 to n:
+    total = total + i
+print(total)
+```
+
+**Solution:**
+
+- `total = 0` — executes once: $O(1)$.
+- The `for` loop runs from $1$ to $n$: exactly $n$ iterations.
+- Inside the loop, `total = total + i` is a single arithmetic operation: $O(1)$ per iteration.
+- `print(total)` — executes once: $O(1)$.
+
+Total operations: $1 + n \cdot 1 + 1 = n + 2$.
+
+Drop constants and lower-order terms:
+
+$$T(n) = O(n)$$
+
+This is a **linear** algorithm. The single loop over $n$ elements is the dominant factor.
+
+---
+
+### Exercise 2
+
+```
+for i from 1 to n:
+    for j from 1 to n:
+        for k from 1 to n:
+            total = total + 1
+```
+
+**Solution:**
+
+- There are three nested loops, each running independently from $1$ to $n$.
+- The outermost loop runs $n$ times.
+- For each iteration of the outer loop, the middle loop runs $n$ times.
+- For each iteration of the middle loop, the inner loop runs $n$ times.
+- The body `total = total + 1` is $O(1)$.
+
+Total operations:
+
+$$T(n) = n \times n \times n \times 1 = n^3$$
+
+Drop the implicit coefficient of $1$:
+
+$$T(n) = O(n^3)$$
+
+This is a **cubic** algorithm. Each additional level of nesting that iterates over the full input multiplies the complexity by another factor of $n$. Notice that unlike the worked example, all three loops here run from $1$ to $n$ unconditionally — they are fully independent, so there is no triangular-sum correction needed.

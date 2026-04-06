@@ -1,0 +1,90 @@
+### **1. Key Ideas**
+
+Simple Harmonic Motion (SHM) is a specific type of periodic motion that occurs when the restoring force acting on an object is directly proportional to the object's displacement from its equilibrium position, and acts in the opposite direction of that displacement. 
+
+This relationship is described mathematically by Hooke's Law:
+
+$$F = -kx$$
+
+where $F$ is the restoring force, $k$ is the force constant (or spring constant), and $x$ is the displacement from equilibrium. 
+
+By applying Newton's second law of motion ($F = ma$), and expressing acceleration as the second time derivative of position ($a = \frac{d^2x}{dt^2} = \ddot{x}$), we arrive at the governing second-order differential equation for SHM:
+
+$$m\ddot{x} = -kx$$
+
+The general solution to this differential equation yields the position of the object as a function of time:
+
+$$x(t) = A\cos(\omega t + \phi), \quad \text{where } \omega = \sqrt{\frac{k}{m}}$$
+
+**Defining the Parameters:**
+* **Amplitude ($A$):** The maximum magnitude of displacement from equilibrium. It is determined by the total energy of the system (initial conditions).
+* **Angular Frequency ($\omega$):** The rate of oscillation measured in radians per second. It depends entirely on the physical properties of the system ($k$ and $m$).
+* **Period ($T$):** The time required to complete one full cycle of oscillation, defined as $T = 2\pi/\omega$.
+* **Phase Constant ($\phi$):** An angle (in radians) that shifts the cosine curve along the time axis. It is determined by the initial position and initial velocity of the object at $t = 0$.
+
+---
+
+### **2. Worked Example**
+
+**Problem:**
+A block of mass $m = 0.5\ \text{kg}$ is attached to a spring with spring constant $k = 8\ \text{N/m}$ on a frictionless horizontal surface. The block is pulled $0.1\ \text{m}$ from equilibrium and released from rest. 
+
+**Step 1: Find the angular frequency**
+Use the formula for angular frequency:
+$$\omega = \sqrt{\frac{k}{m}}$$
+$$\omega = \sqrt{\frac{8}{0.5}} = \sqrt{16} = 4\ \text{rad/s}$$
+
+**Step 2: Find the period of oscillation**
+Use the relationship between period and angular frequency:
+$$T = \frac{2\pi}{\omega}$$
+$$T = \frac{2\pi}{4} = \frac{\pi}{2} \approx 1.57\ \text{s}$$
+
+**Step 3: Write the explicit equation $x(t)$ using the given initial conditions**
+We know the general form is $x(t) = A\cos(4t + \phi)$. We must find $A$ and $\phi$.
+At $t = 0$, the initial position is $x(0) = 0.1\ \text{m}$, and the initial velocity is $v(0) = 0\ \text{m/s}$ (released from rest).
+
+The velocity equation is the derivative of the position equation: 
+$$v(t) = -A\omega\sin(\omega t + \phi)$$
+
+Apply the initial velocity condition:
+$$v(0) = -A(4)\sin(0 + \phi) = 0$$
+Since amplitude $A$ cannot be zero for an oscillating system, $\sin(\phi) = 0$. This means $\phi = 0$ or $\phi = \pi$.
+
+Apply the initial position condition to determine the correct phase:
+$$x(0) = A\cos(\phi) = 0.1$$
+If we choose $\phi = 0$, then $\cos(0) = 1$, giving $A(1) = 0.1$, so $A = 0.1\ \text{m}$. (If we chose $\phi = \pi$, $A$ would be negative, which contradicts the convention that amplitude is a positive scalar). 
+
+The explicit equation is:
+$$x(t) = 0.1\cos(4t)$$
+
+---
+
+### **3. Practice Exercises**
+
+**Exercise 1**
+A cart of mass $m = 2.0\ \text{kg}$ is attached to a spring with $k = 50\ \text{N/m}$. The cart is pulled to a displacement of $0.2\ \text{m}$ from equilibrium and released from rest. Find the angular frequency, the period, and the equation of motion $x(t)$.
+
+**Solution 1**
+* **Angular frequency:** $\omega = \sqrt{\frac{k}{m}} = \sqrt{\frac{50}{2.0}} = \sqrt{25} = 5\ \text{rad/s}$.
+* **Period:** $T = \frac{2\pi}{\omega} = \frac{2\pi}{5} \approx 1.26\ \text{s}$.
+* **Equation of motion:** Because it is released from rest at a maximum positive displacement, the phase constant $\phi = 0$ and the amplitude $A = 0.2\ \text{m}$.
+    $$x(t) = 0.2\cos(5t)$$
+
+**Exercise 2**
+A mass $m = 0.1\ \text{kg}$ is attached to a spring with $k = 10\ \text{N/m}$. At time $t = 0$, the mass passes through the equilibrium position ($x = 0$) moving in the positive $x$-direction with a velocity of $0.5\ \text{m/s}$. Find the equation of motion $x(t)$.
+
+**Solution 2**
+* **Angular frequency:** $\omega = \sqrt{\frac{k}{m}} = \sqrt{\frac{10}{0.1}} = \sqrt{100} = 10\ \text{rad/s}$.
+* **Determine Phase ($\phi$):** The general position equation is $x(0) = A\cos(\phi) = 0$. This implies $\phi = \frac{\pi}{2}$ or $\phi = -\frac{\pi}{2}$.
+* **Determine Amplitude ($A$) and verify Phase:** The general velocity equation is $v(0) = -A\omega\sin(\phi) = 0.5$. 
+    If $\phi = \frac{\pi}{2}$, then $\sin(\frac{\pi}{2}) = 1$, giving $v(0) = -10A = 0.5$ (which yields a negative amplitude, so we reject it).
+    If $\phi = -\frac{\pi}{2}$, then $\sin(-\frac{\pi}{2}) = -1$, giving $v(0) = -10A(-1) = 10A = 0.5$. Therefore, $A = \frac{0.5}{10} = 0.05\ \text{m}$.
+* **Equation of motion:**
+    $$x(t) = 0.05\cos\left(10t - \frac{\pi}{2}\right)$$
+    *(Note: Using the trigonometric identity $\cos(\theta - \frac{\pi}{2}) = \sin(\theta)$, this can also be written as $x(t) = 0.05\sin(10t)$).*
+
+---
+
+```json?chameleon
+{"component":"LlmGeneratedComponent","props":{"height":"700px","prompt":"Objective: Simulate Simple Harmonic Motion of a spring-mass system. Data State: initialValues { mass: 0.5, springConstant: 8, initialDisplacement: 0.1 }. Strategy: Standard Layout. Inputs: Sliders for Mass (kg), Spring Constant (N/m), and Initial Displacement (m). Behavior: Animate a 1D block attached to a spring oscillating horizontally. Display a dynamic, real-time graph plotting position x(t) versus time. Update the oscillation frequency and amplitude visually in real-time as the user adjusts the input parameters.","id":"im_43ea8e817772c775"}}
+```

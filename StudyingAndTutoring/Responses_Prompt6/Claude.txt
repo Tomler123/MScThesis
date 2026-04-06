@@ -1,0 +1,105 @@
+# Simple Harmonic Motion — Complete Solution
+
+## Part (a): Angular frequency and period
+
+The equation of motion for a spring-mass system is $m\ddot{x} = -kx$, which gives $\ddot{x} + \omega^2 x = 0$ with:
+
+$$\omega = \sqrt{\frac{k}{m}} = \sqrt{\frac{50}{0.2}} = \sqrt{250} = 5\sqrt{10} \approx 15.81 \ \text{rad/s}$$
+
+$$T = \frac{2\pi}{\omega} = \frac{2\pi}{5\sqrt{10}} \approx 0.397 \ \text{s}$$
+
+---
+
+## Part (b): Amplitude via energy conservation
+
+At maximum displacement $x = A$, all energy is potential (speed is zero). At any other point, total mechanical energy is conserved:
+
+$$\frac{1}{2}kA^2 = \frac{1}{2}kx_0^2 + \frac{1}{2}mv_0^2$$
+
+Solving for $A$:
+
+$$A^2 = x_0^2 + \frac{m}{k}v_0^2 = (0.04)^2 + \frac{0.2}{50}(0.3)^2$$
+
+$$A^2 = 0.0016 + (0.004)(0.09) = 0.0016 + 0.00036 = 0.00196 \ \text{m}^2$$
+
+$$\boxed{A = \sqrt{0.00196} = \frac{7\sqrt{10}}{500} \approx 0.04427 \ \text{m}}$$
+
+---
+
+## Part (c): Phase constant $\phi$
+
+The general solution is $x(t) = A\cos(\omega t + \phi)$, so $\dot{x}(t) = -A\omega\sin(\omega t + \phi)$.
+
+Applying both initial conditions at $t = 0$:
+
+$$x(0) = A\cos\phi = x_0 \implies \cos\phi = \frac{x_0}{A} = \frac{0.04}{7\sqrt{10}/500} = \frac{20}{7\sqrt{10}} = \frac{2\sqrt{10}}{7}$$
+
+$$\dot{x}(0) = -A\omega\sin\phi = v_0 \implies \sin\phi = \frac{-v_0}{A\omega}$$
+
+Note that $A\omega = \dfrac{7\sqrt{10}}{500} \cdot 5\sqrt{10} = \dfrac{7 \cdot 5 \cdot 10}{500} = \dfrac{350}{500} = 0.7 \ \text{m/s}$, so:
+
+$$\sin\phi = \frac{-(-0.3)}{0.7} = \frac{3}{7}$$
+
+**Consistency check:** $\cos^2\phi + \sin^2\phi = \dfrac{40}{49} + \dfrac{9}{49} = \dfrac{49}{49} = 1$ ✓
+
+Since $\cos\phi > 0$ and $\sin\phi > 0$, the phase angle is in the **first quadrant**:
+
+$$\phi = \arctan\!\left(\frac{\sin\phi}{\cos\phi}\right) = \arctan\!\left(\frac{3/7}{2\sqrt{10}/7}\right) = \arctan\!\left(\frac{3}{2\sqrt{10}}\right) \approx 0.443 \ \text{rad} \approx 25.4°$$
+
+**Full equation of motion:**
+
+$$\boxed{x(t) = \frac{7\sqrt{10}}{500}\cos\!\left(5\sqrt{10}\, t + 0.443\right) \approx 0.04427\cos(15.81\, t + 0.443) \ \text{m}}$$
+
+---
+
+## Part (d): Speed at equilibrium ($x = 0$)
+
+At $x = 0$, all energy is kinetic. Using energy conservation:
+
+$$\frac{1}{2}mv_{\max}^2 = \frac{1}{2}kA^2 \implies v_{\max} = A\sqrt{\frac{k}{m}} = A\omega$$
+
+We already computed $A\omega = 0.7 \ \text{m/s}$, so:
+
+$$\boxed{v_{\max} = 0.7 \ \text{m/s}}$$
+
+This also confirms part (b): $A\omega$ directly gives the maximum speed, which is a useful cross-check.
+
+------
+
+## Practice Exercises
+
+### Exercise 1
+
+A 0.5 kg mass on a frictionless surface is attached to a spring with $k = 200 \ \text{N/m}$. At $t = 0$, $x_0 = 0.06 \ \text{m}$ and $\dot{x}(0) = +0.8 \ \text{m/s}$ (moving away from equilibrium). Find: (a) $\omega$, (b) $A$, and (c) the speed at $x = 0.03 \ \text{m}$.
+
+**Solution:**
+
+**(a)** $\omega = \sqrt{k/m} = \sqrt{200/0.5} = \sqrt{400} = 20 \ \text{rad/s}$
+
+**(b)** $A^2 = x_0^2 + \dfrac{m}{k}v_0^2 = (0.06)^2 + \dfrac{0.5}{200}(0.8)^2 = 0.0036 + 0.0016 = 0.0052$, so $A \approx 0.0721 \ \text{m}$
+
+**(c)** At $x = 0.03 \ \text{m}$, use energy conservation:
+
+$$\frac{1}{2}mv^2 = \frac{1}{2}kA^2 - \frac{1}{2}kx^2 = \frac{1}{2}k(A^2 - x^2)$$
+
+$$v = \sqrt{\frac{k}{m}(A^2 - x^2)} = \omega\sqrt{A^2 - x^2} = 20\sqrt{0.0052 - 0.0009} = 20\sqrt{0.0043} \approx 1.31 \ \text{m/s}$$
+
+---
+
+### Exercise 2
+
+A spring-mass oscillator has $\omega = 10 \ \text{rad/s}$ and amplitude $A = 0.05 \ \text{m}$. At $t = 0$, $x(0) = 0$ and $\dot{x}(0) = -0.5 \ \text{m/s}$. Write the equation of motion $x(t) = A\cos(\omega t + \phi)$.
+
+**Solution:**
+
+From $x(0) = A\cos\phi = 0$, we get $\cos\phi = 0$, so $\phi = \pm\pi/2$.
+
+From $\dot{x}(0) = -A\omega\sin\phi = -0.5$:
+
+$$\sin\phi = \frac{0.5}{A\omega} = \frac{0.5}{(0.05)(10)} = \frac{0.5}{0.5} = 1$$
+
+Since $\sin\phi = +1$, we need $\phi = +\pi/2$.
+
+$$\boxed{x(t) = 0.05\cos\!\left(10t + \frac{\pi}{2}\right) = -0.05\sin(10t) \ \text{m}}$$
+
+This makes physical sense: starting at equilibrium and moving in the negative direction, $x(t) = -A\sin(\omega t)$ exactly matches the initial conditions.

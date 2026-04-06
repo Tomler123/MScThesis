@@ -1,0 +1,9 @@
+For **MergeSort**, the recurrence relation is **$T(n) = 2T(n/2) + O(n)$**.
+*   **$2T(n/2)$**: Represents the two recursive calls on halves of the array.
+*   **$O(n)$**: The time required to merge the sorted halves.
+
+Applying the **Master Theorem** ($a=2, b=2, f(n)=n^1$): Since $f(n) = \Theta(n^{\log_b a})$, this falls under **Case 2**. The closed-form solution is **$T(n) = \Theta(n \log n)$**. Intuitively, the recursion tree has $\log n$ levels, and each level performs $n$ work, leading to the $n \log n$ complexity.
+
+To provide the rigorous, step-by-step derivation and the practice exercises you requested, NotebookLM works best when you upload your specific textbooks or lecture notes to the **source panel**. This ensures the "Direct Instruction" and notation are grounded in your actual course materials! Once you upload them, the **studio panel** can even generate a comprehensive Study Guide or Quiz for you.
+
+Would you like me to use **fast research** to find some high-quality undergraduate computer science materials to help build this solution for you?

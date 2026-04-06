@@ -1,0 +1,33 @@
+**1. Key Ideas**
+
+Eigenvalues and eigenvectors describe special directions for a linear transformation represented by a square matrix \(A\). An eigenvector \(\mathbf{v}\) (nonzero vector) satisfies \(A\mathbf{v} = \lambda \mathbf{v}\), where \(\lambda\) is the eigenvalue (scalar); this means \(A\) scales \(\mathbf{v}\) by \(\lambda\) without changing its direction .
+
+Geometrically, eigenvectors are axes unchanged by the transformation (up to scaling), while eigenvalues indicate the stretch or shrink factor along those axes .
+
+These concepts are crucial in linear algebra for simplifying matrix powers (\(A^n \mathbf{v} = \lambda^n \mathbf{v}\)), diagonalization, stability analysis, and applications like vibrations or data compression .
+
+**2. Worked Example**
+
+For \(A = \begin{pmatrix} 3 & 1 \\ 0 & 2 \end{pmatrix}\), the eigenvalues solve \(\det(A - \lambda I) = 0\), where \(A - \lambda I = \begin{pmatrix} 3-\lambda & 1 \\ 0 & 2-\lambda \end{pmatrix}\), so the characteristic polynomial is \((3-\lambda)(2-\lambda) - 0 = \lambda^2 - 5\lambda + 6 = 0\) .
+
+Factoring gives \((\lambda - 3)(\lambda - 2) = 0\), so \(\lambda_1 = 3\), \(\lambda_2 = 2\) .
+
+For \(\lambda = 3\), solve \((A - 3I)\mathbf{v} = 0\): \(\begin{pmatrix} 0 & 1 \\ 0 & -1 \end{pmatrix} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix}\), yielding \(v_2 = 0\), \(v_1\) free; a basis eigenvector is \(\begin{pmatrix} 1 \\ 0 \end{pmatrix}\) .
+
+For \(\lambda = 2\), solve \((A - 2I)\mathbf{v} = 0\): \(\begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix}\), yielding \(v_1 + v_2 = 0\), so \(v_1 = -v_2\); a basis eigenvector is \(\begin{pmatrix} -1 \\ 1 \end{pmatrix}\) (or scalar multiples) .
+
+**3. Practice Exercises (with solutions)**
+
+**Exercise 1:** Find all eigenvalues and eigenvectors for \(B = \begin{pmatrix} 1 & 2 \\ 0 & 3 \end{pmatrix}\).
+
+The characteristic polynomial is \(\det(B - \lambda I) = (1-\lambda)(3-\lambda) = \lambda^2 - 4\lambda + 3 = 0\), so \(\lambda = 1, 3\) .
+
+For \(\lambda = 1\): \((B - I)\mathbf{v} = \begin{pmatrix} 0 & 2 \\ 0 & 2 \end{pmatrix} \mathbf{v} = 0\) gives \(v_2 = 0\), \(v_1\) free; eigenvector \(\begin{pmatrix} 1 \\ 0 \end{pmatrix}\) .
+
+For \(\lambda = 3\): \((B - 3I)\mathbf{v} = \begin{pmatrix} -2 & 2 \\ 0 & 0 \end{pmatrix} \mathbf{v} = 0\) gives \(v_1 = v_2\); eigenvector \(\begin{pmatrix} 1 \\ 1 \end{pmatrix}\) .
+
+**Exercise 2:** Find all eigenvalues and eigenvectors for \(C = \begin{pmatrix} 4 & 0 \\ 1 & 4 \end{pmatrix}\).
+
+The characteristic polynomial is \(\det(C - \lambda I) = (4-\lambda)^2 = 0\), so \(\lambda = 4\) (multiplicity 2) .
+
+Solve \((C - 4I)\mathbf{v} = \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix} \mathbf{v} = 0\): \(v_1 = 0\), \(v_2\) free; basis eigenvector \(\begin{pmatrix} 0 \\ 1 \end{pmatrix}\) (geometric multiplicity 1) .

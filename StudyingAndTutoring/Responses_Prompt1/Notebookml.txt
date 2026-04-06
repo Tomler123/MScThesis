@@ -1,0 +1,10 @@
+I can certainly help you master these linear algebra concepts! 
+
+**Key Idea:**
+The equation $A\mathbf{v} = \lambda\mathbf{v}$ defines the relationship where a matrix $A$ transforms a non-zero vector $\mathbf{v}$ (the **eigenvector**) only by scaling it by a constant $\lambda$ (the **eigenvalue**). Geometrically, this means the vector stays on its original span, only stretching, shrinking, or reversing direction.
+
+To provide the detailed worked examples and practice exercises you requested, NotebookLM works best when it is grounded in specific sources. By uploading your textbook, syllabus, or lecture notes to the **source panel**, I can ensure the explanations and notation perfectly match your undergraduate curriculum.
+
+Once sources are added, you can use the **studio panel** to generate a custom **Study Guide** or **Quiz** to reinforce these methods!
+
+Would you like me to use **fast research** to find some high-quality undergraduate-level sources on eigenvalues and eigenvectors for you to review and import?

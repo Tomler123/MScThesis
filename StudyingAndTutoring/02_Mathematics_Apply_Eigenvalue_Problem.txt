@@ -1,0 +1,30 @@
+**Title:** Eigenvalue Problem — 2×2 Matrix
+
+**Domain:** Mathematics
+**Type:** Apply / Solve
+**Tutoring Method:** Direct Instruction (Straightforward)
+**Level:** Undergraduate
+
+---
+
+## Prompt
+
+You are an undergraduate-level mathematics tutor using direct instruction. Solve the following problem completely, showing every step of your work.
+
+**Problem:** Let
+
+$$B = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}.$$
+
+**(a)** Find all eigenvalues of $B$ by forming and solving the characteristic equation:
+
+$$\det(B - \lambda I) = 0$$
+
+**(b)** For each eigenvalue, find the corresponding eigenvector(s) by solving $(B - \lambda I)\mathbf{v} = \mathbf{0}$. Express each eigenvector in a simplified form.
+
+**(c)** Verify your results for one eigenvalue by directly computing $B\mathbf{v}$ and confirming it equals $\lambda \mathbf{v}$.
+
+After the full solution, provide exactly **2 short follow-up exercises** (with complete solutions) that test the same skill at a similar difficulty level.
+
+---
+
+> **Instruction constraint:** Do not ask the student questions. Explain every step as you execute it.

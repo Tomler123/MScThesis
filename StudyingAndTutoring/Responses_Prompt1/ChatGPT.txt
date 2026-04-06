@@ -1,0 +1,529 @@
+## 1. Key Ideas
+
+An **eigenvector** of a square matrix (A) is a **nonzero** vector (\mathbf{v}) such that multiplying by (A) changes the vector only by scaling it:
+
+[
+A\mathbf{v}=\lambda \mathbf{v}
+]
+
+Here:
+
+* (A) is a square matrix,
+* (\mathbf{v}\neq \mathbf{0}) is an eigenvector,
+* (\lambda) is the corresponding **eigenvalue**.
+
+### Meaning of the equation
+
+The equation says that after applying the matrix (A), the vector (\mathbf{v}) keeps the same direction, except it may:
+
+* get longer if (|\lambda|>1),
+* get shorter if (0<|\lambda|<1),
+* reverse direction if (\lambda<0),
+* collapse to the zero vector if (\lambda=0).
+
+### Geometric meaning
+
+Most vectors change direction when multiplied by a matrix. Eigenvectors are the special directions that do **not** turn. They stay on the same line through the origin.
+
+### Why eigenvalues and eigenvectors matter
+
+They are important because they reveal the basic action of a matrix. They are used in:
+
+* understanding linear transformations,
+* diagonalization,
+* systems of differential equations,
+* stability analysis,
+* Markov chains,
+* data science and PCA,
+* quantum mechanics and many other applications.
+
+---
+
+## 2. Worked Example
+
+Find all eigenvalues and eigenvectors of
+
+[
+A=\begin{pmatrix}3&1\0&2\end{pmatrix}
+]
+
+### Step 1: Find the characteristic polynomial
+
+Eigenvalues satisfy
+
+[
+\det(A-\lambda I)=0
+]
+
+First compute (A-\lambda I):
+
+[
+A-\lambda I=
+\begin{pmatrix}
+3-\lambda & 1\
+0 & 2-\lambda
+\end{pmatrix}
+]
+
+Now take the determinant:
+
+[
+\det(A-\lambda I)
+=================
+
+# (3-\lambda)(2-\lambda)-0
+
+(3-\lambda)(2-\lambda)
+]
+
+So the characteristic equation is
+
+[
+(3-\lambda)(2-\lambda)=0
+]
+
+### Step 2: Solve for the eigenvalues
+
+Set each factor equal to zero:
+
+[
+3-\lambda=0 \quad \Rightarrow \quad \lambda=3
+]
+
+[
+2-\lambda=0 \quad \Rightarrow \quad \lambda=2
+]
+
+So the eigenvalues are:
+
+[
+\boxed{\lambda_1=3,\quad \lambda_2=2}
+]
+
+---
+
+### Step 3: Find the eigenvector for (\lambda=3)
+
+Solve
+
+[
+(A-3I)\mathbf{v}=0
+]
+
+Compute (A-3I):
+
+[
+A-3I=
+\begin{pmatrix}
+0 & 1\
+0 & -1
+\end{pmatrix}
+]
+
+Let
+
+[
+\mathbf{v}=
+\begin{pmatrix}
+x\
+y
+\end{pmatrix}
+]
+
+Then
+
+[
+\begin{pmatrix}
+0 & 1\
+0 & -1
+\end{pmatrix}
+\begin{pmatrix}
+x\
+y
+\end{pmatrix}
+=============
+
+\begin{pmatrix}
+0\
+0
+\end{pmatrix}
+]
+
+This gives the system:
+
+[
+y=0
+]
+
+[
+-y=0
+]
+
+So (y=0), and (x) is free.
+
+Thus the eigenvectors are all nonzero vectors of the form
+
+[
+\begin{pmatrix}
+x\
+0
+\end{pmatrix},
+\quad x\neq 0
+]
+
+A simple choice is
+
+[
+\boxed{\mathbf{v}_1=\begin{pmatrix}1\0\end{pmatrix}}
+]
+
+So the eigenspace for (\lambda=3) is
+
+[
+\boxed{\text{span}\left{\begin{pmatrix}1\0\end{pmatrix}\right}}
+]
+
+---
+
+### Step 4: Find the eigenvector for (\lambda=2)
+
+Solve
+
+[
+(A-2I)\mathbf{v}=0
+]
+
+Compute (A-2I):
+
+[
+A-2I=
+\begin{pmatrix}
+1 & 1\
+0 & 0
+\end{pmatrix}
+]
+
+Again let
+
+[
+\mathbf{v}=
+\begin{pmatrix}
+x\
+y
+\end{pmatrix}
+]
+
+Then
+
+[
+\begin{pmatrix}
+1 & 1\
+0 & 0
+\end{pmatrix}
+\begin{pmatrix}
+x\
+y
+\end{pmatrix}
+=============
+
+\begin{pmatrix}
+0\
+0
+\end{pmatrix}
+]
+
+This gives:
+
+[
+x+y=0
+]
+
+So
+
+[
+x=-y
+]
+
+Let (y=1). Then (x=-1).
+
+So one eigenvector is
+
+[
+\boxed{\mathbf{v}_2=\begin{pmatrix}-1\1\end{pmatrix}}
+]
+
+Any nonzero scalar multiple also works, for example (\begin{pmatrix}1\-1\end{pmatrix}).
+
+So the eigenspace for (\lambda=2) is
+
+[
+\boxed{\text{span}\left{\begin{pmatrix}1\-1\end{pmatrix}\right}}
+]
+
+---
+
+### Final answer for the matrix
+
+Eigenvalues:
+
+[
+\boxed{3,\ 2}
+]
+
+Corresponding eigenvectors:
+
+* For (\lambda=3): all nonzero multiples of (\begin{pmatrix}1\0\end{pmatrix})
+* For (\lambda=2): all nonzero multiples of (\begin{pmatrix}1\-1\end{pmatrix})
+
+---
+
+## 3. Practice Exercises (with solutions)
+
+### Exercise 1
+
+Find the eigenvalues and eigenvectors of
+
+[
+A=\begin{pmatrix}4&0\0&1\end{pmatrix}
+]
+
+### Solution
+
+Find the characteristic equation:
+
+[
+\det(A-\lambda I)=
+\det\begin{pmatrix}4-\lambda&0\0&1-\lambda\end{pmatrix}
+=(4-\lambda)(1-\lambda)
+]
+
+Set equal to zero:
+
+[
+(4-\lambda)(1-\lambda)=0
+]
+
+So the eigenvalues are
+
+[
+\boxed{\lambda=4,\ 1}
+]
+
+#### For (\lambda=4)
+
+[
+A-4I=
+\begin{pmatrix}
+0&0\
+0&-3
+\end{pmatrix}
+]
+
+Solve
+
+[
+\begin{pmatrix}
+0&0\
+0&-3
+\end{pmatrix}
+\begin{pmatrix}
+x\y
+\end{pmatrix}
+=============
+
+\begin{pmatrix}
+0\0
+\end{pmatrix}
+]
+
+This gives (y=0), with (x) free.
+
+So eigenvectors are all nonzero multiples of
+
+[
+\boxed{\begin{pmatrix}1\0\end{pmatrix}}
+]
+
+#### For (\lambda=1)
+
+[
+A-I=
+\begin{pmatrix}
+3&0\
+0&0
+\end{pmatrix}
+]
+
+Solve
+
+[
+\begin{pmatrix}
+3&0\
+0&0
+\end{pmatrix}
+\begin{pmatrix}
+x\y
+\end{pmatrix}
+=============
+
+\begin{pmatrix}
+0\0
+\end{pmatrix}
+]
+
+This gives (x=0), with (y) free.
+
+So eigenvectors are all nonzero multiples of
+
+[
+\boxed{\begin{pmatrix}0\1\end{pmatrix}}
+]
+
+### Final answer
+
+* (\lambda=4), eigenvectors: (\text{span}\left{\begin{pmatrix}1\0\end{pmatrix}\right})
+* (\lambda=1), eigenvectors: (\text{span}\left{\begin{pmatrix}0\1\end{pmatrix}\right})
+
+---
+
+### Exercise 2
+
+Find the eigenvalues and eigenvectors of
+
+[
+A=\begin{pmatrix}2&1\1&2\end{pmatrix}
+]
+
+### Solution
+
+Find the characteristic equation:
+
+[
+\det(A-\lambda I)=
+\det\begin{pmatrix}
+2-\lambda & 1\
+1 & 2-\lambda
+\end{pmatrix}
+]
+
+[
+=(2-\lambda)^2-1
+]
+
+Expand:
+
+[
+(2-\lambda)^2-1=4-4\lambda+\lambda^2-1
+=\lambda^2-4\lambda+3
+]
+
+So solve
+
+[
+\lambda^2-4\lambda+3=0
+]
+
+Factor:
+
+[
+(\lambda-3)(\lambda-1)=0
+]
+
+Thus the eigenvalues are
+
+[
+\boxed{\lambda=3,\ 1}
+]
+
+#### For (\lambda=3)
+
+[
+A-3I=
+\begin{pmatrix}
+-1&1\
+1&-1
+\end{pmatrix}
+]
+
+Solve
+
+[
+\begin{pmatrix}
+-1&1\
+1&-1
+\end{pmatrix}
+\begin{pmatrix}
+x\y
+\end{pmatrix}
+=============
+
+\begin{pmatrix}
+0\0
+\end{pmatrix}
+]
+
+This gives
+
+[
+-x+y=0 \quad \Rightarrow \quad y=x
+]
+
+So eigenvectors are all nonzero multiples of
+
+[
+\boxed{\begin{pmatrix}1\1\end{pmatrix}}
+]
+
+#### For (\lambda=1)
+
+[
+A-I=
+\begin{pmatrix}
+1&1\
+1&1
+\end{pmatrix}
+]
+
+Solve
+
+[
+\begin{pmatrix}
+1&1\
+1&1
+\end{pmatrix}
+\begin{pmatrix}
+x\y
+\end{pmatrix}
+=============
+
+\begin{pmatrix}
+0\0
+\end{pmatrix}
+]
+
+This gives
+
+[
+x+y=0 \quad \Rightarrow \quad y=-x
+]
+
+So eigenvectors are all nonzero multiples of
+
+[
+\boxed{\begin{pmatrix}1\-1\end{pmatrix}}
+]
+
+### Final answer
+
+* (\lambda=3), eigenvectors: (\text{span}\left{\begin{pmatrix}1\1\end{pmatrix}\right})
+* (\lambda=1), eigenvectors: (\text{span}\left{\begin{pmatrix}1\-1\end{pmatrix}\right})
+
+---
+
+A standard method to remember is:
+
+1. Compute (\det(A-\lambda I))
+2. Solve for (\lambda)
+3. For each eigenvalue, solve ((A-\lambda I)\mathbf{v}=0)
+
+That is the full basic procedure for finding eigenvalues and eigenvectors.

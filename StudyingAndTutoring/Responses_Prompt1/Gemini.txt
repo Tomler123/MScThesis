@@ -1,0 +1,78 @@
+## 1. Key Ideas
+
+In linear algebra, most vectors change direction when they are multiplied by a matrix. However, certain special vectors maintain their direction, only changing in scale. These are called **eigenvectors**, and the factor by which they are scaled is the **eigenvalue**.
+
+The defining equation for this relationship is:
+
+$$A\mathbf{v} = \lambda\mathbf{v}$$
+
+Where:
+* $A$ is a square matrix.
+* $\mathbf{v}$ is the **eigenvector** (a non-zero vector).
+* $\lambda$ (lambda) is the **eigenvalue** (a scalar).
+
+### Geometric Meaning
+Geometrically, if you apply a linear transformation $A$ to an eigenvector $\mathbf{v}$, the resulting vector $A\mathbf{v}$ stays on the same span (line) as the original vector. It is simply stretched, compressed, or flipped, but never rotated off its original axis.
+
+
+
+### Importance
+Eigenvalues and eigenvectors are fundamental because they simplify complex matrix operations. They allow us to:
+* **Diagonalize matrices**, making it easier to calculate high powers of a matrix.
+* **Decouple systems of differential equations**, turning complex interactions into independent equations.
+* **Reduce dimensionality** in data science (such as Principal Component Analysis).
+
+---
+
+## 2. Worked Example
+
+Find the eigenvalues and eigenvectors for the matrix:
+$$A = \begin{pmatrix} 3 & 1 \\ 0 & 2 \end{pmatrix}$$
+
+### Step 1: Find the Eigenvalues
+To find $\lambda$, we solve the **characteristic equation**: $\det(A - \lambda I) = 0$.
+
+$$A - \lambda I = \begin{pmatrix} 3 & 1 \\ 0 & 2 \end{pmatrix} - \begin{pmatrix} \lambda & 0 \\ 0 & \lambda \end{pmatrix} = \begin{pmatrix} 3 - \lambda & 1 \\ 0 & 2 - \lambda \end{pmatrix}$$
+
+The determinant is:
+$$(3 - \lambda)(2 - \lambda) - (1)(0) = 0$$
+$$(3 - \lambda)(2 - \lambda) = 0$$
+
+The roots of this polynomial are the eigenvalues:
+**$\lambda_1 = 3$** and **$\lambda_2 = 2$**.
+
+### Step 2: Find the Eigenvectors for $\lambda_1 = 3$
+We solve the system $(A - 3I)\mathbf{v} = \mathbf{0}$:
+$$\begin{pmatrix} 3-3 & 1 \\ 0 & 2-3 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} \Rightarrow \begin{pmatrix} 0 & 1 \\ 0 & -1 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix}$$
+
+This gives the equation $y = 0$. Since there is no constraint on $x$, it is a free variable. Choosing $x=1$, the first eigenvector is:
+$$\mathbf{v}_1 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$$
+
+### Step 3: Find the Eigenvectors for $\lambda_2 = 2$
+We solve the system $(A - 2I)\mathbf{v} = \mathbf{0}$:
+$$\begin{pmatrix} 3-2 & 1 \\ 0 & 2-2 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} \Rightarrow \begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix}$$
+
+This gives the equation $x + y = 0$, or $x = -y$. Choosing $y=1$ results in $x=-1$. The second eigenvector is:
+$$\mathbf{v}_2 = \begin{pmatrix} -1 \\ 1 \end{pmatrix}$$
+
+---
+
+## 3. Practice Exercises
+
+### Exercise 1
+Find the eigenvalues and eigenvectors for $B = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}$.
+
+**Solution:**
+1.  **Characteristic Equation:** $\det(B - \lambda I) = (4-\lambda)(3-\lambda) - 2 = \lambda^2 - 7\lambda + 10 = 0$.
+2.  **Eigenvalues:** Factoring $(\lambda - 5)(\lambda - 2) = 0$ gives **$\lambda_1 = 5, \lambda_2 = 2$**.
+3.  **Eigenvector for $\lambda = 5$:** Solve $\begin{pmatrix} -1 & 1 \\ 2 & -2 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \mathbf{0}$. This gives $-x + y = 0 \Rightarrow x = y$. Eigenvector: **$\mathbf{v}_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$**.
+4.  **Eigenvector for $\lambda = 2$:** Solve $\begin{pmatrix} 2 & 1 \\ 2 & 1 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \mathbf{0}$. This gives $2x + y = 0 \Rightarrow y = -2x$. Eigenvector: **$\mathbf{v}_2 = \begin{pmatrix} 1 \\ -2 \end{pmatrix}$**.
+
+### Exercise 2
+Find the eigenvalues and eigenvectors for $C = \begin{pmatrix} 1 & 2 \\ 2 & 1 \end{pmatrix}$.
+
+**Solution:**
+1.  **Characteristic Equation:** $\det(C - \lambda I) = (1-\lambda)^2 - 4 = \lambda^2 - 2\lambda - 3 = 0$.
+2.  **Eigenvalues:** Factoring $(\lambda - 3)(\lambda + 1) = 0$ gives **$\lambda_1 = 3, \lambda_2 = -1$**.
+3.  **Eigenvector for $\lambda = 3$:** Solve $\begin{pmatrix} -2 & 2 \\ 2 & -2 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \mathbf{0}$. This gives $-2x + 2y = 0 \Rightarrow x = y$. Eigenvector: **$\mathbf{v}_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$**.
+4.  **Eigenvector for $\lambda = -1$:** Solve $\begin{pmatrix} 2 & 2 \\ 2 & 2 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \mathbf{0}$. This gives $2x + 2y = 0 \Rightarrow x = -y$. Eigenvector: **$\mathbf{v}_2 = \begin{pmatrix} 1 \\ -1 \end{pmatrix}$**.

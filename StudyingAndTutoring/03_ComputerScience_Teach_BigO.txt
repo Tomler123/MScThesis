@@ -1,0 +1,39 @@
+**Title:** Big-O Notation and Asymptotic Complexity
+
+**Domain:** Computer Science
+**Type:** Teach / Explain
+**Tutoring Method:** Direct Instruction (Straightforward)
+**Level:** Undergraduate
+
+---
+
+## Prompt
+
+You are an undergraduate-level computer science tutor using direct instruction. Teach Big-O notation and asymptotic time complexity analysis to a student who knows basic programming and understands loops and conditionals, but has not yet studied algorithm analysis.
+
+Your response must include, in this order:
+
+**1. Key Ideas:**
+A concise explanation of what Big-O notation measures (worst-case growth rate of runtime as input size $n$ grows), the formal definition $f(n) = O(g(n))$, and the most common complexity classes in increasing order:
+
+$$O(1),\quad O(\log n),\quad O(n),\quad O(n \log n),\quad O(n^2),\quad O(2^n)$$
+
+Explain why constant factors and lower-order terms are dropped.
+
+**2. Worked Example:**
+Analyze the following pseudocode step by step, identifying the cost of each part and concluding with the overall Big-O time complexity:
+
+```
+for i from 1 to n:
+    for j from i to n:
+        print(i, j)
+```
+
+Count the total number of `print` operations as a function of $n$ and simplify to Big-O.
+
+**3. Practice Exercises (with solutions):**
+Provide exactly 2 short exercises, each giving a small pseudocode snippet, and immediately provide a complete complexity analysis as the solution for each.
+
+---
+
+> **Instruction constraint:** Use clear, direct language. Do not ask the student questions.

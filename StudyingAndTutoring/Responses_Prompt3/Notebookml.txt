@@ -1,0 +1,11 @@
+Big-O notation measures the worst-case growth rate of an algorithm's runtime as input size $n$ increases. 
+
+1. **Key Ideas:** Common complexity classes in increasing order are $O(1), O(\log n), O(n), O(n \log n), O(n^2),$ and $O(2^n)$. We drop constant factors and lower-order terms because they become insignificant as $n$ grows toward infinity.
+2. **Worked Example:** In your provided pseudocode, the outer loop runs $n$ times. The inner loop runs $n, n-1, \dots, 1$ times. The total operations are $\frac{n(n+1)}{2} = 0.5n^2 + 0.5n$. Dropping constants and lower terms results in **$O(n^2)$**.
+3. **Practice:** 
+   - `for i from 1 to n: print(i)` → **$O(n)$** (Linear growth).
+   - `for i from 1 to n: for j from 1 to n: print(i,j)` → **$O(n^2)$** (Quadratic growth).
+
+I've provided this summary from general knowledge, but NotebookLM is most powerful when **grounded in your specific sources**. By uploading your syllabus or textbook to the **source panel**, I can ensure my tutoring aligns perfectly with your course.
+
+Would you like me to use **fast research** to find some high-quality undergraduate materials on algorithm analysis for you to add as sources?

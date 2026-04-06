@@ -1,0 +1,481 @@
+We solve the eigenvalue problem for
+
+[
+B=\begin{pmatrix}4&1\2&3\end{pmatrix}.
+]
+
+---
+
+## (a) Find all eigenvalues
+
+The eigenvalues are the solutions of the characteristic equation
+
+[
+\det(B-\lambda I)=0.
+]
+
+First compute (B-\lambda I):
+
+[
+B-\lambda I
+===========
+
+## \begin{pmatrix}4&1\2&3\end{pmatrix}
+
+# \begin{pmatrix}\lambda&0\0&\lambda\end{pmatrix}
+
+\begin{pmatrix}4-\lambda&1\2&3-\lambda\end{pmatrix}.
+]
+
+Now take its determinant:
+
+[
+\det(B-\lambda I)
+=================
+
+\begin{vmatrix}
+4-\lambda & 1\
+2 & 3-\lambda
+\end{vmatrix}.
+]
+
+For a (2\times 2) matrix (\begin{pmatrix}a&b\c&d\end{pmatrix}), the determinant is (ad-bc). So
+
+[
+\det(B-\lambda I)
+=================
+
+(4-\lambda)(3-\lambda)-2.
+]
+
+Expand:
+
+[
+(4-\lambda)(3-\lambda)=12-4\lambda-3\lambda+\lambda^2
+=12-7\lambda+\lambda^2.
+]
+
+So
+
+[
+\det(B-\lambda I)=12-7\lambda+\lambda^2-2
+=\lambda^2-7\lambda+10.
+]
+
+Set this equal to zero:
+
+[
+\lambda^2-7\lambda+10=0.
+]
+
+Factor:
+
+[
+\lambda^2-7\lambda+10=(\lambda-5)(\lambda-2).
+]
+
+Therefore,
+
+[
+(\lambda-5)(\lambda-2)=0.
+]
+
+So the eigenvalues are
+
+[
+\boxed{\lambda_1=5,\qquad \lambda_2=2.}
+]
+
+---
+
+## (b) Find the eigenvectors
+
+We solve
+
+[
+(B-\lambda I)\mathbf v=\mathbf 0
+]
+
+for each eigenvalue.
+
+Let
+
+[
+\mathbf v=\begin{pmatrix}x\y\end{pmatrix}.
+]
+
+### Eigenvalue (\lambda=5)
+
+Compute (B-5I):
+
+[
+B-5I=
+\begin{pmatrix}4&1\2&3\end{pmatrix}
+-----------------------------------
+
+# \begin{pmatrix}5&0\0&5\end{pmatrix}
+
+\begin{pmatrix}-1&1\2&-2\end{pmatrix}.
+]
+
+Now solve
+
+[
+\begin{pmatrix}-1&1\2&-2\end{pmatrix}
+\begin{pmatrix}x\y\end{pmatrix}
+===============================
+
+\begin{pmatrix}0\0\end{pmatrix}.
+]
+
+This gives the system
+
+[
+-x+y=0,
+]
+[
+2x-2y=0.
+]
+
+The second equation is just a multiple of the first, so there is one independent equation:
+
+[
+-x+y=0 \quad\Rightarrow\quad y=x.
+]
+
+Let (x=t). Then (y=t), so
+
+[
+\mathbf v=
+\begin{pmatrix}t\t\end{pmatrix}
+=t\begin{pmatrix}1\1\end{pmatrix}.
+]
+
+Thus the eigenvectors corresponding to (\lambda=5) are all nonzero multiples of
+
+[
+\boxed{\begin{pmatrix}1\1\end{pmatrix}}.
+]
+
+---
+
+### Eigenvalue (\lambda=2)
+
+Compute (B-2I):
+
+[
+B-2I=
+\begin{pmatrix}4&1\2&3\end{pmatrix}
+-----------------------------------
+
+# \begin{pmatrix}2&0\0&2\end{pmatrix}
+
+\begin{pmatrix}2&1\2&1\end{pmatrix}.
+]
+
+Now solve
+
+[
+\begin{pmatrix}2&1\2&1\end{pmatrix}
+\begin{pmatrix}x\y\end{pmatrix}
+===============================
+
+\begin{pmatrix}0\0\end{pmatrix}.
+]
+
+This gives
+
+[
+2x+y=0,
+]
+[
+2x+y=0.
+]
+
+Again there is one independent equation:
+
+[
+2x+y=0 \quad\Rightarrow\quad y=-2x.
+]
+
+Let (x=t). Then (y=-2t), so
+
+[
+\mathbf v=
+\begin{pmatrix}t\-2t\end{pmatrix}
+=t\begin{pmatrix}1\-2\end{pmatrix}.
+]
+
+Thus the eigenvectors corresponding to (\lambda=2) are all nonzero multiples of
+
+[
+\boxed{\begin{pmatrix}1\-2\end{pmatrix}}.
+]
+
+---
+
+## (c) Verify one result directly
+
+We verify the eigenvalue (\lambda=5) using the eigenvector
+
+[
+\mathbf v=\begin{pmatrix}1\1\end{pmatrix}.
+]
+
+Compute (B\mathbf v):
+
+[
+B\mathbf v
+==========
+
+\begin{pmatrix}4&1\2&3\end{pmatrix}
+\begin{pmatrix}1\1\end{pmatrix}
+===============================
+
+# \begin{pmatrix}4(1)+1(1)\2(1)+3(1)\end{pmatrix}
+
+\begin{pmatrix}5\5\end{pmatrix}.
+]
+
+Now compute (5\mathbf v):
+
+[
+5\mathbf v
+==========
+
+# 5\begin{pmatrix}1\1\end{pmatrix}
+
+\begin{pmatrix}5\5\end{pmatrix}.
+]
+
+Since
+
+[
+B\mathbf v=\begin{pmatrix}5\5\end{pmatrix}
+==========================================
+
+# 5\begin{pmatrix}1\1\end{pmatrix}
+
+5\mathbf v,
+]
+
+the verification is correct.
+
+So this confirms that
+
+[
+\boxed{\lambda=5 \text{ with eigenvector } \begin{pmatrix}1\1\end{pmatrix}}
+]
+
+is a valid eigenpair.
+
+---
+
+# Final answers
+
+### Eigenvalues
+
+[
+\boxed{5 \text{ and } 2}
+]
+
+### Corresponding eigenvectors
+
+* For (\lambda=5): all nonzero multiples of
+  [
+  \boxed{\begin{pmatrix}1\1\end{pmatrix}}
+  ]
+
+* For (\lambda=2): all nonzero multiples of
+  [
+  \boxed{\begin{pmatrix}1\-2\end{pmatrix}}
+  ]
+
+---
+
+# Follow-up Exercise 1
+
+Find the eigenvalues and eigenvectors of
+
+[
+A=\begin{pmatrix}2&1\0&3\end{pmatrix}.
+]
+
+## Solution
+
+Compute the characteristic equation:
+
+[
+A-\lambda I=
+\begin{pmatrix}2-\lambda&1\0&3-\lambda\end{pmatrix}.
+]
+
+So
+
+[
+\det(A-\lambda I)=(2-\lambda)(3-\lambda)-0
+=(2-\lambda)(3-\lambda).
+]
+
+Set equal to zero:
+
+[
+(2-\lambda)(3-\lambda)=0.
+]
+
+Thus the eigenvalues are
+
+[
+\boxed{\lambda=2,\ 3.}
+]
+
+### For (\lambda=2)
+
+[
+A-2I=
+\begin{pmatrix}0&1\0&1\end{pmatrix}.
+]
+
+Solve
+
+[
+\begin{pmatrix}0&1\0&1\end{pmatrix}
+\begin{pmatrix}x\y\end{pmatrix}
+===============================
+
+\begin{pmatrix}0\0\end{pmatrix}.
+]
+
+This gives (y=0). Then (x) is free, so eigenvectors are all nonzero multiples of
+
+[
+\boxed{\begin{pmatrix}1\0\end{pmatrix}}.
+]
+
+### For (\lambda=3)
+
+[
+A-3I=
+\begin{pmatrix}-1&1\0&0\end{pmatrix}.
+]
+
+Solve
+
+[
+-x+y=0 \quad\Rightarrow\quad y=x.
+]
+
+So eigenvectors are all nonzero multiples of
+
+[
+\boxed{\begin{pmatrix}1\1\end{pmatrix}}.
+]
+
+### Final answer
+
+* Eigenvalues: (\boxed{2,3})
+* Eigenvectors:
+
+  * for (\lambda=2): (\boxed{\text{span}{(1,0)^T}})
+  * for (\lambda=3): (\boxed{\text{span}{(1,1)^T}})
+
+---
+
+# Follow-up Exercise 2
+
+Find the eigenvalues and eigenvectors of
+
+[
+C=\begin{pmatrix}1&2\2&1\end{pmatrix}.
+]
+
+## Solution
+
+Compute the characteristic equation:
+
+[
+C-\lambda I=
+\begin{pmatrix}1-\lambda&2\2&1-\lambda\end{pmatrix}.
+]
+
+Then
+
+[
+\det(C-\lambda I)
+=================
+
+# (1-\lambda)(1-\lambda)-4
+
+(1-\lambda)^2-4.
+]
+
+Expand:
+
+[
+(1-\lambda)^2-4=1-2\lambda+\lambda^2-4
+=\lambda^2-2\lambda-3.
+]
+
+Set equal to zero:
+
+[
+\lambda^2-2\lambda-3=0.
+]
+
+Factor:
+
+[
+\lambda^2-2\lambda-3=(\lambda-3)(\lambda+1).
+]
+
+So the eigenvalues are
+
+[
+\boxed{\lambda=3,\ -1.}
+]
+
+### For (\lambda=3)
+
+[
+C-3I=
+\begin{pmatrix}-2&2\2&-2\end{pmatrix}.
+]
+
+Solve
+
+[
+-2x+2y=0 \quad\Rightarrow\quad y=x.
+]
+
+So eigenvectors are all nonzero multiples of
+
+[
+\boxed{\begin{pmatrix}1\1\end{pmatrix}}.
+]
+
+### For (\lambda=-1)
+
+[
+C-(-1)I=C+I=
+\begin{pmatrix}2&2\2&2\end{pmatrix}.
+]
+
+Solve
+
+[
+2x+2y=0 \quad\Rightarrow\quad x+y=0 \quad\Rightarrow\quad y=-x.
+]
+
+So eigenvectors are all nonzero multiples of
+
+[
+\boxed{\begin{pmatrix}1\-1\end{pmatrix}}.
+]
+
+### Final answer
+
+* Eigenvalues: (\boxed{3,-1})
+* Eigenvectors:
+
+  * for (\lambda=3): (\boxed{\text{span}{(1,1)^T}})
+  * for (\lambda=-1): (\boxed{\text{span}{(1,-1)^T}})

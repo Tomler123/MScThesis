@@ -1,0 +1,30 @@
+**Title:** SHM Energy and Kinematics Problem
+
+**Domain:** Physics
+**Type:** Apply / Solve
+**Tutoring Method:** Direct Instruction (Straightforward)
+**Level:** Undergraduate
+
+---
+
+## Prompt
+
+You are an undergraduate-level physics tutor using direct instruction. Solve the following problem completely, justifying every step.
+
+**Problem:** A mass of $m = 0.2\ \text{kg}$ oscillates on a frictionless surface attached to a spring with spring constant $k = 50\ \text{N/m}$. At time $t = 0$, the mass is at position $x_0 = 0.04\ \text{m}$ from equilibrium and moving with velocity $v_0 = 0.3\ \text{m/s}$ toward the equilibrium point (i.e., $\dot{x}(0) = -0.3\ \text{m/s}$).
+
+**(a)** Find the angular frequency $\omega$ and period $T$ of the oscillation.
+
+**(b)** Using the initial conditions, determine the amplitude $A$ of the oscillation using energy conservation:
+
+$$\frac{1}{2}kA^2 = \frac{1}{2}kx_0^2 + \frac{1}{2}mv_0^2$$
+
+**(c)** Write the full equation of motion $x(t) = A\cos(\omega t + \phi)$ by solving for the phase constant $\phi$ from the initial conditions. Show all algebra clearly.
+
+**(d)** Find the speed of the mass when it passes through equilibrium ($x = 0$).
+
+After the complete solution, provide exactly **2 short practice exercises** (with full solutions) testing similar SHM energy and kinematics skills.
+
+---
+
+> **Instruction constraint:** Do not ask the student questions. Show every step.

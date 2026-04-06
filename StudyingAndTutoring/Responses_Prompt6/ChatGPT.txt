@@ -1,0 +1,391 @@
+We solve the motion as a standard simple harmonic oscillator.
+
+Given:
+
+[
+m=0.2\ \text{kg},\qquad k=50\ \text{N/m},\qquad x_0=0.04\ \text{m},\qquad v_0=-0.3\ \text{m/s}
+]
+
+The negative sign on (v_0) means the mass is moving toward equilibrium at (t=0).
+
+---
+
+## (a) Angular frequency (\omega) and period (T)
+
+For a mass-spring oscillator,
+
+[
+\omega=\sqrt{\frac{k}{m}}
+]
+
+Substitute the values:
+
+[
+\omega=\sqrt{\frac{50}{0.2}}=\sqrt{250}
+]
+
+[
+\omega \approx 15.81\ \text{rad/s}
+]
+
+Now the period is
+
+[
+T=\frac{2\pi}{\omega}
+]
+
+So,
+
+[
+T=\frac{2\pi}{15.81}\approx 0.397\ \text{s}
+]
+
+### Answer for (a)
+
+[
+\boxed{\omega=\sqrt{250}\approx 15.81\ \text{rad/s}}
+]
+
+[
+\boxed{T=\frac{2\pi}{\sqrt{250}}\approx 0.397\ \text{s}}
+]
+
+---
+
+## (b) Amplitude (A) using energy conservation
+
+The total mechanical energy of SHM is constant. At maximum displacement (x=A), all the energy is spring potential energy:
+
+[
+E=\frac12 kA^2
+]
+
+At (t=0), the energy is the sum of spring potential and kinetic energy:
+
+[
+E=\frac12 kx_0^2+\frac12 mv_0^2
+]
+
+Set them equal:
+
+[
+\frac12 kA^2=\frac12 kx_0^2+\frac12 mv_0^2
+]
+
+Multiply both sides by (2):
+
+[
+kA^2=kx_0^2+mv_0^2
+]
+
+Now divide by (k):
+
+[
+A^2=x_0^2+\frac{m}{k}v_0^2
+]
+
+Substitute the numbers:
+
+[
+A^2=(0.04)^2+\frac{0.2}{50}(0.3)^2
+]
+
+Compute each term:
+
+[
+(0.04)^2=0.0016
+]
+
+[
+(0.3)^2=0.09
+]
+
+[
+\frac{0.2}{50}=0.004
+]
+
+[
+0.004 \cdot 0.09=0.00036
+]
+
+Therefore,
+
+[
+A^2=0.0016+0.00036=0.00196
+]
+
+So,
+
+[
+A=\sqrt{0.00196}\approx 0.0443\ \text{m}
+]
+
+### Answer for (b)
+
+[
+\boxed{A\approx 0.0443\ \text{m}}
+]
+
+---
+
+## (c) Full equation of motion (x(t)=A\cos(\omega t+\phi))
+
+We use the form
+
+[
+x(t)=A\cos(\omega t+\phi)
+]
+
+We already know:
+
+[
+A\approx 0.0443,\qquad \omega\approx 15.81
+]
+
+So we must find (\phi).
+
+### Step 1: Use the initial position
+
+At (t=0),
+
+[
+x(0)=A\cos\phi
+]
+
+Since (x(0)=0.04),
+
+[
+0.04=A\cos\phi
+]
+
+Thus,
+
+[
+\cos\phi=\frac{0.04}{A}
+]
+
+Substitute (A=0.0443):
+
+[
+\cos\phi=\frac{0.04}{0.0443}\approx 0.904
+]
+
+---
+
+### Step 2: Use the initial velocity
+
+Differentiate (x(t)):
+
+[
+v(t)=\dot x(t)=-A\omega\sin(\omega t+\phi)
+]
+
+At (t=0),
+
+[
+v(0)=-A\omega\sin\phi
+]
+
+Given (v(0)=-0.3),
+
+[
+-0.3=-A\omega\sin\phi
+]
+
+So,
+
+[
+0.3=A\omega\sin\phi
+]
+
+Hence,
+
+[
+\sin\phi=\frac{0.3}{A\omega}
+]
+
+Now compute (A\omega):
+
+[
+A\omega \approx (0.0443)(15.81)\approx 0.700
+]
+
+So,
+
+[
+\sin\phi=\frac{0.3}{0.700}\approx 0.429
+]
+
+---
+
+### Step 3: Determine the correct quadrant
+
+We found:
+
+[
+\cos\phi>0,\qquad \sin\phi>0
+]
+
+So (\phi) is in the first quadrant.
+
+Thus,
+
+[
+\phi \approx \cos^{-1}(0.904)\approx 0.443\ \text{rad}
+]
+
+This is consistent with
+
+[
+\sin^{-1}(0.429)\approx 0.443\ \text{rad}
+]
+
+---
+
+### Final equation of motion
+
+[
+\boxed{x(t)=0.0443\cos(15.81,t+0.443)}
+]
+
+with (x) in meters and (t) in seconds.
+
+---
+
+## (d) Speed when the mass passes through equilibrium
+
+At equilibrium, (x=0), so the spring potential energy is zero. Therefore all the energy is kinetic:
+
+[
+\frac12 mv^2=\frac12 kA^2
+]
+
+So,
+
+[
+v^2=\frac{k}{m}A^2
+]
+
+[
+v=A\sqrt{\frac{k}{m}}=A\omega
+]
+
+Substitute values:
+
+[
+v=(0.0443)(15.81)\approx 0.700\ \text{m/s}
+]
+
+Since the question asks for speed, we give the positive magnitude:
+
+[
+\boxed{0.700\ \text{m/s}}
+]
+
+---
+
+# Final Answers
+
+[
+\boxed{\omega\approx 15.81\ \text{rad/s}}
+]
+
+[
+\boxed{T\approx 0.397\ \text{s}}
+]
+
+[
+\boxed{A\approx 0.0443\ \text{m}}
+]
+
+[
+\boxed{x(t)=0.0443\cos(15.81,t+0.443)}
+]
+
+[
+\boxed{\text{Speed at equilibrium}=0.700\ \text{m/s}}
+]
+
+---
+
+# Practice Exercise 1
+
+A mass (m=0.5\ \text{kg}) is attached to a spring with (k=32\ \text{N/m}). At (t=0), it is at (x_0=0.10\ \text{m}) and has speed (v_0=0.40\ \text{m/s}).
+
+Find the amplitude (A).
+
+## Solution
+
+Use energy conservation:
+
+[
+\frac12 kA^2=\frac12 kx_0^2+\frac12 mv_0^2
+]
+
+So,
+
+[
+A^2=x_0^2+\frac{m}{k}v_0^2
+]
+
+Substitute:
+
+[
+A^2=(0.10)^2+\frac{0.5}{32}(0.40)^2
+]
+
+[
+A^2=0.01+\frac{0.5}{32}\cdot 0.16
+]
+
+[
+\frac{0.5}{32}=0.015625
+]
+
+[
+0.015625\cdot 0.16=0.0025
+]
+
+Thus,
+
+[
+A^2=0.01+0.0025=0.0125
+]
+
+[
+A=\sqrt{0.0125}\approx 0.112\ \text{m}
+]
+
+### Answer
+
+[
+\boxed{A\approx 0.112\ \text{m}}
+]
+
+---
+
+# Practice Exercise 2
+
+A mass-spring oscillator has amplitude (A=0.06\ \text{m}) and angular frequency (\omega=12\ \text{rad/s}).
+
+Find the speed when it passes through equilibrium.
+
+## Solution
+
+At equilibrium, the speed is maximum:
+
+[
+v_{\max}=A\omega
+]
+
+Substitute:
+
+[
+v=(0.06)(12)=0.72\ \text{m/s}
+]
+
+### Answer
+
+[
+\boxed{0.72\ \text{m/s}}
+]

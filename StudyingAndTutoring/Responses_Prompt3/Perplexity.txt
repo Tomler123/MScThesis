@@ -1,0 +1,33 @@
+## 1. Key Ideas
+
+Big-O notation measures the worst-case growth rate of an algorithm's runtime as the input size \(n\) increases, focusing on scalability rather than exact times. Formally, \(f(n) = O(g(n))\) if there exist constants \(c > 0\) and \(n_0 > 0\) such that for all \(n \geq n_0\), \(f(n) \leq c \cdot g(n)\); this captures an upper bound on growth. Common classes in increasing order are \(O(1)\) (constant), \(O(\log n)\) (logarithmic), \(O(n)\) (linear), \(O(n \log n)\) (linearithmic), \(O(n^2)\) (quadratic), and \(O(2^n)\) (exponential). [en.wikipedia](https://en.wikipedia.org/wiki/Big_O_notation)
+
+We drop constant factors (like 3n becomes O(n)) and lower-order terms (like n^2 + n becomes O(n^2)) because for large n, the highest-order term dominates, and hardware details don't change the asymptotic behavior. [geeksforgeeks](https://www.geeksforgeeks.org/dsa/analysis-algorithms-big-o-analysis/)
+
+## 2. Worked Example
+
+The outer loop runs n times (i from 1 to n).
+
+The inner loop, for each i, runs from i to n, so (n - i + 1) times; e.g., when i=1, it runs n times; i=2, n-1 times; up to i=n, 1 time. [stackoverflow](https://stackoverflow.com/questions/76449597/time-complexity-analysis-of-nested-loops)
+
+Total print operations: \(\sum_{i=1}^n (n - i + 1) = \sum_{k=1}^n k = \frac{n(n+1)}{2}\), which simplifies to \(O(n^2)\) since we drop the constant 1/2 and lower term. [stackoverflow](https://stackoverflow.com/questions/76449597/time-complexity-analysis-of-nested-loops)
+
+Each loop iteration and print costs O(1), so overall time complexity is O(n^2). [youtube](https://www.youtube.com/watch?v=1HvPzkc2_pY)
+
+## 3. Practice Exercises (with solutions)
+
+**Exercise 1:**
+```
+for i from 1 to n:
+    print(i)
+```
+**Solution:** Outer loop runs n times, each print is O(1), so total is n operations, or O(n). [simplilearn](https://www.simplilearn.com/big-o-notation-in-data-structure-article)
+
+**Exercise 2:**
+```
+for i from 1 to n:
+    for j from 1 to n:
+        if i == j:
+            print(i)
+```
+**Solution:** Outer loop n times, inner loop n times (independent), so n * n = n^2 print checks; the if doesn't change this, yielding O(n^2). [youtube](https://www.youtube.com/watch?v=kKkGBvgQf0A)

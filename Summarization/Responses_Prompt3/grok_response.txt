@@ -1,0 +1,22 @@
+Response:
+
+'''
+
+'''
+
+Extra feature:
+-    Auto option on model selection. (Decides which model to use that better suits the input)
+-    Expert option (Similar to whats most commonly known as Extended thinking)
+-    Copy button
+-    Export to PDF option
+-    Read loud
+-    Option for 3 follow up inputs that can be sent in one click:
+    *   Explain email etiquette nuances
+    *   Suggest alternate communication tools
+    *   Revise for firmer tone
+
+Model:
+Free tier grok.com (Grok) using "Grok 4.20" + Expert thinking
+
+Date:
+3/23/2026

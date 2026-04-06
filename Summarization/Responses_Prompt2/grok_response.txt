@@ -1,0 +1,34 @@
+Response:
+
+'''
+**Purpose**  
+The purpose of this paper is to align language models with user intent on a wide range of tasks by fine-tuning with human feedback. Making language models bigger does not inherently make them better at following a user’s intent, as large models can generate outputs that are untruthful, toxic, or simply not helpful. The language modeling objective is misaligned with the goal of producing outputs that are helpful, honest, and harmless.
+
+**Method**  
+The method consists of three steps applied to pretrained GPT-3 models: (1) collect demonstration data from labeler-written prompts and API prompts, then train a supervised policy (SFT) using supervised learning; (2) collect comparison data of model outputs ranked by labelers, then train a reward model (RM) to predict preferred outputs; (3) optimize a policy against the RM using proximal policy optimization (PPO), with a PPO-ptx variant that mixes in pretraining updates to reduce performance regressions. The process uses prompts primarily from the OpenAI API Playground and labeler-written examples, with data splits based on user ID and PII filtering.
+
+**Key Contributions**  
+The key contributions are the InstructGPT models (PPO and PPO-ptx variants) trained via the three-step RLHF pipeline on GPT-3 architectures of 1.3B, 6B, and 175B parameters. The work introduces datasets of labeler demonstrations and ranked comparisons for a broad distribution of API prompts (mostly generative tasks), plus systematic human evaluations on held-out API prompts and public NLP datasets. It also demonstrates generalization of instruction-following behavior beyond the fine-tuning distribution.
+
+**Results**  
+On the API prompt distribution, outputs from the 1.3B InstructGPT model are preferred to those from the 175B GPT-3 despite 100× fewer parameters, and 175B InstructGPT outputs are preferred 85 ± 3% of the time to 175B GPT-3 (71 ± 4% vs. few-shot GPT-3). InstructGPT models generate truthful and informative answers about twice as often as GPT-3 on TruthfulQA and make up information not present in the input about half as often on closed-domain tasks (21% vs. 41% hallucination rate). They generate about 25% fewer toxic outputs than GPT-3 when prompted to be respectful, with PPO-ptx minimizing regressions on public NLP datasets such as SQuAD, DROP, HellaSwag, and WMT 2015 translation.
+
+**Limitations**  
+The behavior of InstructGPT models is determined in part by the human feedback obtained from about 40 contractors, a small non-representative group primarily English-speaking whose value judgments may be influenced by personal history and cultural backgrounds. Models are neither fully aligned nor fully safe; they still generate toxic or biased outputs, make up facts, generate sexual and violent content without explicit prompting, and can fail to generate reasonable outputs on some inputs. The greatest limitation is that they follow the user’s instruction even if that could lead to harm in the real world—for example, generating more toxic outputs than GPT-3 when instructed to be maximally biased.
+'''
+
+Extra feature:
+-    Auto option on model selection. (Decides which model to use that better suits the input)
+-    Expert option (Similar to whats most commonly known as Extended thinking)
+-    Copy button
+-    Export to PDF option
+-    Read loud
+-    Options for follow up inputs that can be sent in one click:
+    *   Explain RLHF in details
+    *   Discuss ChatGPT origins
+
+Model:
+Free tier grok.com (Grok) using "Grok 4.20" + Expert thinking
+
+Date:
+3/23/2026

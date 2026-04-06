@@ -1,0 +1,32 @@
+Response:
+
+'''
+## Summary: "Training Language Models to Follow Instructions with Human Feedback"
+
+**Purpose**
+Large language models trained on next-token prediction are misaligned with user intent, producing outputs that are untruthful, toxic, or unhelpful. This paper aims to align language models with human intent across a wide range of tasks by fine-tuning GPT-3 using reinforcement learning from human feedback (RLHF). The resulting models are called InstructGPT.
+
+**Method**
+The approach involves three steps: (1) supervised fine-tuning (SFT) on labeler-written demonstrations, (2) training a reward model (RM) on human-ranked comparisons of model outputs, and (3) optimizing the SFT model against the RM using proximal policy optimization (PPO). To mitigate performance regressions on public NLP datasets, the authors introduce a PPO-ptx variant that mixes pretraining gradients into the PPO update. A team of approximately 40 contractors provided all demonstration and comparison data.
+
+**Key Contributions**
+The paper demonstrates that RLHF fine-tuning is substantially more effective than simply scaling model size for improving instruction-following behavior. It introduces the PPO-ptx objective to reduce the "alignment tax," and shows that InstructGPT generalizes instruction-following to domains not directly supervised, such as non-English languages and code.
+
+**Results**
+Outputs from the 1.3B parameter InstructGPT model were preferred by human labelers over outputs from the 175B GPT-3 model despite having over 100x fewer parameters. On TruthfulQA, InstructGPT generated truthful and informative answers roughly twice as often as GPT-3, and hallucinated in closed-domain tasks at a 21% rate compared to GPT-3's 41%. InstructGPT also produced approximately 25% fewer toxic outputs than GPT-3 when prompted to be respectful.
+
+**Limitations**
+The model's behavior is aligned to a narrow group — predominantly English-speaking contractors from the US and Southeast Asia — rather than to any broader notion of human values, introducing representational bias. InstructGPT still makes simple mistakes, such as accepting false premises in instructions and over-hedging on straightforward questions. The PPO-ptx mitigation does not fully eliminate performance regressions on datasets like DROP and WMT translation.
+'''
+
+Extra feature:
+-    Extended thinking option
+-    Copy button
+-    In the response, generated email had its own separate section/window.
+-    Get notified when Claude finishes response.
+
+Model:
+Free tier claude.ai using "Sonnet 4.6" + Extended thinking
+
+Date:
+3/23/2026

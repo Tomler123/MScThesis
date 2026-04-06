@@ -1,0 +1,23 @@
+Response:
+
+'''
+* Remote work increases flexibility while reducing daily commuting time for employees.
+* It may weaken informal collaboration and blur distinct work-life boundaries.
+* Many organizations adopt hybrid schedules to balance productivity, coordination, and wellbeing.
+'''
+
+Problem:
+For this simple task, model was not stopping the thinking process. Output was only given after I clicked "skip thinking"
+
+Extra feature:
+-    Auto option on model selection. (Decides which model to use that better suits the input)
+-    Thinking option
+-    Copy button
+-    Export to PDF option.
+-    Read loud
+
+Model:
+Free tier chat.qwen.ai (QWEN) using "Qwen3.5-Flash" + Thinking
+
+Date:
+3/23/2026

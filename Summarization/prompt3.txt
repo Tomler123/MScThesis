@@ -1,0 +1,10 @@
+You will summarize the attached lecture-notes PDF.
+
+Constraints:
+- Output exactly 5 bullet points titled: Concept, Intuition, Key Terms, Example/Use Case, Common Pitfall.
+- Each bullet must be 1–2 sentences.
+- Do not add external information beyond the PDF.
+- If a bullet cannot be answered from the PDF, write "Not specified in the PDF."
+
+Task:
+Summarize the PDF and follow the constraints exactly.

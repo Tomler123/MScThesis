@@ -1,0 +1,18 @@
+Response:
+
+'''
+
+'''
+
+Extra feature:
+-    Extended thinking option
+-    Offered a "Send via Gmail" button, which might make the life easier.
+-    Copy button
+-    In the response, generated email had its own separate section/window.
+-    Get notified when Claude finishes response.
+
+Model:
+Free tier claude.ai using "Sonnet 4.6" + Extended thinking
+
+Date:
+3/23/2026

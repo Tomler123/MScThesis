@@ -1,0 +1,6 @@
+Model,Composite Score,Content Quality,Tone Sentiment,Readability,Lexical Analysis,Structural,Constraint Adherence,Coherence Flow,Redundancy
+ChatGPT,62.77,25.18,70,90.82,55.18,51.23,84.92,30,89.63
+Claude,57.84,51.84,49.7,93.18,57.81,56.73,46,32.79,74.91
+Gemini,58.4,17.51,74.09,72.59,52.26,52.18,85.5,30.39,76.66
+Grok,63.22,21.41,80.71,82.56,52.13,52.48,91.67,31.66,81.31
+QWEN,57.18,10.63,77.25,66.97,64.87,52.21,76.67,30.21,97.33

@@ -1,0 +1,126 @@
+ChatGPT
+Prompt Adherence
+100
+Technical Quality
+90
+Style Accuracy
+95
+Composition
+95
+Color Accuracy
+95
+Detail & Realism
+90
+Overall Quality
+94
+
+The generated image closely matches the prompt with accurate object placement and colors. The composition is tidy and realistic, with soft daylight and natural shadows. Minor issues with shadow consistency and coffee mug fill level.
+
+Strengths: Accurate object placement, Correct objects and colors, Realistic lighting and shadows
+
+Weaknesses: Minor shadow inconsistencies, Coffee mug could be more filled
+FLUX
+Prompt Adherence
+90
+Technical Quality
+95
+Style Accuracy
+92
+Composition
+88
+Color Accuracy
+95
+Detail & Realism
+90
+Overall Quality
+92
+
+The generated image closely follows the prompt with a well-arranged and photorealistic desk scene. It accurately includes all required objects with correct colors and placement, except for a minor deviation in the coffee mug's content.
+
+Strengths: Accurate object placement, Realistic lighting and shadows, High-quality image
+
+Weaknesses: Minor deviation in coffee mug content
+Gemini
+Prompt Adherence
+90
+Technical Quality
+95
+Style Accuracy
+92
+Composition
+88
+Color Accuracy
+95
+Detail & Realism
+90
+Overall Quality
+92
+
+The generated image closely matches the prompt with a photorealistic top-down desk scene. All required objects are present and correctly arranged. The image features soft daylight from the upper-left with natural shadows, and no logos or readable brand names are visible.
+
+Strengths: Accurate object placement, Realistic lighting and shadows, High-quality image
+
+Weaknesses: Minor deviation in sticky note arrangement
+Grok
+Prompt Adherence
+90
+Technical Quality
+95
+Style Accuracy
+92
+Composition
+88
+Color Accuracy
+95
+Detail & Realism
+90
+Overall Quality
+91
+
+The generated image closely matches the prompt with a photorealistic top-down desk scene. It includes all required objects, and the lighting and shadows are well-executed. However, there are minor deviations in object arrangement and the coffee mug's fill level.
+
+Strengths: Accurate object placement, Realistic lighting and shadows, High-quality image
+
+Weaknesses: Minor deviation in object arrangement, Coffee mug not perfectly filled
+Reve
+Prompt Adherence
+90
+Technical Quality
+95
+Style Accuracy
+92
+Composition
+88
+Color Accuracy
+95
+Detail & Realism
+90
+Overall Quality
+92
+
+The generated image closely follows the prompt with a photorealistic top-down desk scene. It includes all required objects and maintains a tidy layout. However, there are minor discrepancies with the laptop screen and sticky note arrangement.
+
+Strengths: The image accurately includes all required objects., The layout is tidy and realistic., The lighting and shadows are well-handled.
+
+Weaknesses: The laptop screen shows some interface elements, not a completely blank document., The sticky notes are not stacked neatly as requested., The green sticky note is missing.
+StableDiffusion
+Prompt Adherence
+60
+Technical Quality
+80
+Style Accuracy
+70
+Composition
+50
+Color Accuracy
+80
+Detail & Realism
+70
+Overall Quality
+65
+
+The generated image mostly follows the prompt but has notable discrepancies. It includes incorrect number of plants, lacks a smartphone, a silver paperclip, and has extra binder clips. The layout, while visually appealing, does not strictly adhere to the specified tidy and realistic arrangement.
+
+Strengths: The image has a realistic and clean desk setup with proper lighting., Objects are generally well-rendered and detailed.
+
+Weaknesses: The image includes two plants instead of one, and there is a smartphone and paperclip missing while extra binder clips are present., The layout does not seem particularly tidy or realistic., There is a watermark in the image.

@@ -1,0 +1,126 @@
+ChatGPT
+Prompt Adherence
+90
+Technical Quality
+95
+Style Accuracy
+92
+Composition
+95
+Color Accuracy
+90
+Detail & Realism
+80
+Overall Quality
+90
+
+The generated image largely follows the prompt, converting the cartoon character into a technical blueprint illustration style with the required callout arrows and labels. The blueprint palette and technical line art are well-executed, with only minor inconsistencies in style and fill tones.
+
+Strengths: Accurate blueprint style conversion, Correct number and placement of callout arrows and labels, Preserved original pose and framing
+
+Weaknesses: Minor inconsistency in line art style, Slight deviation in fill tones
+FLUX
+Prompt Adherence
+80
+Technical Quality
+90
+Style Accuracy
+85
+Composition
+95
+Color Accuracy
+90
+Detail & Realism
+80
+Overall Quality
+85
+
+The generated image successfully transforms the cartoon character into a technical blueprint illustration style with a deep blue background and light cyan linework. It accurately adds callout arrows and labels, and preserves the original pose and proportions. However, there are some minor issues with line width consistency and extra lines that were not requested.
+
+Strengths: Accurate blueprint style conversion, Correct use of callout arrows and labels, Preserved original pose and proportions
+
+Weaknesses: Inconsistent line widths, Extra text or measurement lines not requested
+Gemini
+Prompt Adherence
+90
+Technical Quality
+85
+Style Accuracy
+95
+Composition
+95
+Color Accuracy
+90
+Detail & Realism
+80
+Overall Quality
+88
+
+The generated image largely follows the prompt, converting the character into a technical blueprint illustration style with a deep blue background and light cyan/white linework. The character is rendered as clean technical line art with consistent stroke width and minimal flat fills using exactly 2 fill tones. Three callout arrows pointing to the head/face, torso/clothing, and shoes are correctly added, each ending with a small label box containing a single letter (A, B, or C). The original pose, proportions, and framing are preserved without cropping, and no extra characters or objects are added. However, there is a minor inconsistency in linework stroke width and an extra small detail (a star) in the corner.
+
+Strengths: Accurate conversion to blueprint style, Correct use of 2 fill tones, Proper placement of callout arrows and labels
+
+Weaknesses: Minor inconsistency in linework stroke width, Presence of small extra detail (star) in corner
+Grok
+Prompt Adherence
+90
+Technical Quality
+85
+Style Accuracy
+88
+Composition
+92
+Color Accuracy
+95
+Detail & Realism
+80
+Overall Quality
+88
+
+The generated image largely follows the prompt, converting the cartoon character into a technical blueprint style with a deep blue background and light cyan/white linework. The character's pose, proportions, and framing are preserved. However, there are minor inconsistencies in line art quality and fill tones.
+
+Strengths: Accurate color palette, Correct composition and pose, Proper use of callout arrows and labels
+
+Weaknesses: Inconsistent line art quality, Minor fill tone inconsistencies
+Reve
+Prompt Adherence
+90
+Technical Quality
+95
+Style Accuracy
+92
+Composition
+95
+Color Accuracy
+90
+Detail & Realism
+80
+Overall Quality
+90
+
+The generated image largely follows the prompt, converting the cartoon character into a technical blueprint illustration style with a deep blue background and light cyan/white linework. The character is rendered as clean technical line art with consistent stroke width and minimal flat fills using exactly 2 fill tones. Three callout arrows pointing to the head/face, torso/clothing, and shoes are correctly added, each with a small label box containing a single letter (A, B, or C). The original pose, proportions, and framing are preserved.
+
+Strengths: Accurate conversion to blueprint style, Correct use of 2 fill tones, Precise linework and stroke width
+
+Weaknesses: Minor inconsistency in fill tones, Slight deviation in label box placement
+StableDiffusion
+Prompt Adherence
+80
+Technical Quality
+90
+Style Accuracy
+70
+Composition
+90
+Color Accuracy
+80
+Detail & Realism
+60
+Overall Quality
+78
+
+The generated image mostly follows the prompt, with accurate pose and framing, correct callout arrows and labels, and good technical line art quality. However, it fails to meet some requirements, such as inconsistent line widths, more than 2 fill tones, and extra text.
+
+Strengths: Accurate pose and framing, Correct use of callout arrows and labels, Good technical line art quality
+
+Weaknesses: Inconsistent line widths, Exceeds 2 fill tones, Presence of extra text

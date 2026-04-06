@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TransEval — Translation Quality Evaluation</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0b0d14;
+  --bg2:       #111420;
+  --bg3:       #181c2e;
+  --card:      #1a1f35;
+  --card2:     #1e2440;
+  --border:    #2a3050;
+  --border2:   #3a4570;
+  --text:      #dce4ff;
+  --text2:     #8892b0;
+  --text3:     #4f5d8a;
+  --accent:    #5e81f4;
+  --accent2:   #7c9fff;
+  --green:     #3dd68c;
+  --yellow:    #f5c542;
+  --red:       #f05060;
+  --purple:    #a78bfa;
+  --cyan:      #38bdf8;
+  --orange:    #fb923c;
+  --mono: 'Space Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+  --radius: 10px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 10% 0%, rgba(94,129,244,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 100%, rgba(167,139,250,0.05) 0%, transparent 60%);
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+  position: sticky; top: 0; z-index: 100;
+}
+.header-brand { display: flex; align-items: center; gap: 12px; }
+.header-brand .logo {
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--accent2);
+  letter-spacing: -0.5px;
+}
+.header-brand .badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  background: rgba(94,129,244,0.15);
+  border: 1px solid rgba(94,129,244,0.3);
+  color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: 1px;
+}
+.header-right { display: flex; align-items: center; gap: 12px; }
+.header-right .entry-count {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text3);
+}
+.header-right .entry-count span { color: var(--accent2); }
+
+/* ── LAYOUT ── */
+.layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 0;
+  min-height: calc(100vh - 60px);
+}
+.sidebar {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  padding: 24px;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 20px;
+}
+.main {
+  padding: 28px 32px;
+  overflow-x: hidden;
+}
+
+/* ── PANELS ── */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.panel-header {
+  background: var(--card2);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.panel-header .ph-icon {
+  width: 20px; height: 20px;
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+}
+.ph-blue  { background: rgba(94,129,244,0.2); color: var(--accent); }
+.ph-green { background: rgba(61,214,140,0.2); color: var(--green); }
+.ph-purple{ background: rgba(167,139,250,0.2); color: var(--purple); }
+.ph-yellow{ background: rgba(245,197,66,0.2); color: var(--yellow); }
+.ph-cyan  { background: rgba(56,189,248,0.2); color: var(--cyan); }
+.panel-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text2);
+}
+.panel-body { padding: 16px; }
+
+/* ── FORMS ── */
+label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--text2);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+textarea, input[type=text], select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  padding: 9px 12px;
+  transition: border-color 0.15s;
+  resize: vertical;
+}
+textarea:focus, input[type=text]:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(94,129,244,0.12);
+}
+select option { background: var(--bg3); }
+.form-row { margin-bottom: 14px; }
+.form-row:last-child { margin-bottom: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+.btn-secondary {
+  background: var(--card2);
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-green { background: rgba(61,214,140,0.15); color: var(--green); border: 1px solid rgba(61,214,140,0.3); }
+.btn-green:hover { background: rgba(61,214,140,0.25); }
+.btn-red { background: rgba(240,80,96,0.12); color: var(--red); border: 1px solid rgba(240,80,96,0.25); }
+.btn-red:hover { background: rgba(240,80,96,0.22); }
+.btn-purple { background: rgba(167,139,250,0.12); color: var(--purple); border: 1px solid rgba(167,139,250,0.25); }
+.btn-purple:hover { background: rgba(167,139,250,0.22); }
+.btn-full { width: 100%; justify-content: center; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+
+/* ── STEP LABEL ── */
+.step-label {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+.step-num {
+  width: 20px; height: 20px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── ENTRY LIST ── */
+.entry-list { display: flex; flex-direction: column; gap: 8px; }
+.entry-chip {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 10px 12px;
+  display: flex; align-items: center; gap: 10px;
+  transition: border-color 0.15s;
+  cursor: default;
+}
+.entry-chip:hover { border-color: var(--border2); }
+.entry-chip.evaluated { border-left: 3px solid var(--green); }
+.entry-chip.pending   { border-left: 3px solid var(--yellow); }
+.entry-chip.error     { border-left: 3px solid var(--red); }
+.entry-chip-info { flex: 1; min-width: 0; }
+.entry-chip-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entry-chip-pair { font-family: var(--mono); font-size: 10px; color: var(--accent); margin-top: 2px; }
+.entry-chip-score { font-family: var(--mono); font-size: 14px; font-weight: 700; }
+.entry-chip-actions { display: flex; gap: 4px; }
+.icon-btn {
+  width: 26px; height: 26px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  transition: all 0.15s;
+}
+.icon-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  gap: 0;
+  overflow-x: auto;
+}
+.tab-btn {
+  padding: 10px 18px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text3);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.tab-btn:hover { color: var(--text2); }
+.tab-btn.active { color: var(--accent2); border-bottom-color: var(--accent); }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* ── METRIC GRID ── */
+.metric-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px; }
+.metric-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.metric-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.metric-card.pos::before { background: var(--green); }
+.metric-card.neg::before { background: var(--red); }
+.metric-card.neu::before { background: var(--accent); }
+.metric-label { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; color: var(--text3); text-transform: uppercase; margin-bottom: 6px; }
+.metric-value { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--text); }
+.metric-value.good  { color: var(--green); }
+.metric-value.ok    { color: var(--yellow); }
+.metric-value.bad   { color: var(--red); }
+.metric-sub { font-size: 10px; color: var(--text3); margin-top: 3px; }
+
+/* ── TABLE ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.data-table th {
+  background: var(--bg3);
+  padding: 9px 12px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+.data-table th:hover { color: var(--accent); }
+.data-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+  font-family: var(--mono);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.data-table tr:hover td { background: rgba(94,129,244,0.05); }
+.data-table .model-name-col { color: var(--text); font-weight: 600; font-family: var(--sans); font-size: 12px; }
+.data-table .lang-col { color: var(--accent); }
+.rank-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+.rank-1 { background: rgba(245,197,66,0.2); color: var(--yellow); }
+.rank-2 { background: rgba(180,180,180,0.15); color: #ccc; }
+.rank-3 { background: rgba(205,127,50,0.2); color: #cd7f32; }
+
+/* ── HEATMAP ── */
+.heatmap-wrap { overflow-x: auto; }
+.heatmap-table { border-collapse: collapse; font-size: 11px; }
+.heatmap-table th {
+  padding: 8px 10px;
+  background: var(--bg3);
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text3);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  text-align: center;
+}
+.heatmap-table td {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  transition: opacity 0.2s;
+}
+.heatmap-table td:first-child {
+  text-align: left;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--bg3);
+  min-width: 160px;
+}
+.heatmap-table .model-pair {
+  font-size: 10px;
+  color: var(--accent);
+  font-family: var(--mono);
+  display: block;
+}
+
+/* ── RADAR CHART GRID ── */
+.radar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.radar-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.radar-card-title { font-family: var(--mono); font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+.radar-card-pair  { font-family: var(--mono); font-size: 10px; color: var(--accent); margin-bottom: 12px; }
+
+/* ── COMPOSITE SCORE DISPLAY ── */
+.composite-big {
+  font-family: var(--mono);
+  font-size: 48px;
+  font-weight: 700;
+  text-align: center;
+  padding: 20px 0;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── LLM JUDGE ── */
+.judge-entry {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.judge-entry-header {
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.judge-entry-header:hover { background: var(--card2); }
+.judge-entry-body { padding: 16px; border-top: 1px solid var(--border); display: none; }
+.judge-entry-body.open { display: block; }
+.judge-scores { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.judge-score-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 12px;
+  text-align: center;
+}
+.judge-score-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.judge-score-val { font-family: var(--mono); font-size: 28px; font-weight: 700; }
+.judge-score-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+.judge-score-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s; }
+.judge-justification { font-size: 12px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
+.judge-assessment {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* ── WEIGHT SLIDERS ── */
+.weight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.weight-item { }
+.weight-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.weight-name { font-size: 11px; color: var(--text2); font-family: var(--mono); }
+.weight-val { font-size: 11px; font-family: var(--mono); color: var(--accent); }
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* ── PROFILE BUTTONS ── */
+.profile-btns { display: flex; gap: 8px; margin-bottom: 16px; }
+.profile-btn {
+  flex: 1;
+  padding: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text2);
+  font-family: var(--mono);
+  font-size: 10px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.profile-btn:hover { border-color: var(--accent); color: var(--accent); }
+.profile-btn.active { background: rgba(94,129,244,0.15); border-color: var(--accent); color: var(--accent2); }
+
+/* ── LANG STATS ── */
+.lang-group { margin-bottom: 24px; }
+.lang-group-title {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent2);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.lang-group-title .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── ALERTS ── */
+.alert {
+  padding: 12px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+.alert-info  { background: rgba(94,129,244,0.1);  border: 1px solid rgba(94,129,244,0.25); color: var(--accent2); }
+.alert-success { background: rgba(61,214,140,0.1); border: 1px solid rgba(61,214,140,0.25); color: var(--green); }
+.alert-warning { background: rgba(245,197,66,0.1);  border: 1px solid rgba(245,197,66,0.25); color: var(--yellow); }
+.alert-error { background: rgba(240,80,96,0.1);  border: 1px solid rgba(240,80,96,0.25); color: var(--red); }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text3);
+}
+.empty-state .big { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+.empty-state .msg { font-size: 14px; }
+
+/* ── SPINNER ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(94,129,244,0.3);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ── TOOLTIP ── */
+[data-tip] { position: relative; cursor: help; }
+[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 999;
+  pointer-events: none;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* ── FILE UPLOAD ── */
+.file-upload-zone {
+  border: 1px dashed var(--border2);
+  border-radius: 6px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text3);
+  font-size: 11px;
+}
+.file-upload-zone:hover { border-color: var(--accent); color: var(--accent); }
+input[type=file] { display: none; }
+
+/* ── PROGRESS ── */
+.progress-bar-wrap { background: var(--bg3); border-radius: 4px; height: 6px; overflow: hidden; margin: 4px 0; }
+.progress-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s; }
+
+/* ── SECTION TITLE ── */
+.section-title {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── Z-SCORE TABLE ── */
+.z-positive { color: var(--green); }
+.z-negative { color: var(--red); }
+.z-neutral  { color: var(--text3); }
+
+/* ── GROQ API ── */
+.api-key-wrap { position: relative; }
+.api-key-wrap input { padding-right: 40px; font-family: var(--mono); font-size: 12px; }
+.api-key-toggle {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: var(--text3); cursor: pointer; font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-brand">
+    <div class="logo">TransEval</div>
+    <div class="badge">v1.0 · MSc Thesis</div>
+  </div>
+  <div class="header-right">
+    <div class="entry-count">Entries: <span id="hdr-entry-count">0</span> &nbsp;|&nbsp; Evaluated: <span id="hdr-eval-count">0</span></div>
+    <button class="btn btn-secondary" onclick="clearSession()">✕ Clear Session</button>
+  </div>
+</header>
+
+<div class="layout">
+
+<!-- ═══════════════════════════════ SIDEBAR ═══════════════════════════════ -->
+<aside class="sidebar">
+
+  <!-- Step 1: Source Text -->
+  <div>
+    <div class="step-label"><div class="step-num">1</div> ORIGINAL SOURCE TEXT (A)</div>
+    <div class="panel">
+      <div class="panel-body">
+        <div class="form-row">
+          <textarea id="original-text" rows="6" placeholder="Paste the original English source text here…"></textarea>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-secondary" style="flex:1" onclick="loadSampleText()">Load Sample</button>
+          <button class="btn btn-primary" style="flex:1" onclick="setOriginalText()">Set Text</button>
+        </div>
+        <div id="orig-status" style="margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--text3);"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Add Model Entry -->
+  <div>
+    <div class="step-label"><div class="step-num">2</div> ADD MODEL ENTRY</div>
+    <div class="panel">
+      <div class="panel-body">
+        <div class="form-row row2">
+          <div>
+            <label>Model Name</label>
+            <input type="text" id="model-name" placeholder="e.g. GPT-4o"/>
+          </div>
+          <div>
+            <label>Language Pair</label>
+            <input type="text" id="lang-pair" placeholder="e.g. EN→HU"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Translation B (→ Target Lang)</label>
+          <textarea id="translation-b" rows="4" placeholder="Paste the model's translation into the target language…"></textarea>
+          <div style="margin-top:6px;display:flex;align-items:center;gap:6px;">
+            <label class="file-upload-zone" for="upload-b" style="margin:0;flex:1;">📎 Upload .txt/.json</label>
+            <input type="file" id="upload-b" accept=".txt,.json" onchange="loadFile('upload-b','translation-b')"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Back-Translation C (→ English)</label>
+          <textarea id="back-translation-c" rows="4" placeholder="Paste the model's back-translation to English…"></textarea>
+          <div style="margin-top:6px;display:flex;align-items:center;gap:6px;">
+            <label class="file-upload-zone" for="upload-c" style="margin:0;flex:1;">📎 Upload .txt/.json</label>
+            <input type="file" id="upload-c" accept=".txt,.json" onchange="loadFile('upload-c','back-translation-c')"/>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="addEntry()">+ Add &amp; Evaluate Entry</button>
+        <div id="add-error" class="alert alert-error" style="display:none;margin-top:10px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Entry List -->
+  <div>
+    <div class="step-label"><div class="step-num">3</div> ENTRIES</div>
+    <div id="entry-list" class="entry-list">
+      <div class="empty-state" style="padding:20px">
+        <div class="msg" style="color:var(--text3);font-size:12px;">No entries yet. Add a model entry above.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4: Run Analysis -->
+  <div>
+    <button class="btn btn-green btn-full" style="padding:12px" onclick="runFullAnalysis()" id="run-analysis-btn">
+      ▶ Run Full Analysis
+    </button>
+  </div>
+
+  <!-- Export -->
+  <div>
+    <div class="step-label" style="margin-bottom:8px;"><div class="step-num">4</div> EXPORT</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button class="btn btn-secondary btn-full" onclick="exportData('csv')">↓ CSV</button>
+      <button class="btn btn-secondary btn-full" onclick="exportData('json')">↓ JSON</button>
+    </div>
+  </div>
+
+</aside>
+
+<!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
+<main class="main">
+
+  <div id="empty-main" class="empty-state">
+    <div class="big">⟷</div>
+    <div class="msg">Add model entries on the left and click <strong>Run Full Analysis</strong><br>to see the evaluation dashboard.</div>
+  </div>
+
+  <div id="results-section" style="display:none">
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+      <button class="tab-btn" onclick="switchTab('metrics')">Metrics Table</button>
+      <button class="tab-btn" onclick="switchTab('heatmap')">Heatmap</button>
+      <button class="tab-btn" onclick="switchTab('radar')">Radar Charts</button>
+      <button class="tab-btn" onclick="switchTab('leaderboard')">Leaderboard</button>
+      <button class="tab-btn" onclick="switchTab('zscores')">Z-Scores</button>
+      <button class="tab-btn" onclick="switchTab('weights')">Weights</button>
+      <button class="tab-btn" onclick="switchTab('judge')">LLM Judge</button>
+    </div>
+
+    <!-- ── TAB: OVERVIEW ── -->
+    <div id="tab-overview" class="tab-pane active">
+      <div class="section-title">Session Overview</div>
+      <div id="overview-lang-groups"></div>
+    </div>
+
+    <!-- ── TAB: METRICS TABLE ── -->
+    <div id="tab-metrics" class="tab-pane">
+      <div class="section-title">Full Metrics Table</div>
+      <div style="overflow-x:auto">
+        <table class="data-table" id="metrics-table">
+          <thead>
+            <tr>
+              <th onclick="sortTable('model_name')">Model</th>
+              <th onclick="sortTable('language_pair')">Lang Pair</th>
+              <th onclick="sortTable('bleu_4')" data-tip="BLEU-4 score">BLEU-4</th>
+              <th onclick="sortTable('rouge_1_f1')" data-tip="ROUGE-1 F1">R-1 F1</th>
+              <th onclick="sortTable('rouge_2_f1')" data-tip="ROUGE-2 F1">R-2 F1</th>
+              <th onclick="sortTable('rouge_l_f1')" data-tip="ROUGE-L F1">R-L F1</th>
+              <th onclick="sortTable('chrf')" data-tip="chrF score (char-level F)">chrF</th>
+              <th onclick="sortTable('tfidf_cosine')" data-tip="TF-IDF cosine similarity">TF-IDF</th>
+              <th onclick="sortTable('jaccard')" data-tip="Jaccard token overlap">Jaccard</th>
+              <th onclick="sortTable('content_word_overlap')" data-tip="Content word overlap">CW-Ovlp</th>
+              <th onclick="sortTable('bigram_overlap')" data-tip="Bigram Jaccard overlap">Bigram</th>
+              <th onclick="sortTable('wer')" data-tip="Word Error Rate (lower=better)">WER↓</th>
+              <th onclick="sortTable('cer')" data-tip="Character Error Rate (lower=better)">CER↓</th>
+              <th onclick="sortTable('length_ratio')" data-tip="Back-translation / original word count ratio">Len Ratio</th>
+              <th onclick="sortTable('composite_score')" data-tip="Composite weighted score">Composite</th>
+            </tr>
+          </thead>
+          <tbody id="metrics-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── TAB: HEATMAP ── -->
+    <div id="tab-heatmap" class="tab-pane">
+      <div class="section-title">Metric Heatmap — Models × Metrics</div>
+      <div class="heatmap-wrap">
+        <table class="heatmap-table" id="heatmap-table"></table>
+      </div>
+    </div>
+
+    <!-- ── TAB: RADAR ── -->
+    <div id="tab-radar" class="tab-pane">
+      <div class="section-title">Radar Charts — Per-Entry Performance Profile</div>
+      <div class="radar-grid" id="radar-grid"></div>
+    </div>
+
+    <!-- ── TAB: LEADERBOARD ── -->
+    <div id="tab-leaderboard" class="tab-pane">
+      <div class="section-title">Leaderboard — Ranked by Composite Score</div>
+      <div id="leaderboard-by-lang"></div>
+    </div>
+
+    <!-- ── TAB: Z-SCORES ── -->
+    <div id="tab-zscores" class="tab-pane">
+      <div class="section-title">Z-Score Normalization</div>
+      <div class="alert alert-info" style="margin-bottom:16px">
+        Z-scores show how each model performs <strong>relative to the session average</strong>. Positive = above average, negative = below average.
+      </div>
+      <div style="overflow-x:auto">
+        <table class="data-table" id="zscore-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Lang Pair</th>
+              <th>BLEU-4</th>
+              <th>ROUGE-L</th>
+              <th>chrF</th>
+              <th>TF-IDF</th>
+              <th>Jaccard</th>
+              <th>CW-Ovlp</th>
+              <th>WER</th>
+              <th>CER</th>
+              <th>Bigram</th>
+              <th>Len Score</th>
+            </tr>
+          </thead>
+          <tbody id="zscore-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── TAB: WEIGHTS ── -->
+    <div id="tab-weights" class="tab-pane">
+      <div class="section-title">Composite Score — Weight Configuration</div>
+      <div class="alert alert-info" style="margin-bottom:16px">
+        Adjust weights per metric group and click <strong>Recalculate</strong> to update composite scores and leaderboard. Weights do not need to sum to 1.
+      </div>
+      <div class="profile-btns">
+        <div class="profile-btn active" id="profile-balanced" onclick="applyProfile('balanced')">⚖ Balanced</div>
+        <div class="profile-btn" id="profile-meaning_heavy" onclick="applyProfile('meaning_heavy')">📝 Meaning-Heavy</div>
+        <div class="profile-btn" id="profile-fluency_heavy" onclick="applyProfile('fluency_heavy')">🗣 Fluency-Heavy</div>
+        <div class="profile-btn" id="profile-custom" onclick="applyProfile('custom')">🔧 Custom</div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-header"><div class="ph-icon ph-blue">📐</div><div class="panel-title">Meaning Preservation</div></div>
+        <div class="panel-body">
+          <div class="weight-grid">
+            <div class="weight-item">
+              <div class="weight-header"><span class="weight-name">BLEU-4</span><span class="weight-val" id="wv-bleu_4">15%</span></div>
+              <input type="range" id="w-bleu_4" min="0" max="50" value="15" oninput="updateWeightDisplay('bleu_4')"/>
+            </div>
+            <div class="weight-item">
+              <div class="weight-header"><span class="weight-name">ROUGE-1 F1</span><span class="weight-val" id="wv-rouge_1_f1">8%</span></div>
+              <input type="range" id="w-rouge_1_f1" min="0" max="50" value="8" oninput="updateWeightDisplay('rouge_1_f1')"/>
+            </div>
+            <div class="weight-item">
+              <div class="weight-header"><span class="weight-name">ROUGE-L F1</span><span class="weight-val" id="wv-rouge_l_f1">10%</span></div>
+              <input type="range" id="w-rouge_l_f1" min="0" max="50" value="10" oninput="updateWeightDisplay('rouge_l_f1')"/>
+            </div>
+            <div class="weight-item">
+              <div class="weight-header"><span class="weight-name">chrF</span><span class="weight-val" id="wv-chrf">10%</span></div>
+              <input type="range" id="w-chrf" min="0" max="50" value="10" oninput="updateWeightDisplay('chrf')"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-header"><div class="ph-icon ph-cyan">🔍</div><div class="panel-title">Semantic Similarity</div></div>
+        <div class="panel-body">
+          <div class="weight-grid">
+            <div class="weight-item">
+              <div class="weight-header"><span class="weight-name">TF-IDF Cosine</span><span class="weight-val" id="wv-tfidf_cosine">12%</span></div>
+              <input type="range" id="w-tfidf_cosine" min="0" max="50" value="12" oninput="updateWeightDisplay('tfidf_cosine')"/>
+            </div>
+            <div class="weight-item">
+              <div class="weight-header"><span class="weight-name">Jaccard</span><span class="weight-val" id="wv-jaccard">8%</span></div>
+              <input type="range" id="w-jaccard" min="0" max="50" value="8" oninput="updateWeightDisplay('jaccard')"/>
+            </div>
+            <div class="weight-item">
+              <div class="weight-header"><span class="weight-name">Content Word Overlap</span><span class="weight-val" id="wv-content_word_overlap">8%</span></div>
+              <input type="range" id="w-content_word_overlap" min="0" max="50" value="8" oninput="updateWeightDisplay('content_word_overlap')"/>
+            </div>
+            <div class="weight-item">
+              <div class="weight-header"><span class="weight-name">Bigram Overlap</span><span class="weight-val" id="wv-bigram_overlap">8%</span></div>
+              <input type="range" id="w-bigram_overlap" min="0" max="50" value="8" oninput="updateWeightDisplay('bigram_overlap')"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:20px">
+        <div class="panel-header"><div class="ph-icon ph-red" style="background:rgba(240,80,96,0.2);color:var(--red)">🗣</div><div class="panel-title">Fluency &amp; Structural</div></div>
+        <div class="panel-body">
+          <div class="weight-grid">
+            <div class="weight-item">
+              <div class="weight-header"><span class="weight-name">WER (inverted)</span><span class="weight-val" id="wv-wer">13%</span></div>
+              <input type="range" id="w-wer" min="0" max="50" value="13" oninput="updateWeightDisplay('wer')"/>
+            </div>
+            <div class="weight-item">
+              <div class="weight-header"><span class="weight-name">CER (inverted)</span><span class="weight-val" id="wv-cer">7%</span></div>
+              <input type="range" id="w-cer" min="0" max="50" value="7" oninput="updateWeightDisplay('cer')"/>
+            </div>
+            <div class="weight-item">
+              <div class="weight-header"><span class="weight-name">Length Score</span><span class="weight-val" id="wv-length_score">6%</span></div>
+              <input type="range" id="w-length_score" min="0" max="50" value="6" oninput="updateWeightDisplay('length_score')"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-green btn-full" style="padding:12px" onclick="recalculateComposite()">⟳ Recalculate Composite Scores</button>
+    </div>
+
+    <!-- ── TAB: LLM JUDGE ── -->
+    <div id="tab-judge" class="tab-pane">
+      <div class="section-title">LLM-as-Judge — Groq / Llama 3.3 70B</div>
+      <div class="panel" style="margin-bottom:20px">
+        <div class="panel-header"><div class="ph-icon ph-purple">🔑</div><div class="panel-title">Groq API Configuration</div></div>
+        <div class="panel-body">
+          <div class="form-row row2">
+            <div>
+              <label>Groq API Key</label>
+              <div class="api-key-wrap">
+                <input type="password" id="groq-api-key" placeholder="gsk_…"/>
+                <button class="api-key-toggle" onclick="toggleApiKeyVis()">👁</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-end">
+              <button class="btn btn-purple btn-full" onclick="runAllJudge()">⚡ Judge All Entries</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="judge-entries"></div>
+    </div>
+
+  </div><!-- /results-section -->
+</main>
+</div><!-- /layout -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+const state = {
+  originalText: '',
+  entries: [],       // {id, model_name, language_pair, translation, back_translation, metrics, composite_score, z_scores, judge}
+  zScores: {},       // {entryId: {metric: z}}
+  langStats: {},
+  currentProfile: 'balanced',
+  idCounter: 0,
+};
+
+const WEIGHT_PROFILES = {
+  balanced:      { bleu_4:0.10, rouge_1_f1:0.08, rouge_l_f1:0.10, chrf:0.10, tfidf_cosine:0.12, jaccard:0.08, content_word_overlap:0.08, bigram_overlap:0.08, wer:0.13, cer:0.07, length_score:0.06 },
+  meaning_heavy: { bleu_4:0.18, rouge_1_f1:0.10, rouge_l_f1:0.15, chrf:0.15, tfidf_cosine:0.12, jaccard:0.10, content_word_overlap:0.10, bigram_overlap:0.06, wer:0.02, cer:0.01, length_score:0.01 },
+  fluency_heavy: { bleu_4:0.05, rouge_1_f1:0.04, rouge_l_f1:0.05, chrf:0.06, tfidf_cosine:0.06, jaccard:0.05, content_word_overlap:0.05, bigram_overlap:0.04, wer:0.35, cer:0.15, length_score:0.10 },
+};
+
+const LANG_COLORS = ['#5e81f4','#3dd68c','#f5c542','#f05060','#a78bfa','#38bdf8','#fb923c','#ec4899'];
+
+// ═══════════════════════════════════════════════════════════════
+// SAMPLE TEXT
+// ═══════════════════════════════════════════════════════════════
+const SAMPLE_TEXT = `The ceaseless deluge battered the corrugated tin roof of the temporary command pavilion, creating a deafening symphony of metallic drumming that reverberated through the humid air. Inside, the atmosphere was suffocating, thick with the acrid scent of cheap, burnt coffee and the unmistakable stench of estuarine mud. Outside, shrouded in the gray gloom of the squall, the listing carcass of the H.M.S. Leviathan lay hopelessly wedged against the treacherous shoals of the coastal sound.
+
+Alistair Vance, a man whose immaculate, bespoke trench coat seemed a deliberate affront to the surrounding squalor, stood rigid by the fogged window. Across from him, sprawled negligently in a rusted folding chair with his mud-caked boots propped brazenly upon the scarred wooden table, was Jax — the foreman of the ragtag salvage outfit currently failing to extract Vance's multi-million-dollar asset from the murky depths.
+
+"Look, man," Jax muttered, aggressively chewing on a frayed toothpick. "Bottom line? Thing's super stuck. Mud's like glue out there. You want it out, we gotta tear her open. My guys are down there in the dark, total blackout conditions."
+
+Alistair turned slowly, his expression one of profound, aristocratic weariness. "The Leviathan is equipped with experimental quantum arrays, the sensitivity of which cannot be overstated. A mere fraction of a degree in lateral movement could permanently misalign the optical matrices."`;
+
+function loadSampleText() {
+  document.getElementById('original-text').value = SAMPLE_TEXT;
+}
+
+function setOriginalText() {
+  const val = document.getElementById('original-text').value.trim();
+  if (!val) { showAddError('Please enter the original source text.'); return; }
+  state.originalText = val;
+  const wc = val.split(/\s+/).length;
+  document.getElementById('orig-status').textContent = `✓ Set — ${wc} words`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FILE UPLOAD
+// ═══════════════════════════════════════════════════════════════
+function loadFile(inputId, targetId) {
+  const file = document.getElementById(inputId).files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    let content = e.target.result;
+    // If JSON, try to extract a text field
+    if (file.name.endsWith('.json')) {
+      try {
+        const obj = JSON.parse(content);
+        content = obj.text || obj.translation || obj.content || JSON.stringify(obj);
+      } catch(_) {}
+    }
+    document.getElementById(targetId).value = content;
+  };
+  reader.readAsText(file);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ADD ENTRY & EVALUATE
+// ═══════════════════════════════════════════════════════════════
+async function addEntry() {
+  const model    = document.getElementById('model-name').value.trim();
+  const langPair = document.getElementById('lang-pair').value.trim();
+  const transB   = document.getElementById('translation-b').value.trim();
+  const backC    = document.getElementById('back-translation-c').value.trim();
+
+  document.getElementById('add-error').style.display = 'none';
+
+  if (!state.originalText) { showAddError('Set the original source text first (Step 1).'); return; }
+  if (!model)    { showAddError('Enter a model name.'); return; }
+  if (!langPair) { showAddError('Enter a language pair (e.g. EN→HU).'); return; }
+  if (!transB)   { showAddError('Paste the translation (B).'); return; }
+  if (!backC)    { showAddError('Paste the back-translation (C).'); return; }
+
+  const id = ++state.idCounter;
+  const entry = { id, model_name: model, language_pair: langPair, translation: transB, back_translation: backC, metrics: null, composite_score: null, z_scores: null, judge: null };
+  state.entries.push(entry);
+
+  // Evaluate immediately
+  entry._status = 'loading';
+  renderEntryList();
+  updateHeaderCounts();
+
+  try {
+    const res = await fetch('/api/evaluate', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ original: state.originalText, back_translation: backC })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    entry.metrics = data.metrics;
+    entry._status = 'evaluated';
+  } catch(e) {
+    entry._status = 'error';
+    entry._error = e.message;
+  }
+
+  renderEntryList();
+  updateHeaderCounts();
+
+  // Clear form
+  document.getElementById('model-name').value = '';
+  document.getElementById('lang-pair').value = '';
+  document.getElementById('translation-b').value = '';
+  document.getElementById('back-translation-c').value = '';
+}
+
+function showAddError(msg) {
+  const el = document.getElementById('add-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function removeEntry(id) {
+  state.entries = state.entries.filter(e => e.id !== id);
+  renderEntryList();
+  updateHeaderCounts();
+  if (state.entries.length === 0) {
+    document.getElementById('empty-main').style.display = 'block';
+    document.getElementById('results-section').style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RUN FULL ANALYSIS
+// ═══════════════════════════════════════════════════════════════
+async function runFullAnalysis() {
+  const evaluated = state.entries.filter(e => e.metrics);
+  if (!evaluated.length) {
+    alert('No evaluated entries yet. Add at least one model entry first.');
+    return;
+  }
+  const btn = document.getElementById('run-analysis-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Running…';
+
+  try {
+    await computeComposite();
+    renderAll();
+    document.getElementById('empty-main').style.display = 'none';
+    document.getElementById('results-section').style.display = 'block';
+    renderEntryList();
+  } catch(e) {
+    alert('Analysis error: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '▶ Run Full Analysis';
+  }
+}
+
+async function computeComposite(profile) {
+  const p = profile || state.currentProfile;
+  const evaluated = state.entries.filter(e => e.metrics);
+  if (!evaluated.length) return;
+
+  const res = await fetch('/api/composite', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      entries: evaluated.map(e => ({id: e.id, metrics: e.metrics, language_pair: e.language_pair})),
+      profile: p,
+    })
+  });
+  const data = await res.json();
+
+  data.composite_scores.forEach(cs => {
+    const entry = state.entries.find(e => e.id === cs.id);
+    if (entry) entry.composite_score = cs.composite;
+  });
+
+  state.zScores   = data.z_scores || {};
+  state.langStats = data.lang_stats || {};
+  state.currentProfile = p;
+}
+
+async function recalculateComposite() {
+  const weights = getWeightsFromSliders();
+  const evaluated = state.entries.filter(e => e.metrics);
+  if (!evaluated.length) return;
+
+  const res = await fetch('/api/composite', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      entries: evaluated.map(e => ({id: e.id, metrics: e.metrics, language_pair: e.language_pair})),
+      weights,
+    })
+  });
+  const data = await res.json();
+  data.composite_scores.forEach(cs => {
+    const entry = state.entries.find(e => e.id === cs.id);
+    if (entry) entry.composite_score = cs.composite;
+  });
+  state.zScores   = data.z_scores || {};
+  state.langStats = data.lang_stats || {};
+
+  renderAll();
+  renderEntryList();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER ALL
+// ═══════════════════════════════════════════════════════════════
+function renderAll() {
+  renderOverview();
+  renderMetricsTable();
+  renderHeatmap();
+  renderRadarCharts();
+  renderLeaderboard();
+  renderZScores();
+  renderJudgePanel();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ENTRY LIST SIDEBAR
+// ═══════════════════════════════════════════════════════════════
+function renderEntryList() {
+  const container = document.getElementById('entry-list');
+  if (!state.entries.length) {
+    container.innerHTML = '<div class="empty-state" style="padding:20px"><div class="msg" style="color:var(--text3);font-size:12px;">No entries yet.</div></div>';
+    return;
+  }
+  container.innerHTML = state.entries.map(e => {
+    const cls = e._status === 'loading' ? 'pending' : e._status === 'error' ? 'error' : 'evaluated';
+    const scoreStr = e.composite_score !== null ? (e.composite_score * 100).toFixed(1) + '%' : e._status === 'loading' ? '…' : '—';
+    const scoreColor = e.composite_score !== null ? scoreClass(e.composite_score) : 'color:var(--text3)';
+    return `<div class="entry-chip ${cls}">
+      <div class="entry-chip-info">
+        <div class="entry-chip-name">${esc(e.model_name)}</div>
+        <div class="entry-chip-pair">${esc(e.language_pair)}</div>
+      </div>
+      <div class="entry-chip-score" style="${scoreColor}">${scoreStr}</div>
+      <div class="entry-chip-actions">
+        <button class="icon-btn" onclick="removeEntry(${e.id})" title="Remove">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB: OVERVIEW
+// ═══════════════════════════════════════════════════════════════
+function renderOverview() {
+  const evaluated = state.entries.filter(e => e.metrics);
+  if (!evaluated.length) return;
+
+  const langGroups = groupByLang(evaluated);
+  const langKeys   = Object.keys(langGroups);
+  const container  = document.getElementById('overview-lang-groups');
+
+  let html = '';
+  langKeys.forEach((lp, gi) => {
+    const group = langGroups[lp];
+    const color = LANG_COLORS[gi % LANG_COLORS.length];
+    html += `<div class="lang-group">
+      <div class="lang-group-title">
+        <div class="dot" style="background:${color}"></div>
+        ${esc(lp)} — ${group.length} model${group.length > 1 ? 's' : ''}
+      </div>
+      <div class="metric-grid">`;
+
+    // Average metrics for this lang pair
+    const avgMetrics = avgEntryMetrics(group);
+    const best = group.reduce((a,b) => (b.composite_score||0) > (a.composite_score||0) ? b : a);
+
+    html += metricCard('Best Model', best.model_name, 'neu', '');
+    html += metricCard('Avg BLEU-4', fmt(avgMetrics.bleu_4), colorClass(avgMetrics.bleu_4), 'higher = more preserved');
+    html += metricCard('Avg ROUGE-L', fmt(avgMetrics.rouge_l_f1), colorClass(avgMetrics.rouge_l_f1), 'sequence-level recall');
+    html += metricCard('Avg chrF', fmt(avgMetrics.chrf), colorClass(avgMetrics.chrf), 'char-level F-score');
+    html += metricCard('Avg TF-IDF', fmt(avgMetrics.tfidf_cosine), colorClass(avgMetrics.tfidf_cosine), 'semantic similarity');
+    html += metricCard('Avg WER', fmt(avgMetrics.wer), wer_colorClass(avgMetrics.wer), 'word error rate (lower=better)');
+    html += metricCard('Avg Composite', fmt(avgMetrics.composite_score), colorClass(avgMetrics.composite_score||0), 'weighted composite');
+
+    html += `</div>`;
+
+    // Mini bar chart for composite scores
+    if (group.length > 1) {
+      html += `<div style="margin-top:14px">`;
+      group.sort((a,b) => (b.composite_score||0) - (a.composite_score||0)).forEach(e => {
+        const pct = Math.round((e.composite_score||0) * 100);
+        html += `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:140px;font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(e.model_name)}</div>
+          <div style="flex:1">
+            <div class="progress-bar-wrap" style="height:8px">
+              <div class="progress-bar-fill" style="width:${pct}%;background:${color}"></div>
+            </div>
+          </div>
+          <div style="font-family:var(--mono);font-size:11px;color:${color};width:36px;text-align:right">${pct}%</div>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function metricCard(label, value, cls, tip) {
+  return `<div class="metric-card ${cls}" ${tip ? `data-tip="${tip}"` : ''}>
+    <div class="metric-label">${label}</div>
+    <div class="metric-value">${value}</div>
+  </div>`;
+}
+
+function avgEntryMetrics(entries) {
+  const keys = Object.keys(entries[0].metrics || {});
+  const result = {};
+  keys.forEach(k => {
+    const vals = entries.map(e => e.metrics[k]).filter(v => typeof v === 'number');
+    result[k] = vals.length ? vals.reduce((a,b) => a+b, 0) / vals.length : 0;
+  });
+  result.composite_score = entries.reduce((s,e) => s + (e.composite_score||0), 0) / entries.length;
+  return result;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB: METRICS TABLE
+// ═══════════════════════════════════════════════════════════════
+let sortKey = 'composite_score', sortDir = -1;
+
+function sortTable(key) {
+  if (sortKey === key) sortDir *= -1;
+  else { sortKey = key; sortDir = -1; }
+  renderMetricsTable();
+}
+
+function renderMetricsTable() {
+  const evaluated = state.entries.filter(e => e.metrics);
+  const sorted = [...evaluated].sort((a,b) => {
+    const av = sortKey === 'composite_score' ? (a.composite_score||0) : (a.metrics?.[sortKey] ?? a[sortKey] ?? 0);
+    const bv = sortKey === 'composite_score' ? (b.composite_score||0) : (b.metrics?.[sortKey] ?? b[sortKey] ?? 0);
+    if (typeof av === 'string') return sortDir * av.localeCompare(bv);
+    return sortDir * (bv - av);
+  });
+  const tbody = document.getElementById('metrics-tbody');
+  tbody.innerHTML = sorted.map(e => {
+    const m = e.metrics;
+    return `<tr>
+      <td class="model-name-col">${esc(e.model_name)}</td>
+      <td class="lang-col">${esc(e.language_pair)}</td>
+      <td style="${colorStyle(m.bleu_4)}">${fmt(m.bleu_4)}</td>
+      <td style="${colorStyle(m.rouge_1_f1)}">${fmt(m.rouge_1_f1)}</td>
+      <td style="${colorStyle(m.rouge_2_f1)}">${fmt(m.rouge_2_f1)}</td>
+      <td style="${colorStyle(m.rouge_l_f1)}">${fmt(m.rouge_l_f1)}</td>
+      <td style="${colorStyle(m.chrf)}">${fmt(m.chrf)}</td>
+      <td style="${colorStyle(m.tfidf_cosine)}">${fmt(m.tfidf_cosine)}</td>
+      <td style="${colorStyle(m.jaccard)}">${fmt(m.jaccard)}</td>
+      <td style="${colorStyle(m.content_word_overlap)}">${fmt(m.content_word_overlap)}</td>
+      <td style="${colorStyle(m.bigram_overlap)}">${fmt(m.bigram_overlap)}</td>
+      <td style="${werColorStyle(m.wer)}">${fmt(m.wer)}</td>
+      <td style="${werColorStyle(m.cer)}">${fmt(m.cer)}</td>
+      <td style="color:var(--text2)">${fmt(m.length_ratio)}</td>
+      <td style="font-weight:700;${colorStyle(e.composite_score||0)}">${e.composite_score !== null ? (e.composite_score*100).toFixed(1)+'%' : '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB: HEATMAP
+// ═══════════════════════════════════════════════════════════════
+const HEATMAP_METRICS = [
+  {key:'bleu_4',     label:'BLEU-4',     dir:'pos'},
+  {key:'rouge_1_f1', label:'R-1 F1',     dir:'pos'},
+  {key:'rouge_l_f1', label:'R-L F1',     dir:'pos'},
+  {key:'chrf',       label:'chrF',       dir:'pos'},
+  {key:'tfidf_cosine',label:'TF-IDF',    dir:'pos'},
+  {key:'jaccard',    label:'Jaccard',    dir:'pos'},
+  {key:'content_word_overlap',label:'CW-Ovlp',dir:'pos'},
+  {key:'bigram_overlap',label:'Bigram',  dir:'pos'},
+  {key:'wer',        label:'WER',        dir:'neg'},
+  {key:'cer',        label:'CER',        dir:'neg'},
+  {key:'length_score',label:'Len Score', dir:'pos'},
+];
+
+function renderHeatmap() {
+  const evaluated = state.entries.filter(e => e.metrics);
+  if (!evaluated.length) return;
+
+  // Compute min/max per metric for color scale
+  const ranges = {};
+  HEATMAP_METRICS.forEach(({key}) => {
+    const vals = evaluated.map(e => e.metrics[key]).filter(v => typeof v === 'number');
+    ranges[key] = { min: Math.min(...vals), max: Math.max(...vals) };
+  });
+
+  let html = '<thead><tr><th>Model / Pair</th>';
+  HEATMAP_METRICS.forEach(m => { html += `<th>${m.label}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  evaluated.forEach(e => {
+    html += `<tr><td>${esc(e.model_name)}<span class="model-pair">${esc(e.language_pair)}</span></td>`;
+    HEATMAP_METRICS.forEach(({key, dir}) => {
+      const val = e.metrics[key];
+      const {min, max} = ranges[key];
+      const norm = max > min ? (val - min) / (max - min) : 0.5;
+      // For neg metrics invert the color
+      const t = dir === 'neg' ? 1 - norm : norm;
+      const bg  = heatColor(t);
+      const fg  = t > 0.6 ? '#0b0d14' : '#dce4ff';
+      html += `<td style="background:${bg};color:${fg}">${fmt(val)}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  document.getElementById('heatmap-table').innerHTML = html;
+}
+
+function heatColor(t) {
+  // 0 = dark red, 0.5 = neutral, 1 = vivid green
+  const r = Math.round(t < 0.5 ? 160 + t * 40 : 60 - (t-0.5)*60);
+  const g = Math.round(t < 0.5 ? 40 + t * 120 : 160 + (t-0.5)*108);
+  const b = Math.round(t < 0.5 ? 40 : 40 + (t-0.5)*60);
+  return `rgba(${r},${g},${b},0.75)`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB: RADAR CHARTS
+// ═══════════════════════════════════════════════════════════════
+const radarCharts = {};
+const RADAR_METRICS = [
+  {key:'bleu_4',          label:'BLEU-4'},
+  {key:'rouge_l_f1',      label:'ROUGE-L'},
+  {key:'chrf',            label:'chrF'},
+  {key:'tfidf_cosine',    label:'TF-IDF'},
+  {key:'jaccard',         label:'Jaccard'},
+  {key:'content_word_overlap',label:'CW-Ovlp'},
+  {key:'bigram_overlap',  label:'Bigram'},
+  {key:'length_score',    label:'Len Score'},
+];
+
+function renderRadarCharts() {
+  const evaluated = state.entries.filter(e => e.metrics);
+  const grid = document.getElementById('radar-grid');
+
+  // Destroy old charts
+  Object.values(radarCharts).forEach(c => c.destroy());
+  Object.keys(radarCharts).forEach(k => delete radarCharts[k]);
+
+  grid.innerHTML = evaluated.map(e =>
+    `<div class="radar-card">
+      <div class="radar-card-title">${esc(e.model_name)}</div>
+      <div class="radar-card-pair">${esc(e.language_pair)}</div>
+      <canvas id="radar-${e.id}" width="280" height="240"></canvas>
+    </div>`
+  ).join('');
+
+  evaluated.forEach((e, i) => {
+    const ctx = document.getElementById(`radar-${e.id}`).getContext('2d');
+    const color = LANG_COLORS[i % LANG_COLORS.length];
+    radarCharts[e.id] = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: RADAR_METRICS.map(m => m.label),
+        datasets: [{
+          label: e.model_name,
+          data: RADAR_METRICS.map(m => Math.round((e.metrics[m.key]||0) * 100)),
+          backgroundColor: color + '25',
+          borderColor: color,
+          borderWidth: 2,
+          pointBackgroundColor: color,
+          pointRadius: 3,
+        }]
+      },
+      options: {
+        animation: { duration: 600 },
+        scales: { r: {
+          min: 0, max: 100,
+          grid: { color: 'rgba(255,255,255,0.07)' },
+          angleLines: { color: 'rgba(255,255,255,0.07)' },
+          pointLabels: { color: '#8892b0', font: { family: 'Space Mono', size: 9 } },
+          ticks: { color: '#4f5d8a', font: { size: 8 }, backdropColor: 'transparent', stepSize: 25 },
+        }},
+        plugins: { legend: { display: false } },
+      }
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB: LEADERBOARD
+// ═══════════════════════════════════════════════════════════════
+function renderLeaderboard() {
+  const evaluated = state.entries.filter(e => e.metrics && e.composite_score !== null);
+  const langGroups = groupByLang(evaluated);
+  const container = document.getElementById('leaderboard-by-lang');
+  let html = '';
+
+  Object.entries(langGroups).forEach(([lp, group], gi) => {
+    const color = LANG_COLORS[gi % LANG_COLORS.length];
+    const sorted = [...group].sort((a,b) => (b.composite_score||0) - (a.composite_score||0));
+    html += `<div class="lang-group">
+      <div class="lang-group-title"><div class="dot" style="background:${color}"></div>${esc(lp)}</div>
+      <table class="data-table">
+        <thead><tr>
+          <th style="width:40px">Rank</th>
+          <th>Model</th>
+          <th>BLEU-4</th>
+          <th>ROUGE-L</th>
+          <th>chrF</th>
+          <th>TF-IDF</th>
+          <th>WER↓</th>
+          <th>CER↓</th>
+          <th>Composite</th>
+        </tr></thead><tbody>`;
+    sorted.forEach((e, idx) => {
+      const rankBadge = idx < 3
+        ? `<div class="rank-badge rank-${idx+1}">${idx+1}</div>`
+        : `<span style="font-family:var(--mono);font-size:11px;color:var(--text3)">${idx+1}</span>`;
+      html += `<tr>
+        <td style="text-align:center">${rankBadge}</td>
+        <td class="model-name-col">${esc(e.model_name)}</td>
+        <td style="${colorStyle(e.metrics.bleu_4)}">${fmt(e.metrics.bleu_4)}</td>
+        <td style="${colorStyle(e.metrics.rouge_l_f1)}">${fmt(e.metrics.rouge_l_f1)}</td>
+        <td style="${colorStyle(e.metrics.chrf)}">${fmt(e.metrics.chrf)}</td>
+        <td style="${colorStyle(e.metrics.tfidf_cosine)}">${fmt(e.metrics.tfidf_cosine)}</td>
+        <td style="${werColorStyle(e.metrics.wer)}">${fmt(e.metrics.wer)}</td>
+        <td style="${werColorStyle(e.metrics.cer)}">${fmt(e.metrics.cer)}</td>
+        <td style="font-weight:700;font-size:13px;${colorStyle(e.composite_score||0)}">${((e.composite_score||0)*100).toFixed(1)}%</td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+  });
+
+  container.innerHTML = html || '<div class="alert alert-warning">No composite scores yet. Run full analysis first.</div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB: Z-SCORES
+// ═══════════════════════════════════════════════════════════════
+const Z_KEYS = ['bleu_4','rouge_l_f1','chrf','tfidf_cosine','jaccard','content_word_overlap','wer','cer','bigram_overlap','length_score'];
+
+function renderZScores() {
+  const evaluated = state.entries.filter(e => e.metrics);
+  if (!evaluated.length) return;
+
+  const tbody = document.getElementById('zscore-tbody');
+  tbody.innerHTML = evaluated.map(e => {
+    const z = state.zScores[e.id] || {};
+    return `<tr>
+      <td class="model-name-col">${esc(e.model_name)}</td>
+      <td class="lang-col">${esc(e.language_pair)}</td>
+      ${Z_KEYS.map(k => {
+        const zv = z[k];
+        if (zv === undefined) return '<td>—</td>';
+        const cls = Math.abs(zv) < 0.2 ? 'z-neutral' : zv > 0 ? 'z-positive' : 'z-negative';
+        const prefix = zv > 0 ? '+' : '';
+        // For negative metrics (WER, CER), invert the color meaning
+        const negMetric = k === 'wer' || k === 'cer';
+        const displayCls = negMetric ? (zv > 0 ? 'z-negative' : 'z-positive') : cls;
+        return `<td class="${displayCls}">${prefix}${zv.toFixed(3)}</td>`;
+      }).join('')}
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB: WEIGHTS
+// ═══════════════════════════════════════════════════════════════
+function getWeightsFromSliders() {
+  const keys = ['bleu_4','rouge_1_f1','rouge_l_f1','chrf','tfidf_cosine','jaccard','content_word_overlap','bigram_overlap','wer','cer','length_score'];
+  const w = {};
+  keys.forEach(k => {
+    w[k] = parseInt(document.getElementById(`w-${k}`).value) / 100;
+  });
+  return w;
+}
+
+function updateWeightDisplay(key) {
+  const val = document.getElementById(`w-${key}`).value;
+  document.getElementById(`wv-${key}`).textContent = val + '%';
+  // Mark as custom
+  applyProfileHighlight('custom');
+}
+
+function applyProfile(profile) {
+  applyProfileHighlight(profile);
+  if (profile === 'custom') return;
+  const p = WEIGHT_PROFILES[profile];
+  if (!p) return;
+  state.currentProfile = profile;
+  Object.entries(p).forEach(([k, v]) => {
+    const slider = document.getElementById(`w-${k}`);
+    if (slider) {
+      slider.value = Math.round(v * 100);
+      document.getElementById(`wv-${k}`).textContent = Math.round(v * 100) + '%';
+    }
+  });
+}
+
+function applyProfileHighlight(profile) {
+  ['balanced','meaning_heavy','fluency_heavy','custom'].forEach(p => {
+    const el = document.getElementById(`profile-${p}`);
+    if (el) el.classList.toggle('active', p === profile);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB: LLM JUDGE
+// ═══════════════════════════════════════════════════════════════
+function renderJudgePanel() {
+  const evaluated = state.entries.filter(e => e.metrics);
+  const container = document.getElementById('judge-entries');
+  container.innerHTML = evaluated.map(e => {
+    const hasJudge = !!e.judge;
+    return `<div class="judge-entry">
+      <div class="judge-entry-header" onclick="toggleJudge(${e.id})">
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600;color:var(--text)">${esc(e.model_name)}</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--accent)">${esc(e.language_pair)}</div>
+        </div>
+        ${hasJudge ? `<div style="font-family:var(--mono);font-size:16px;font-weight:700;color:${judgeScoreColor(e.judge.overall_score)}">${e.judge.overall_score}/10</div>` : ''}
+        <button class="btn btn-purple" onclick="event.stopPropagation();judgeEntry(${e.id})" id="judge-btn-${e.id}">
+          ${hasJudge ? '↻ Re-Judge' : '⚡ Judge'}
+        </button>
+      </div>
+      <div class="judge-entry-body" id="judge-body-${e.id}">
+        ${hasJudge ? renderJudgeResult(e.judge) : '<div class="alert alert-info">Click Judge to evaluate this entry with Groq LLM.</div>'}
+      </div>
+    </div>`;
+  }).join('') || '<div class="alert alert-warning">Run full analysis first to populate entries.</div>';
+}
+
+function renderJudgeResult(judge) {
+  const criteria = [
+    {key:'translation_accuracy', label:'Translation Accuracy'},
+    {key:'fluency',              label:'Fluency'},
+    {key:'meaning_preservation', label:'Meaning Preservation'},
+    {key:'naturalness',          label:'Naturalness'},
+    {key:'grammatical_correctness',label:'Grammatical Correctness'},
+  ];
+  return `<div class="judge-scores">
+    ${criteria.map(c => {
+      const item = judge[c.key];
+      if (!item) return '';
+      const pct = Math.round((item.score/10)*100);
+      const col = judgeScoreColor(item.score);
+      return `<div class="judge-score-card">
+        <div class="judge-score-label">${c.label}</div>
+        <div class="judge-score-val" style="color:${col}">${item.score}</div>
+        <div class="judge-score-bar"><div class="judge-score-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+        <div class="judge-justification">${esc(item.justification||'')}</div>
+      </div>`;
+    }).join('')}
+  </div>
+  <div class="judge-assessment">"${esc(judge.overall_assessment||'')}"</div>`;
+}
+
+function toggleJudge(id) {
+  const body = document.getElementById(`judge-body-${id}`);
+  if (body) body.classList.toggle('open');
+}
+
+async function judgeEntry(id) {
+  const apiKey = document.getElementById('groq-api-key').value.trim();
+  if (!apiKey) { alert('Enter your Groq API key first.'); return; }
+
+  const entry = state.entries.find(e => e.id === id);
+  if (!entry) return;
+
+  const btn = document.getElementById(`judge-btn-${id}`);
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  try {
+    // Step 1: get the prompt from Flask (no network call on server side)
+    const promptRes = await fetch('/api/llm-prompt', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        original: state.originalText,
+        translation: entry.translation,
+        back_translation: entry.back_translation,
+        lang_pair: entry.language_pair,
+        model_name: entry.model_name,
+      })
+    });
+    const promptData = await promptRes.json();
+    if (promptData.error) throw new Error(promptData.error);
+
+    // Step 2: call Groq directly from the browser
+    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: promptData.prompt }],
+        max_tokens: 1000,
+        temperature: 0.1,
+      })
+    });
+
+    if (!groqRes.ok) {
+      const errBody = await groqRes.json().catch(() => ({}));
+      const msg = errBody?.error?.message || `Groq HTTP ${groqRes.status}`;
+      throw new Error(msg);
+    }
+
+    const groqData = await groqRes.json();
+    let content = groqData.choices[0].message.content;
+    // Strip any accidental markdown fences
+    content = content.replace(/```json|```/g, '').trim();
+    entry.judge = JSON.parse(content);
+
+    renderJudgePanel();
+    const body = document.getElementById(`judge-body-${id}`);
+    if (body) body.classList.add('open');
+  } catch(e) {
+    alert('LLM Judge error: ' + e.message);
+    btn.disabled = false;
+    btn.innerHTML = entry.judge ? '↻ Re-Judge' : '⚡ Judge';
+  }
+}
+
+async function runAllJudge() {
+  const apiKey = document.getElementById('groq-api-key').value.trim();
+  if (!apiKey) { alert('Enter your Groq API key first.'); return; }
+  const evaluated = state.entries.filter(e => e.metrics);
+  for (const e of evaluated) {
+    await judgeEntry(e.id);
+  }
+}
+
+function judgeScoreColor(score) {
+  if (score >= 8) return 'var(--green)';
+  if (score >= 5) return 'var(--yellow)';
+  return 'var(--red)';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════════════════════════
+async function exportData(format) {
+  const evaluated = state.entries.filter(e => e.metrics);
+  if (!evaluated.length) { alert('No evaluated data to export.'); return; }
+
+  const res = await fetch('/api/export', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      format,
+      entries: evaluated.map(e => ({
+        id: e.id, model_name: e.model_name, language_pair: e.language_pair,
+        composite_score: e.composite_score, metrics: e.metrics, judge: e.judge
+      }))
+    })
+  });
+  const data = await res.json();
+  const blob = new Blob([data.data], {type: format === 'json' ? 'application/json' : 'text/csv'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = data.filename;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILITY
+// ═══════════════════════════════════════════════════════════════
+function groupByLang(entries) {
+  const g = {};
+  entries.forEach(e => { (g[e.language_pair] = g[e.language_pair]||[]).push(e); });
+  return g;
+}
+
+function fmt(v) {
+  if (v === undefined || v === null) return '—';
+  if (typeof v === 'string') return v;
+  return v.toFixed(4);
+}
+
+function colorClass(v) {
+  if (v >= 0.5) return 'pos';
+  if (v >= 0.25) return 'neu';
+  return 'neg';
+}
+
+function wer_colorClass(v) {
+  if (v <= 0.3) return 'pos';
+  if (v <= 0.6) return 'neu';
+  return 'neg';
+}
+
+function colorStyle(v) {
+  if (v === null || v === undefined) return '';
+  if (v >= 0.5) return `color:var(--green)`;
+  if (v >= 0.25) return `color:var(--yellow)`;
+  return `color:var(--red)`;
+}
+
+function werColorStyle(v) {
+  if (v === null || v === undefined) return '';
+  if (v <= 0.3) return `color:var(--green)`;
+  if (v <= 0.6) return `color:var(--yellow)`;
+  return `color:var(--red)`;
+}
+
+function scoreClass(v) {
+  if (v >= 0.5) return 'color:var(--green)';
+  if (v >= 0.25) return 'color:var(--yellow)';
+  return 'color:var(--red)';
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function updateHeaderCounts() {
+  document.getElementById('hdr-entry-count').textContent = state.entries.length;
+  document.getElementById('hdr-eval-count').textContent  = state.entries.filter(e => e.metrics).length;
+}
+
+function clearSession() {
+  if (!confirm('Clear all entries and results?')) return;
+  state.entries = [];
+  state.zScores = {};
+  state.langStats = {};
+  state.idCounter = 0;
+  state.originalText = '';
+  document.getElementById('original-text').value = '';
+  document.getElementById('orig-status').textContent = '';
+  renderEntryList();
+  updateHeaderCounts();
+  document.getElementById('empty-main').style.display = 'block';
+  document.getElementById('results-section').style.display = 'none';
+}
+
+function toggleApiKeyVis() {
+  const inp = document.getElementById('groq-api-key');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+// Init weight display
+applyProfile('balanced');
+</script>
+</body>
+</html>

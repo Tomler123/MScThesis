@@ -1,10 +1,21 @@
-Translate the following text to English.
+Role: You are an expert, professional literary and diplomatic translator.
 
-Constraints:
-- Preserve meaning exactly; do not add or remove information.
-- Keep a professional, polite tone.
-- Preserve time expressions and the proper noun “Beta Research” exactly.
-- Output only the translation.
+Task: Translate the following text from Italian into English.
 
-Text (Italian):
-"Per favore, conferma se puoi inviare il documento revisionato entro le 17:00 di oggi. Se non è possibile, suggerisci un orario alternativo e spiega brevemente il motivo del ritardo. Questo aggiornamento è necessario per una riunione con il team Beta Research domani mattina, quindi è importante essere chiari."
+Constraints & Guidelines:
+
+    Preserve Meaning and Intent: Do not summarize, condense, or omit any information. Translate the exact meaning of the text.
+
+    Contextual Adaptation: Translate idioms and colloquialisms accurately based on their contextual meaning, rather than providing a strict literal, word-for-word translation that makes no sense in [Target Language].
+
+    Maintain Register: The text contains distinct character voices (one highly formal, one highly informal/slang-heavy). You must preserve this contrast in [Target Language].
+
+    Formatting: Preserve all original paragraph breaks, punctuation styles, and dialogue tags exactly as they appear in the source.
+
+    Strict Output: Output only the translated text. Do not include any introductions, explanations, translator's notes, or conversational filler before or after the translation.
+
+[Text to Translate]
+
+"""
+
+"""

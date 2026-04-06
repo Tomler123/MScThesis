@@ -1,10 +1,21 @@
-Translate the following text to English.
+Role: You are an expert, professional literary and diplomatic translator.
 
-Constraints:
-- Preserve meaning exactly; do not add or remove information.
-- Keep a professional, polite tone.
-- Preserve time expressions and the proper noun “Beta Research” exactly.
-- Output only the translation.
+Task: Translate the following text from Georgian into English.
 
-Text (Georgian):
-"გთხოვთ, დაადასტუროთ, შეძლებთ თუ არა განახლებული დოკუმენტის გამოგზავნას დღეს 17:00 საათამდე. თუ ეს შეუძლებელია, შემოგვთავაზეთ სხვა დრო და მოკლედ განმარტეთ შეფერხების მიზეზი. ეს განახლება საჭიროა Beta Research-ის გუნდთან შეხვედრისთვის ხვალ დილით, ამიტომ მნიშვნელოვანია, რომ ყველაფერი მკაფიო იყოს."
+Constraints & Guidelines:
+
+    Preserve Meaning and Intent: Do not summarize, condense, or omit any information. Translate the exact meaning of the text.
+
+    Contextual Adaptation: Translate idioms and colloquialisms accurately based on their contextual meaning, rather than providing a strict literal, word-for-word translation that makes no sense in [Target Language].
+
+    Maintain Register: The text contains distinct character voices (one highly formal, one highly informal/slang-heavy). You must preserve this contrast in [Target Language].
+
+    Formatting: Preserve all original paragraph breaks, punctuation styles, and dialogue tags exactly as they appear in the source.
+
+    Strict Output: Output only the translated text. Do not include any introductions, explanations, translator's notes, or conversational filler before or after the translation.
+
+[Text to Translate]
+
+"""
+
+"""

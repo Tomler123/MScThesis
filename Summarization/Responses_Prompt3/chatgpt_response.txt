@@ -1,6 +1,28 @@
 Response:
 
 '''
+## Overview
+
+* The page is an official “What’s New in Python 3.14” overview that compares Python 3.14 to 3.13, notes that Python 3.14 was released on 7 October 2025, and points readers to the changelog for full details. ([Python documentation][1])
+* It presents Python 3.14 as the latest stable release and says the article is a convenient overview rather than a complete specification. ([Python documentation][1])
+
+## What’s New
+
+* The release highlights call out template string literals, deferred evaluation of annotations, and support for subinterpreters in the standard library as major changes. ([Python documentation][1])
+* The summary also highlights improved asyncio introspection, a new `compression.zstd` module for Zstandard support, syntax highlighting in the REPL, and other deprecations, removals, and usability/correctness improvements. ([Python documentation][1])
+* The page also includes sections on improved modules, optimizations, removals, deprecations, CPython bytecode changes, C API changes, build changes, porting to Python 3.14, and notable changes in 3.14.1. ([Python documentation][1])
+
+## Who It’s For
+
+* The page explicitly points readers upgrading from earlier Python versions to the “Porting to Python 3.14” section for migration guidance. ([Python documentation][1])
+* Readers who want full reference details are directed to the Library Reference and Language Reference, while readers who want design rationale are directed to the relevant PEPs. ([Python documentation][1])
+
+## Key Themes
+
+* The page emphasizes that Python 3.14 combines language changes, implementation changes, and standard-library updates in one release. ([Python documentation][1])
+* Recurrent themes on the page include interpreter improvements, standard-library expansion, platform/build support updates, and ongoing deprecations and removals. ([Python documentation][1])
+
+[1]: https://docs.python.org/3.14/whatsnew/3.14.html "What’s new in Python 3.14 — Python 3.14.3 documentation"
 
 '''
 
@@ -9,8 +31,8 @@ Extra feature:
 -    Read loud
 -    Thinking option
 -    Copy button
--    Seperate window for email
 -    Personality Adjustment (Basically deciding the style, tone and formatting of the response that model gives)
+-    Showing the sources from which it took the information
 
 Model:
 Free tier chatgpt.com (ChatGPT) using "GPT-5.3" + Thinking

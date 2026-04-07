@@ -1,7 +1,31 @@
 Response:
 
 '''
+Based on the content of the Python 3.14 whatsnew documentation page, here is the summary:
 
+## Overview
+
+- Python 3.14 is the latest stable release of the Python programming language, released on 7 October 2025, containing changes to the language, implementation, and standard library
+- The document serves as an overview of new features compared to Python 3.13, pointing users to full documentation and PEPs for detailed implementation rationale
+- Editors Adam Turner and Hugo van Kemenade oversee this release documentation with links to changelog and porting guidance available
+
+## What's New
+
+- **Deferred evaluation of annotations** (PEP 649/PEP 749): Function, class, and module annotations are no longer evaluated eagerly and can be inspected via the new `annotationlib` module
+- **Multiple interpreters** (PEP 734): The `concurrent.interpreters` module brings previously C-API-only multiple interpreter support to the standard library for true multi-core parallelism
+- **Template string literals** (PEP 750): New `t` prefixed strings (t-strings) return Template objects separating static text from interpolated values for custom processing
+
+## Who It's For
+
+- Python developers upgrading from version 3.13 or earlier who need to understand breaking changes and migration requirements
+- System administrators and DevOps engineers deploying production applications needing awareness of JIT compiler support and remote debugging security controls
+- C extension module authors updating code for the new configuration C API and handling deprecated APIs with upcoming removal dates
+
+## Key Themes
+
+- **Performance optimization**: Includes new tail-call-based interpreter, incremental garbage collection, free-threaded mode improvements, and JIT compiler experimental support
+- **Concurrency advancement**: Focuses on true parallelism through isolated interpreters, asyncio introspection tools for debugging stuck tasks, and context-aware warnings control
+- **Developer experience**: Emphasizes improved error suggestions for typos, syntax highlighting in REPL, safe external debugger interfaces, and better platform support including Emscripten at tier 3
 '''
 
 Extra feature:

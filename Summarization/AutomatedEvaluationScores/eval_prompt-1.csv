@@ -1,0 +1,36 @@
+model,group,prompt,url,abstractivity,bigram_overlap,bleu,cer_vs_key,chrf,compression_ratio,content_word_overlap,coverage,information_density,jaccard,lexical_diversity,novel_bigram_ratio,prompt_faithfulness_actual_word_count,prompt_faithfulness_bullet_count,prompt_faithfulness_bullet_points_found,prompt_faithfulness_bullet_points_requested,prompt_faithfulness_expected_bullet_count,prompt_faithfulness_negative_constraints,prompt_faithfulness_overall_adherence,prompt_faithfulness_word_limit,prompt_faithfulness_word_limit_respected,redundancy,rouge1_f1,rouge1_p,rouge1_r,rouge2_f1,rouge2_p,rouge2_r,rougeL_f1,rougeL_p,rougeL_r,sentence_overlap,source_word_count,summary_sent_count,summary_word_count,tfidf_cosine,wer_vs_key,llmJudge
+ChatGPT,prompt-1,"Summarize the text below.
+
+Constraints:
+- Output exactly 3 bullet points.
+- Each bullet must be 10–14 words.
+- Do not add any information not present in the text.
+- Keep the wording neutral (no opinio",,0.6061,0.3913,0.4612,0.3374,0.8145,1.129,0.7,0.875,0.8,0.6667,0.9143,0.4706,35,3,True,True,3,['add any information not present in the text'],0.6667,14,,,0.8182,0.7714,0.871,0.5625,0.5294,0.6,0.7576,0.7143,0.8065,1,31,3,35,0.7497,0.3871,
+Claude,prompt-1,"Summarize the text below.
+
+Constraints:
+- Output exactly 3 bullet points.
+- Each bullet must be 10–14 words.
+- Do not add any information not present in the text.
+- Keep the wording neutral (no opinio",,0.7353,0.2745,0.3293,0.3251,0.7416,1.1613,0.4571,0.6667,0.7778,0.4634,0.8889,0.6,36,3,True,True,3,['add any information not present in the text'],0.6667,14,,,0.6567,0.6111,0.7097,0.4308,0.4,0.4667,0.6567,0.6111,0.7097,1,31,3,36,0.5855,0.4839,
+Gemini,prompt-1,"Summarize the text below.
+
+Constraints:
+- Output exactly 3 bullet points.
+- Each bullet must be 10–14 words.
+- Do not add any information not present in the text.
+- Keep the wording neutral (no opinio",,0.7049,0.3,0.3275,0.8395,0.7759,2.0323,0.6389,0.9583,0.619,0.5098,0.7778,0.6557,63,3,True,True,3,['add any information not present in the text'],0.6667,14,,,0.617,0.4603,0.9355,0.4565,0.3387,0.7,0.5745,0.4286,0.871,0.75,31,4,63,0.6019,1.1935,
+Grok,prompt-1,"Summarize the text below.
+
+Constraints:
+- Output exactly 3 bullet points.
+- Each bullet must be 10–14 words.
+- Do not add any information not present in the text.
+- Keep the wording neutral (no opinio",,0.129,0.8788,0.8866,0.07,0.9234,1.0645,0.96,1,0.7879,0.9333,0.9091,0.0938,33,3,True,True,3,['add any information not present in the text'],0.6667,14,,,0.9688,0.9394,1,0.9355,0.9062,0.9667,0.9688,0.9394,1,1,31,3,33,0.9529,0.0645,
+QWEN,prompt-1,"Summarize the text below.
+
+Constraints:
+- Output exactly 3 bullet points.
+- Each bullet must be 10–14 words.
+- Do not add any information not present in the text.
+- Keep the wording neutral (no opinio",,0.4194,0.55,0.6357,0.2058,0.866,1.0645,0.75,0.875,0.7879,0.7353,0.9394,0.3125,33,3,True,True,3,['add any information not present in the text'],0.6667,14,,,0.8438,0.8182,0.871,0.7097,0.6875,0.7333,0.8438,0.8182,0.871,1,31,3,33,0.7786,0.2258,

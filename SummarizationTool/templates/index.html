@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Summarization Evaluator — MSc Thesis</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0b0d14;--bg2:#111320;--bg3:#181b2a;--bg4:#1e2236;
+  --accent:#5e81f4;--accent2:#7c9aff;--accent-glow:rgba(94,129,244,.12);
+  --green:#34d399;--red:#f87171;--yellow:#fbbf24;--orange:#fb923c;--purple:#a78bfa;--cyan:#38bdf8;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--border:#252a3a;
+  --mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg2);}::-webkit-scrollbar-thumb{background:var(--text3);border-radius:3px;}
+.app{max-width:1440px;margin:0 auto;padding:20px 24px;}
+header{display:flex;align-items:center;gap:16px;padding:14px 0 20px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+.logo{font-family:var(--mono);font-size:1.1rem;color:var(--accent);white-space:nowrap;}
+.logo span{color:var(--text3);font-weight:400;font-size:.72rem;display:block;margin-top:2px;}
+.steps-nav{display:flex;gap:2px;background:var(--bg2);border-radius:8px;padding:3px;margin-left:auto;}
+.step-btn{padding:9px 22px;border-radius:6px;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--text3);border:none;background:none;transition:all .2s;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.step-btn .num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:.68rem;font-weight:700;background:var(--bg3);color:var(--text3);transition:all .2s;}
+.step-btn.active{background:var(--accent);color:#fff;}.step-btn.active .num{background:rgba(255,255,255,.2);color:#fff;}
+.step-btn:hover:not(.active){color:var(--text);background:var(--bg3);}
+.step-btn.done .num{background:var(--green);color:#000;}
+.panel{display:none;}.panel.active{display:block;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+.card-title{font-family:var(--mono);font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px;}
+.card-subtitle{font-size:.8rem;color:var(--text2);margin-bottom:16px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:860px){.form-grid{grid-template-columns:1fr;}}
+.form-group{display:flex;flex-direction:column;gap:5px;}.form-group.full{grid-column:1/-1;}
+label{font-size:.72rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;}
+label .opt{color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;}
+input,textarea,select{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 12px;color:var(--text);font-family:var(--sans);font-size:.88rem;outline:none;transition:border .2s;}
+input:focus,textarea:focus,select:focus{border-color:var(--accent);}
+textarea{resize:vertical;min-height:70px;}
+.btn{padding:10px 20px;border-radius:6px;border:none;cursor:pointer;font-weight:600;font-size:.83rem;transition:all .15s;display:inline-flex;align-items:center;gap:6px;}
+.btn-primary{background:var(--accent);color:#fff;}.btn-primary:hover{background:var(--accent2);}
+.btn-secondary{background:var(--bg3);color:var(--text2);border:1px solid var(--border);}.btn-secondary:hover{color:var(--text);border-color:var(--text3);}
+.btn-danger{background:rgba(248,113,113,.12);color:var(--red);border:1px solid rgba(248,113,113,.2);}.btn-danger:hover{background:rgba(248,113,113,.2);}
+.btn-success{background:var(--green);color:#000;}.btn-success:hover{opacity:.9;}
+.btn-sm{padding:6px 14px;font-size:.76rem;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.task-summary{display:flex;gap:16px;align-items:flex-start;background:var(--bg3);border-radius:8px;padding:14px 16px;margin-bottom:16px;border-left:3px solid var(--accent);}
+.task-summary .ts-label{font-size:.68rem;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
+.task-summary .ts-text{font-size:.82rem;color:var(--text);max-height:60px;overflow:hidden;text-overflow:ellipsis;}
+.ts-badge{font-family:var(--mono);font-size:.72rem;padding:3px 8px;border-radius:4px;white-space:nowrap;}
+.entry-row{display:flex;gap:12px;align-items:center;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;transition:all .15s;}
+.entry-row:hover{border-color:var(--accent);background:var(--accent-glow);}
+.entry-row .model-tag{font-weight:700;color:var(--accent);font-size:.9rem;min-width:120px;}
+.entry-row .preview{flex:1;font-size:.78rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.entry-row .actions{display:flex;gap:6px;align-items:center;}
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;}
+.m-card{background:var(--bg3);border-radius:8px;padding:10px 12px;text-align:center;border:1px solid transparent;transition:border .15s;}
+.m-card:hover{border-color:var(--border);}
+.m-card .m-label{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;}
+.m-card .m-val{font-family:var(--mono);font-size:1.2rem;font-weight:700;}
+.m-val.good{color:var(--green);}.m-val.mid{color:var(--yellow);}.m-val.low{color:var(--red);}.m-val.na{color:var(--text3);}
+.acc{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:8px;}
+.acc-head{padding:12px 16px;background:var(--bg3);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:.85rem;user-select:none;}
+.acc-head:hover{background:var(--bg4);}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .25s ease;padding:0 16px;}
+.acc.open .acc-body{max-height:5000px;padding:14px 16px;}
+.acc-head .arr{transition:transform .25s;font-size:.7rem;}.acc.open .acc-head .arr{transform:rotate(90deg);}
+.chart-box{position:relative;height:340px;}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:860px){.chart-row{grid-template-columns:1fr;}}
+.hm-wrap{overflow-x:auto;margin-top:10px;}
+.hm-table{border-collapse:collapse;font-size:.72rem;font-family:var(--mono);width:100%;}
+.hm-table th,.hm-table td{padding:5px 7px;text-align:center;border:1px solid var(--border);}
+.hm-table th{background:var(--bg3);color:var(--text2);font-size:.65rem;text-transform:uppercase;}
+.lb-table{width:100%;border-collapse:collapse;font-size:.84rem;}
+.lb-table th{text-align:left;padding:9px 12px;color:var(--text3);font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);}
+.lb-table td{padding:9px 12px;border-bottom:1px solid var(--border);}
+.lb-table tr:hover td{background:var(--accent-glow);}
+.rank{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-weight:700;font-size:.75rem;}
+.rank-1{background:#fbbf24;color:#000;}.rank-2{background:#94a3b8;color:#000;}.rank-3{background:#fb923c;color:#000;}
+.sl-row{display:flex;align-items:center;gap:10px;margin-bottom:5px;}
+.sl-row label{min-width:140px;font-size:.72rem;}.sl-row input[type=range]{flex:1;accent-color:var(--accent);}
+.sl-row .sl-v{font-family:var(--mono);font-size:.72rem;min-width:36px;text-align:right;color:var(--accent);}
+.llm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;}
+.llm-c{background:var(--bg);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border);}
+.llm-c .crit{font-size:.65rem;color:var(--text3);text-transform:uppercase;margin-bottom:4px;}
+.llm-c .sc{font-family:var(--mono);font-size:1.8rem;font-weight:700;}
+.llm-c .just{font-size:.72rem;color:var(--text2);margin-top:5px;line-height:1.35;}
+.pf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+.pf-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.pf-item .pf-l{font-size:.68rem;color:var(--text3);text-transform:uppercase;margin-bottom:3px;}
+.pf-item .pf-v{font-family:var(--mono);font-size:.9rem;font-weight:600;}
+.pf-pass{color:var(--green);}.pf-fail{color:var(--red);}.pf-warn{color:var(--yellow);}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.68rem;font-weight:600;}
+.badge-blue{background:rgba(94,129,244,.12);color:var(--accent);}
+.badge-green{background:rgba(52,211,153,.12);color:var(--green);}
+.badge-yellow{background:rgba(251,191,36,.12);color:var(--yellow);}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg3);color:var(--text);padding:12px 20px;border-radius:8px;font-size:.84rem;z-index:1000;opacity:0;transition:opacity .25s;pointer-events:none;border:1px solid var(--border);box-shadow:0 8px 30px rgba(0,0,0,.4);}
+.toast.show{opacity:1;}
+.empty{text-align:center;padding:50px 20px;color:var(--text3);font-size:.9rem;}
+.empty .ico{font-size:2.5rem;margin-bottom:10px;opacity:.4;}
+.warn-banner{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:8px;padding:10px 14px;font-size:.8rem;color:var(--yellow);margin-bottom:12px;}
+.hidden{display:none!important;}
+pre.cblk{white-space:pre-wrap;font-size:.76rem;color:var(--text2);background:var(--bg);padding:10px;border-radius:6px;max-height:140px;overflow-y:auto;margin-top:4px;border:1px solid var(--border);}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="logo">📝 Summarization Evaluator<span>MSc Thesis · Understanding and Comparing Generative AI Models</span></div>
+  <div class="steps-nav" id="stepsNav">
+    <button class="step-btn active" data-step="step1"><span class="num">1</span>Define Task</button>
+    <button class="step-btn" data-step="step2"><span class="num">2</span>Add Models</button>
+    <button class="step-btn" data-step="step3"><span class="num">3</span>Results</button>
+  </div>
+</header>
+
+<!-- ═══ STEP 1 ═══ -->
+<div class="panel active" id="step1">
+  <div class="card">
+    <div class="card-title">① Define the Summarization Task</div>
+    <div class="card-subtitle">Enter the prompt you gave to the models, and optionally the source material.</div>
+    <div style="margin-bottom:16px;"><label>Quick-load a preset prompt:</label>
+      <div class="btn-row" style="margin-top:6px;" id="quickBtns"></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Prompt (P) — The exact instruction given to all models <span style="color:var(--red);">*</span></label>
+        <textarea id="fPrompt" rows="5" placeholder="Paste the exact prompt you gave to the models..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Source Text (S) <span class="opt">— Optional. The original text to summarize.</span></label>
+        <textarea id="fSource" rows="4" placeholder="Paste the source text, or upload a file below..."></textarea>
+        <div class="btn-row"><label class="btn btn-secondary btn-sm" style="cursor:pointer;">📄 Upload .txt / .json / .pdf<input type="file" id="fSourceFile" accept=".txt,.json,.pdf" class="hidden"></label><span id="uploadStatus" style="font-size:.76rem;color:var(--text3);"></span></div>
+      </div>
+      <div class="form-group full">
+        <label>URL (L) <span class="opt">— Optional. Link included in the prompt.</span></label>
+        <input id="fUrl" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label>Task / Group Name <span class="opt">— for organizing multiple tasks</span></label>
+        <input id="fGroup" placeholder="e.g. task-1, paper-summary">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveTask()">Save Task & Continue →</button>
+    </div>
+  </div>
+  <div class="card" id="savedTasksCard" style="display:none;">
+    <div class="card-title">Saved Tasks</div>
+    <div id="savedTasksList"></div>
+  </div>
+</div>
+
+<!-- ═══ STEP 2 ═══ -->
+<div class="panel" id="step2">
+  <div id="taskBanner"></div>
+  <div class="card">
+    <div class="card-title">② Add Model Responses</div>
+    <div class="card-subtitle">For each AI model, paste its summary response. Add as many as you want.</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Model Name <span style="color:var(--red);">*</span></label><input id="fModel" placeholder="e.g. GPT-4o, Claude 4, Gemini 2.5 Pro"></div>
+      <div class="form-group" style="align-self:end;"><button class="btn btn-primary" onclick="addModelEntry()" style="width:100%;">Add & Evaluate</button></div>
+      <div class="form-group full"><label>Model's Summary / Response <span style="color:var(--red);">*</span></label><textarea id="fResponse" rows="6" placeholder="Paste the model's generated summary..."></textarea></div>
+    </div>
+  </div>
+  <div class="card hidden" id="entriesCard">
+    <div class="card-title">Model Entries <span id="eCnt" class="badge badge-blue" style="margin-left:8px;"></span></div>
+    <div id="entriesList"></div>
+  </div>
+  <div class="btn-row hidden" id="toRes" style="margin-top:8px;">
+    <button class="btn btn-success" onclick="goStep('step3')">View Results & Analytics →</button>
+  </div>
+</div>
+
+<!-- ═══ STEP 3 ═══ -->
+<div class="panel" id="step3">
+  <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;">
+    <label style="white-space:nowrap;">Task:</label>
+    <select id="rTaskSel" onchange="renderResults()" style="flex:1;max-width:300px;"></select>
+    <span id="rCnt" style="font-family:var(--mono);font-size:.78rem;color:var(--text3);"></span>
+  </div>
+  <div style="display:flex;gap:2px;background:var(--bg2);border-radius:8px;padding:3px;margin-bottom:18px;width:fit-content;" id="rTabs">
+    <button class="step-btn active" data-sub="subMetrics" onclick="switchSub(this)">Detailed Metrics</button>
+    <button class="step-btn" data-sub="subAnalytics" onclick="switchSub(this)">Analytics</button>
+    <button class="step-btn" data-sub="subLLM" onclick="switchSub(this)">LLM Judge</button>
+    <button class="step-btn" data-sub="subExport" onclick="switchSub(this)">Export</button>
+  </div>
+
+  <div class="sub-panel" id="subMetrics"><div id="mAccs"></div></div>
+
+  <div class="sub-panel" id="subAnalytics" style="display:none;">
+    <div class="card"><div class="card-title">Composite Score Weights</div>
+      <div class="btn-row" style="margin-bottom:14px;">
+        <button class="btn btn-sm btn-secondary" onclick="applyPreset('balanced')">Balanced</button>
+        <button class="btn btn-sm btn-secondary" onclick="applyPreset('coverage_heavy')">Coverage-Heavy</button>
+        <button class="btn btn-sm btn-secondary" onclick="applyPreset('conciseness_heavy')">Conciseness-Heavy</button>
+      </div>
+      <div id="wSliders"></div>
+      <div class="btn-row"><button class="btn btn-primary btn-sm" onclick="runAnalytics()">Recompute</button></div>
+    </div>
+    <div class="card hidden" id="lbCard"><div class="card-title">Leaderboard</div><div id="lbBody"></div></div>
+    <div class="chart-row">
+      <div class="card hidden" id="radarCard"><div class="card-title">Radar — Model Profiles</div><div class="chart-box"><canvas id="radarC"></canvas></div></div>
+      <div class="card hidden" id="barCard"><div class="card-title">Composite Scores</div><div class="chart-box"><canvas id="barC"></canvas></div></div>
+    </div>
+    <div class="card hidden" id="hmCard"><div class="card-title">Heatmap — Models × Metrics</div><div class="hm-wrap" id="hmBody"></div></div>
+    <div class="card hidden" id="statsCard"><div class="card-title">Cross-Model Statistics</div><div id="statsBody"></div></div>
+  </div>
+
+  <div class="sub-panel" id="subLLM" style="display:none;">
+    <div class="card"><div class="card-title">LLM-as-Judge</div>
+      <div class="card-subtitle">Calls happen entirely in your browser — Flask only builds the evaluation prompt.</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Provider</label><select id="llmProv"><option value="groq">Groq — llama-3.3-70b-versatile</option><option value="gemini">Gemini — gemini-2.0-flash</option></select></div>
+        <div class="form-group"><label>API Key</label><input id="llmKey" type="password" placeholder="Paste your API key"></div>
+      </div>
+      <div class="btn-row" style="margin-top:14px;">
+        <select id="llmSel" style="max-width:260px;"></select>
+        <button class="btn btn-primary btn-sm" onclick="llmJudgeSingle()">Judge Selected</button>
+        <button class="btn btn-secondary btn-sm" onclick="llmJudgeAll()">Judge All Models</button>
+      </div>
+    </div>
+    <div id="llmWrap"></div>
+  </div>
+
+  <div class="sub-panel" id="subExport" style="display:none;">
+    <div class="card"><div class="card-title">Export Evaluation Data</div>
+      <div class="card-subtitle">Download metrics, prompt faithfulness, and LLM judge scores.</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="exportData('json')">📥 Export JSON</button>
+        <button class="btn btn-secondary" onclick="exportData('csv')">📥 Export CSV</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+</div>
+<script>
+let tasks=[],activeTaskId=null,charts={};
+const PRESETS=[
+  {name:'P1 · Remote Work',prompt:'Summarize the text below.\n\nConstraints:\n- Output exactly 3 bullet points.\n- Each bullet must be 10–14 words.\n- Do not add any information not present in the text.\n- Keep the wording neutral (no opinions).\n\nText:\n"Remote work increases flexibility and reduces commuting time. However, it may weaken informal collaboration and blur work-life boundaries. Many organizations adopt hybrid schedules to balance productivity, coordination, and employee wellbeing."',source:'Remote work increases flexibility and reduces commuting time. However, it may weaken informal collaboration and blur work-life boundaries. Many organizations adopt hybrid schedules to balance productivity, coordination, and employee wellbeing.',url:'',group:'prompt-1'},
+  {name:'P2 · InstructGPT Paper',prompt:'You will summarize the attached research paper PDF "2203.02155v1.pdf".\n\nConstraints:\n- Output sections in this exact order: Purpose, Method, Key Contributions, Results, Limitations.\n- Each section must be 2–4 sentences.\n- Do not invent results or metrics not stated in the paper.\n- Use precise terms from the paper when describing the method.\n\nTask:\nSummarize the PDF and follow the constraints exactly.',source:'',url:'',group:'prompt-2'},
+  {name:'P3 · Lecture Notes',prompt:'You will summarize the attached lecture-notes PDF.\n\nConstraints:\n- Output exactly 5 bullet points titled: Concept, Intuition, Key Terms, Example/Use Case, Common Pitfall.\n- Each bullet must be 1–2 sentences.\n- Do not add external information beyond the PDF.\n- If a bullet cannot be answered from the PDF, write "Not specified in the PDF."\n\nTask:\nSummarize the PDF and follow the constraints exactly.',source:'',url:'',group:'prompt-3'},
+  {name:'P4 · Python 3.14',prompt:'Summarize the content of the webpage at the provided link.\n\nConstraints:\n- Output exactly 4 sections: Overview, What\'s New, Who It\'s For, Key Themes.\n- Each section must be 2–3 bullet points.\n- Do not include any content not present on the webpage.\n- If the model cannot access the page, it must state that clearly and stop.\n\nLink:\nhttps://docs.python.org/3.14/whatsnew/3.14.html',source:'',url:'https://docs.python.org/3.14/whatsnew/3.14.html',group:'prompt-4'}
+];
+const COLORS=['#5e81f4','#34d399','#f87171','#fbbf24','#a78bfa','#fb923c','#38bdf8','#f472b6','#4ade80','#e879f9'];
+const W_KEYS=['effective_rouge1_f1','effective_rouge2_f1','effective_rougeL_f1','bleu','chrf','tfidf_cosine','coverage','compression_ratio','lexical_diversity','information_density','redundancy','prompt_adherence'];
+let curW={};
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.step-btn[data-step]').forEach(b=>b.addEventListener('click',()=>goStep(b.dataset.step)));
+  const qb=document.getElementById('quickBtns');
+  PRESETS.forEach(p=>{const b=document.createElement('button');b.className='btn btn-sm btn-secondary';b.textContent=p.name;b.onclick=()=>{document.getElementById('fPrompt').value=p.prompt;document.getElementById('fSource').value=p.source;document.getElementById('fUrl').value=p.url;document.getElementById('fGroup').value=p.group;toast('Loaded: '+p.name);};qb.appendChild(b);});
+  document.getElementById('fSourceFile').addEventListener('change',async e=>{
+    const f=e.target.files[0];if(!f)return;
+    const status=document.getElementById('uploadStatus');
+    if(f.name.toLowerCase().endsWith('.pdf')){
+      status.textContent='Extracting text from PDF...';status.style.color='var(--accent)';
+      try{
+        const fd=new FormData();fd.append('file',f);
+        const r=await fetch('/api/extract-pdf',{method:'POST',body:fd});
+        const d=await r.json();
+        if(d.error){status.textContent='⚠ '+d.error;status.style.color='var(--red)';return;}
+        document.getElementById('fSource').value=d.text;
+        status.textContent=`✓ Extracted via ${d.method} (${d.text.length} chars)`;status.style.color='var(--green)';
+        toast('PDF text extracted: '+f.name);
+      }catch(err){status.textContent='⚠ Upload failed: '+err.message;status.style.color='var(--red)';}
+    }else{
+      const r=new FileReader();
+      r.onload=ev=>{let t=ev.target.result;if(f.name.endsWith('.json')){try{const j=JSON.parse(t);t=typeof j==='string'?j:JSON.stringify(j,null,2);}catch(e){}}document.getElementById('fSource').value=t;status.textContent=`✓ Loaded (${t.length} chars)`;status.style.color='var(--green)';toast('Loaded: '+f.name);};
+      r.readAsText(f);
+    }
+  });
+  try{tasks=JSON.parse(localStorage.getItem('se_tasks')||'[]');}catch(e){tasks=[];}
+  if(tasks.length)activeTaskId=tasks[tasks.length-1].id;
+  applyPreset('balanced');
+  refreshSaved();
+});
+
+function persist(){localStorage.setItem('se_tasks',JSON.stringify(tasks));}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+function goStep(id){document.querySelectorAll('.step-btn[data-step]').forEach(b=>b.classList.toggle('active',b.dataset.step===id));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));if(id==='step2')refreshStep2();if(id==='step3'){popTaskSel();renderResults();}}
+function switchSub(btn){document.querySelectorAll('#rTabs .step-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.sub-panel').forEach(p=>p.style.display='none');document.getElementById(btn.dataset.sub).style.display='';}
+function getTask(){return tasks.find(t=>t.id===activeTaskId);}
+function markDone(i){document.querySelectorAll('.step-btn[data-step]')[i]?.classList.add('done');}
+function show(id){const el=document.getElementById(id);el.classList.remove('hidden');el.style.display='';}
+
+/* ═══ STEP 1 ═══ */
+function saveTask(){
+  const prompt=document.getElementById('fPrompt').value.trim();
+  if(!prompt)return toast('Prompt is required');
+  const task={id:'T'+Date.now(),prompt,source:document.getElementById('fSource').value.trim(),url:document.getElementById('fUrl').value.trim(),group:document.getElementById('fGroup').value.trim()||'task-'+(tasks.length+1),entries:[]};
+  tasks.push(task);activeTaskId=task.id;persist();refreshSaved();toast('Task saved');goStep('step2');markDone(0);
+}
+function refreshSaved(){
+  const c=document.getElementById('savedTasksCard'),l=document.getElementById('savedTasksList');
+  if(!tasks.length){c.style.display='none';return;}c.style.display='';
+  l.innerHTML=tasks.map((t,i)=>`<div class="entry-row" onclick="loadTask('${t.id}')" style="cursor:pointer"><div class="model-tag">${t.group}</div><div class="preview">${esc(t.prompt.substring(0,120))}...</div><div class="actions"><span class="badge badge-blue">${t.entries.length} model${t.entries.length!==1?'s':''}</span><button class="btn btn-danger btn-sm" onclick="event.stopPropagation();rmTask(${i})">✕</button></div></div>`).join('');
+}
+function loadTask(id){activeTaskId=id;const t=getTask();if(!t)return;document.getElementById('fPrompt').value=t.prompt;document.getElementById('fSource').value=t.source;document.getElementById('fUrl').value=t.url;document.getElementById('fGroup').value=t.group;toast('Loaded: '+t.group);goStep('step2');}
+function rmTask(i){if(!confirm('Delete this task and all its entries?'))return;tasks.splice(i,1);activeTaskId=tasks.length?tasks[tasks.length-1].id:null;persist();refreshSaved();refreshStep2();}
+
+/* ═══ STEP 2 ═══ */
+function refreshStep2(){
+  const task=getTask(),ban=document.getElementById('taskBanner'),ec=document.getElementById('entriesCard'),tr=document.getElementById('toRes');
+  if(!task){ban.innerHTML='<div class="warn-banner">⚠ No task defined yet. Go to Step 1 first.</div>';ec.classList.add('hidden');tr.classList.add('hidden');return;}
+  ban.innerHTML=`<div class="task-summary"><div style="flex:1"><div class="ts-label">Active Task</div><div class="ts-text">${esc(task.prompt.substring(0,200))}${task.prompt.length>200?'...':''}</div></div><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="ts-badge badge-blue">${task.group}</span>${task.source?'<span class="ts-badge badge-green">Source ✓</span>':'<span class="ts-badge badge-yellow">No source</span>'}${task.url?'<span class="ts-badge badge-green">URL ✓</span>':''}</div><button class="btn btn-secondary btn-sm" onclick="goStep('step1')" style="align-self:center">Edit</button></div>`;
+  if(task.entries.length){
+    show('entriesCard');show('toRes');
+    document.getElementById('eCnt').textContent=task.entries.length+' model'+(task.entries.length!==1?'s':'');
+    document.getElementById('entriesList').innerHTML=task.entries.map((e,i)=>`<div class="entry-row"><div class="model-tag">${esc(e.model)}</div><div class="preview">${esc(e.summary.substring(0,100))}...</div><div class="actions">${e.metrics.effective_rouge1_f1!=null?`<span class="badge badge-green" style="font-family:var(--mono)">R1=${e.metrics.effective_rouge1_f1}</span>`:''}${e.llmJudge?'<span class="badge badge-blue">LLM ✓</span>':''}<button class="btn btn-danger btn-sm" onclick="rmEntry(${i})">✕</button></div></div>`).join('');
+  }else{ec.classList.add('hidden');tr.classList.add('hidden');}
+}
+async function addModelEntry(){
+  const task=getTask();if(!task)return toast('Define a task first (Step 1)');
+  const model=document.getElementById('fModel').value.trim(),summary=document.getElementById('fResponse').value.trim();
+  if(!model)return toast('Model name is required');if(!summary)return toast('Response is required');
+  toast('Evaluating...');
+  try{
+    const r=await fetch('/api/evaluate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:task.prompt,source:task.source,summary,url:task.url})});
+    const m=await r.json();if(m.error)return toast('Error: '+m.error);
+    task.entries.push({model,summary,metrics:m,llmJudge:null,timestamp:Date.now()});persist();
+    document.getElementById('fModel').value='';document.getElementById('fResponse').value='';
+    refreshStep2();markDone(1);toast('Added: '+model);
+  }catch(e){toast('Error: '+e.message);}
+}
+function rmEntry(i){const task=getTask();if(!task||!confirm('Remove?'))return;task.entries.splice(i,1);persist();refreshStep2();}
+
+/* ═══ STEP 3 ═══ */
+function popTaskSel(){
+  const s=document.getElementById('rTaskSel');
+  s.innerHTML=tasks.map(t=>`<option value="${t.id}" ${t.id===activeTaskId?'selected':''}>${t.group} (${t.entries.length} models)</option>`).join('');
+  const task=getSelTask();
+  document.getElementById('llmSel').innerHTML=task?task.entries.map((e,i)=>`<option value="${i}">${e.model}</option>`).join(''):'';
+}
+function getSelTask(){return tasks.find(t=>t.id===document.getElementById('rTaskSel').value);}
+function renderResults(){
+  const task=getSelTask();if(!task)return;
+  document.getElementById('rCnt').textContent=task.entries.length+' entries';
+  renderAccs(task);renderLLMPanel(task);
+}
+
+function renderAccs(task){
+  const w=document.getElementById('mAccs');
+  if(!task.entries.length){w.innerHTML='<div class="empty"><div class="ico">📊</div>No model entries yet.</div>';return;}
+  w.innerHTML=task.entries.map((e,i)=>{
+    const m=e.metrics,hs=m.source_word_count!=null,ld=m.is_long_document;
+    const effR1=m.effective_rouge1_f1;
+    return `<div class="acc ${i===0?'open':''}" id="ra-${i}"><div class="acc-head" onclick="document.getElementById('ra-${i}').classList.toggle('open')"><div style="display:flex;align-items:center;gap:10px"><span style="font-weight:700;color:var(--accent)">${esc(e.model)}</span>${!hs?'<span class="badge badge-yellow">No Source</span>':''}${ld?'<span class="badge" style="background:rgba(167,139,250,.12);color:var(--purple)">Long Doc</span>':''}${e.llmJudge?'<span class="badge badge-blue">LLM Judged</span>':''}</div><div style="display:flex;align-items:center;gap:12px">${effR1!=null?`<span style="font-family:var(--mono);font-size:.76rem;color:var(--green)">R1-F1 ${effR1}</span>`:''}${m.prompt_faithfulness?.overall_adherence!=null?`<span style="font-family:var(--mono);font-size:.76rem;color:var(--cyan)">PF ${m.prompt_faithfulness.overall_adherence}</span>`:''}<span class="arr">▶</span></div></div><div class="acc-body"><div style="margin-bottom:14px"><label>Model Response</label><pre class="cblk">${esc(e.summary)}</pre></div>${!hs?'<div class="warn-banner">No source text — source-dependent metrics unavailable.</div>':''}${ld?'<div style="background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.25);border-radius:8px;padding:10px 14px;font-size:.8rem;color:var(--purple);margin-bottom:12px">📄 Long document detected (compression &lt;10%). Using <b>Key-Sentence ROUGE</b> as effective scores — these compare the summary against the most important sentences extracted from the source, giving much more meaningful results than full-source ROUGE.</div>':''}${renderMS(m)}${renderPF(m.prompt_faithfulness)}${e.llmJudge?renderLI(e.llmJudge):''}</div></div>`;
+  }).join('');
+}
+
+function renderMS(m){
+  const ld=m.is_long_document;
+  const S=[
+    {t:'Effective Scores'+(ld?' (Key-Sentence ROUGE)':' (Full-Source ROUGE)'),k:['effective_rouge1_f1','effective_rouge2_f1','effective_rougeL_f1','chrf','tfidf_cosine','coverage']},
+    {t:'Full-Source ROUGE (raw)',k:['rouge1_p','rouge1_r','rouge1_f1','rouge2_p','rouge2_r','rouge2_f1','rougeL_p','rougeL_r','rougeL_f1']},
+    ...(ld?[{t:'Key-Sentence ROUGE',k:['ks_rouge1_p','ks_rouge1_r','ks_rouge1_f1','ks_rouge2_p','ks_rouge2_r','ks_rouge2_f1','ks_rougeL_p','ks_rougeL_r','ks_rougeL_f1']}]:[]),
+    {t:'Content Similarity',k:['bleu','jaccard','content_word_overlap','bigram_overlap']},
+    {t:'Structural',k:['compression_ratio','coverage_raw','coverage','redundancy','sentence_overlap','novel_bigram_ratio','abstractivity']},
+    {t:'Fluency & Quality',k:['lexical_diversity','information_density','wer_vs_key','cer_vs_key']},
+    {t:'Stats',k:['summary_word_count','summary_sent_count','source_word_count']}];
+  return S.map(s=>`<div style="margin-bottom:12px"><div style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${s.t}</div><div class="metrics-grid">${s.k.map(k=>{const v=m[k];return `<div class="m-card"><div class="m-label">${fmtLabel(k)}</div><div class="m-val ${vc(v,k)}">${v!=null?v:'—'}</div></div>`;}).join('')}</div></div>`).join('');
+}
+function fmtLabel(k){
+  return k.replace(/^ks_/,'KS ').replace(/^effective_/,'✦ ').replace(/_/g,' ');
+}
+function vc(v,k){
+  if(v==null)return 'na';if(typeof v!=='number')return '';
+  // Inverted: lower is better
+  if(['redundancy','wer_vs_key','cer_vs_key'].includes(k)){if(v<=.1)return 'good';if(v<=.4)return 'mid';return 'low';}
+  // ROUGE/BLEU — summarization-appropriate thresholds
+  if(k.match(/rouge|bleu/)){if(v>=.35)return 'good';if(v>=.15)return 'mid';return 'low';}
+  // chrF — typically higher than ROUGE
+  if(k==='chrf'){if(v>=.45)return 'good';if(v>=.25)return 'mid';return 'low';}
+  // Similarity metrics — moderate expectations
+  if(['tfidf_cosine','jaccard','content_word_overlap','bigram_overlap'].includes(k)){if(v>=.5)return 'good';if(v>=.25)return 'mid';return 'low';}
+  // Coverage (normalized) — high expected
+  if(k==='coverage'){if(v>=.7)return 'good';if(v>=.4)return 'mid';return 'low';}
+  // Compression — neither too high nor too low is ideal, but low is OK for long docs
+  if(k==='compression_ratio'){if(v<=.3)return 'good';if(v<=.6)return 'mid';return 'low';}
+  // Stats — no coloring
+  if(k.match(/word_count|sent_count/))return '';
+  // Default
+  if(v>=.7)return 'good';if(v>=.4)return 'mid';return 'low';
+}
+
+function renderPF(pf){
+  if(!pf)return '';const I=[];
+  if(pf.overall_adherence!=null)I.push({l:'Overall Adherence',v:pf.overall_adherence,c:pf.overall_adherence>=.7?'pf-pass':pf.overall_adherence>=.4?'pf-warn':'pf-fail'});
+  if(pf.bullet_points_requested)I.push({l:'Bullets Found',v:pf.bullet_points_found?`✓ ${pf.bullet_count}`:'✗ None',c:pf.bullet_points_found?'pf-pass':'pf-fail'});
+  if(pf.expected_bullet_count!=null)I.push({l:'Bullet Count',v:`${pf.bullet_count} / ${pf.expected_bullet_count}`,c:pf.bullet_count===pf.expected_bullet_count?'pf-pass':'pf-fail'});
+  if(pf.word_limit)I.push({l:'Word Limit',v:`${pf.actual_word_count} / ${pf.word_limit}`,c:pf.word_limit_respected?'pf-pass':'pf-fail'});
+  if(pf.sentence_range_per_section)I.push({l:'Sentences/Section',v:`${pf.sentence_range_per_section}`,c:'pf-pass'});
+  if(pf.sentence_range_total)I.push({l:'Total Sentences',v:`${pf.actual_sentence_count} (expected ${pf.sentence_range_total})`,c:(()=>{const p=pf.sentence_range_total.split('-');const lo=+p[0],hi=+p[1];return pf.actual_sentence_count>=lo&&pf.actual_sentence_count<=hi?'pf-pass':'pf-warn';})()});
+  if(pf.sentence_limit&&!pf.sentence_range_per_section)I.push({l:'Sentence Limit',v:`${pf.actual_sentence_count} / ${pf.sentence_limit}`,c:Math.abs(pf.actual_sentence_count-pf.sentence_limit)<=1?'pf-pass':'pf-fail'});
+  if(pf.expected_sections)I.push({l:'Sections Found',v:`${pf.sections_found_count} / ${pf.expected_sections.length}`,c:pf.sections_found_count===pf.expected_sections.length?'pf-pass':'pf-fail'});
+  if(pf.headers_found!=null)I.push({l:'Headers Formatted',v:pf.headers_found?'✓ Detected':'✗ Missing',c:pf.headers_found?'pf-pass':'pf-fail'});
+  if(pf.sections_in_order!=null)I.push({l:'Sections In Order',v:pf.sections_in_order?'✓ Correct':'✗ Wrong order',c:pf.sections_in_order?'pf-pass':'pf-fail'});
+  if(pf.expected_titled_bullets)I.push({l:'Titled Bullets',v:`${pf.titled_bullets_found} / ${pf.expected_titled_bullets.length}`,c:pf.titled_bullets_found===pf.expected_titled_bullets.length?'pf-pass':'pf-fail'});
+  if(pf.brevity_requested)I.push({l:'Brevity',v:`${pf.summary_word_count} words`,c:pf.summary_word_count<200?'pf-pass':'pf-warn'});
+  if(pf.negative_constraints)I.push({l:'Negative Constraints',v:pf.negative_constraints.length+' detected',c:'pf-warn'});
+  if(!I.length)return '<div style="font-size:.78rem;color:var(--text3);margin:8px 0">No specific prompt constraints auto-detected.</div>';
+  return `<div style="margin:12px 0"><div style="font-size:.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Prompt Faithfulness</div><div class="pf-grid">${I.map(i=>`<div class="pf-item"><div class="pf-l">${i.l}</div><div class="pf-v ${i.c}">${i.v}</div></div>`).join('')}</div></div>`;
+}
+function renderLI(j){
+  const C=['factual_accuracy','completeness','conciseness','coherence_fluency','prompt_faithfulness','overall'];
+  return `<div style="margin:12px 0"><div style="font-size:.7rem;color:var(--purple);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">LLM Judge</div><div class="llm-grid">${C.map(c=>{const d=j[c];if(!d)return '';const col=d.score>=8?'var(--green)':d.score>=5?'var(--yellow)':'var(--red)';return `<div class="llm-c"><div class="crit">${c.replace(/_/g,' ')}</div><div class="sc" style="color:${col}">${d.score}</div><div class="just">${d.justification||''}</div></div>`;}).join('')}</div></div>`;
+}
+
+/* ═══ ANALYTICS ═══ */
+function applyPreset(n){
+  const P={balanced:{effective_rouge1_f1:.15,effective_rouge2_f1:.10,effective_rougeL_f1:.10,bleu:.03,chrf:.05,tfidf_cosine:.10,coverage:.10,compression_ratio:.05,lexical_diversity:.05,information_density:.05,redundancy:-.05,prompt_adherence:.17},coverage_heavy:{effective_rouge1_f1:.10,effective_rouge2_f1:.05,effective_rougeL_f1:.05,bleu:.03,chrf:.10,tfidf_cosine:.15,coverage:.22,compression_ratio:0,lexical_diversity:.05,information_density:.05,redundancy:-.05,prompt_adherence:.15},conciseness_heavy:{effective_rouge1_f1:.10,effective_rouge2_f1:.10,effective_rougeL_f1:.10,bleu:.03,chrf:.05,tfidf_cosine:.05,coverage:.05,compression_ratio:.15,lexical_diversity:.10,information_density:.10,redundancy:-.10,prompt_adherence:.07}};
+  curW={...P[n]};renderSliders();
+}
+function renderSliders(){document.getElementById('wSliders').innerHTML=W_KEYS.map(k=>{const v=curW[k]||0;return `<div class="sl-row"><label>${k.replace(/_/g,' ')}</label><input type="range" min="-0.3" max="0.5" step="0.01" value="${v}" oninput="curW['${k}']=+this.value;document.getElementById('sv-${k}').textContent=(+this.value).toFixed(2)"><span class="sl-v" id="sv-${k}">${v.toFixed(2)}</span></div>`;}).join('');}
+
+async function runAnalytics(){
+  const task=getSelTask();if(!task||task.entries.length<1)return toast('Need entries');
+  try{
+    const r=await fetch('/api/analytics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({entries:task.entries.map(e=>({...e.metrics,model:e.model})),weights:curW})});
+    const d=await r.json();
+    show('lbCard');document.getElementById('lbBody').innerHTML=`<table class="lb-table"><thead><tr><th>#</th><th>Model</th><th>Composite</th></tr></thead><tbody>${d.leaderboard.map((r,i)=>`<tr><td><span class="rank ${i<3?'rank-'+(i+1):''}">${i+1}</span></td><td style="font-weight:600">${r.model}</td><td style="font-family:var(--mono);font-weight:700;color:var(--accent)">${r.composite.toFixed(4)}</td></tr>`).join('')}</tbody></table>`;
+    // Radar
+    show('radarCard');killC('radarC');
+    const rLabels=['R1','R2','RL','BLEU','chrF','TF-IDF','Cov','LexDiv','InfDens'],rKeys=['effective_rouge1_f1','effective_rouge2_f1','effective_rougeL_f1','bleu','chrf','tfidf_cosine','coverage','lexical_diversity','information_density'];
+    charts.radarC=new Chart(document.getElementById('radarC'),{type:'radar',data:{labels:rLabels,datasets:task.entries.map((e,i)=>({label:e.model,data:rKeys.map(k=>e.metrics[k]??0),borderColor:COLORS[i%COLORS.length],backgroundColor:COLORS[i%COLORS.length]+'22',pointBackgroundColor:COLORS[i%COLORS.length],borderWidth:2}))},options:{responsive:true,maintainAspectRatio:false,scales:{r:{beginAtZero:true,max:1,ticks:{color:'#64748b',backdropColor:'transparent',font:{size:8}},grid:{color:'#252a3a'},pointLabels:{color:'#94a3b8',font:{size:10}}}},plugins:{legend:{labels:{color:'#e2e8f0',font:{size:11}}}}}});
+    // Bar
+    show('barCard');killC('barC');
+    charts.barC=new Chart(document.getElementById('barC'),{type:'bar',data:{labels:task.entries.map(e=>e.model),datasets:[{label:'Composite',data:d.composite_scores,backgroundColor:task.entries.map((_,i)=>COLORS[i%COLORS.length]),borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',scales:{x:{beginAtZero:true,grid:{color:'#252a3a'},ticks:{color:'#94a3b8'}},y:{grid:{display:false},ticks:{color:'#e2e8f0',font:{size:11}}}},plugins:{legend:{display:false}}}});
+    // Heatmap
+    show('hmCard');const hKeys=['effective_rouge1_f1','effective_rouge2_f1','effective_rougeL_f1','bleu','chrf','tfidf_cosine','jaccard','coverage','compression_ratio','redundancy','lexical_diversity','information_density'];
+    let h='<table class="hm-table"><thead><tr><th>Model</th>'+hKeys.map(k=>`<th>${k.replace(/_/g,' ').substring(0,10)}</th>`).join('')+'</tr></thead><tbody>';
+    task.entries.forEach(e=>{h+=`<tr><td style="text-align:left;font-weight:600">${e.model}</td>`;hKeys.forEach(k=>{const v=e.metrics[k];h+=`<td style="background:${v!=null?hCol(v):'var(--bg4)'};color:#fff;font-weight:600">${v!=null?v.toFixed(3):'—'}</td>`;});h+='</tr>';});
+    document.getElementById('hmBody').innerHTML=h+'</tbody></table>';
+    // Stats
+    show('statsCard');let st='<table class="lb-table"><thead><tr><th>Metric</th><th>Mean</th><th>Std</th><th>Min</th><th>Max</th></tr></thead><tbody>';
+    for(const[k,s]of Object.entries(d.cross_model_stats)){if(s.mean==null)continue;st+=`<tr><td>${k.replace(/_/g,' ')}</td><td style="font-family:var(--mono)">${s.mean}</td><td style="font-family:var(--mono)">${s.std}</td><td style="font-family:var(--mono)">${s.min}</td><td style="font-family:var(--mono)">${s.max}</td></tr>`;}
+    document.getElementById('statsBody').innerHTML=st+'</tbody></table>';
+  }catch(e){toast('Error: '+e.message);}
+}
+function hCol(v){v=Math.max(0,Math.min(1,v));if(v<.5){const t=v/.5;return `rgb(${220-80*t|0},${60+140*t|0},${60+20*t|0})`;}const t=(v-.5)/.5;return `rgb(${140-100*t|0},${200+11*t|0},${80+50*t|0})`;}
+function killC(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+
+/* ═══ LLM JUDGE ═══ */
+async function llmJudgeSingle(){const task=getSelTask();const i=+document.getElementById('llmSel').value;if(!task||isNaN(i))return toast('Select entry');await runJ(task,i);renderResults();renderLLMPanel(task);}
+async function llmJudgeAll(){const task=getSelTask();if(!task)return toast('No task');const k=document.getElementById('llmKey').value.trim();if(!k)return toast('Enter API key');for(let i=0;i<task.entries.length;i++){if(!task.entries[i].llmJudge)await runJ(task,i);}renderResults();renderLLMPanel(task);}
+
+async function runJ(task,idx){
+  const e=task.entries[idx],key=document.getElementById('llmKey').value.trim(),prov=document.getElementById('llmProv').value;
+  if(!key)return toast('Enter API key');toast('Judging '+e.model+'...');
+  try{
+    const pr=await(await fetch('/api/llm-prompt',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:task.prompt,source:task.source,summary:e.summary,url:task.url})})).json();
+    let raw;
+    if(prov==='groq'){const r=await(await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:pr.llm_prompt}],temperature:.3,max_tokens:1500})})).json();if(r.error)throw new Error(r.error.message||JSON.stringify(r.error));raw=r.choices[0].message.content;}
+    else{const r=await(await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:pr.llm_prompt}]}],generationConfig:{temperature:.3,maxOutputTokens:1500}})})).json();if(r.error)throw new Error(r.error.message||JSON.stringify(r.error));raw=r.candidates[0].content.parts[0].text;}
+    let parsed;try{parsed=JSON.parse(raw.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim());}catch(pe){const m=raw.match(/\{[\s\S]*\}/);if(m)parsed=JSON.parse(m[0]);else throw new Error('Could not parse LLM JSON');}
+    task.entries[idx].llmJudge=parsed;persist();toast('Done: '+e.model);
+  }catch(err){toast('LLM Error: '+err.message);}
+}
+
+function renderLLMPanel(task){
+  const w=document.getElementById('llmWrap');if(!task){w.innerHTML='';return;}
+  const judged=task.entries.filter(e=>e.llmJudge);
+  if(!judged.length){w.innerHTML='<div class="empty"><div class="ico">🤖</div>No judgments yet.</div>';return;}
+  const C=['factual_accuracy','completeness','conciseness','coherence_fluency','prompt_faithfulness','overall'];
+  w.innerHTML=judged.map(e=>`<div class="card" style="margin-top:12px"><div class="card-title">${e.model}</div><div class="llm-grid">${C.map(c=>{const d=e.llmJudge[c];if(!d)return '';const col=d.score>=8?'var(--green)':d.score>=5?'var(--yellow)':'var(--red)';return `<div class="llm-c"><div class="crit">${c.replace(/_/g,' ')}</div><div class="sc" style="color:${col}">${d.score}</div><div class="just">${d.justification||''}</div></div>`;}).join('')}</div></div>`).join('');
+}
+
+/* ═══ EXPORT ═══ */
+async function exportData(fmt){
+  const task=getSelTask();if(!task)return toast('No task');
+  const exp=task.entries.map(e=>({model:e.model,group:task.group,prompt:task.prompt.substring(0,200),url:task.url,...e.metrics,llmJudge:e.llmJudge}));
+  try{
+    const r=await(await fetch('/api/export',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({entries:exp,format:fmt})})).json();
+    let blob,fn;if(fmt==='csv'){blob=new Blob([r.csv],{type:'text/csv'});fn='eval_'+task.group+'.csv';}else{blob=new Blob([JSON.stringify(r.data,null,2)],{type:'application/json'});fn='eval_'+task.group+'.json';}
+    const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=fn;a.click();URL.revokeObjectURL(u);toast('Exported '+fn);
+  }catch(e){toast('Export error: '+e.message);}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+ChatGPT
+factual accuracy
+8
+The summary mostly maintains factual accuracy but introduces the phrase 'significantly reducing daily commuting time requirements', which is not present in the source text.
+completeness
+9
+The summary covers the main points from the source text, including the benefits and drawbacks of remote work and the adoption of hybrid schedules.
+conciseness
+8
+The summary is concise but some phrases, such as 'while significantly reducing daily commuting time requirements', could be more directly stated to improve conciseness.
+coherence fluency
+9
+The summary is coherent and fluent, with each bullet point clearly conveying a distinct idea related to remote work.
+prompt faithfulness
+7
+The summary mostly follows the constraints but introduces a phrase not present in the source text and does not strictly adhere to the 10-14 word limit in each bullet point.
+overall
+8
+The summary effectively conveys the main ideas from the source text but could improve in terms of strictly adhering to the constraints and maintaining exact factual accuracy.
+Claude
+factual accuracy
+9
+The summary accurately represents the source text, but slightly rephrases 'reduces commuting time' to 'eliminates time spent on daily commutes', which is close but not exact.
+completeness
+8
+The summary covers the main points of the source text, including the benefits and drawbacks of remote work and the use of hybrid schedules, but does not explicitly mention 'informal collaboration' as a specific aspect weakened by remote work.
+conciseness
+10
+The summary is concise and directly to the point, with each bullet point being within the 10-14 word limit as requested.
+coherence fluency
+9
+The summary flows well and is easy to understand, with each point logically connected to the topic, but the transition between the second and third points could be smoother.
+prompt faithfulness
+10
+The summary adheres to all the constraints given, including the exact number of bullet points, word count per bullet, and maintaining a neutral tone.
+overall
+9
+The summary effectively conveys the key information from the source text in a clear and concise manner, while adhering to the given constraints.
+Gemini
+factual accuracy
+10
+The summary accurately reflects the information presented in the source text without introducing any factual errors.
+completeness
+10
+The summary covers all the main points from the source text, including the benefits and drawbacks of remote work and the adoption of hybrid schedules.
+conciseness
+8
+The summary is mostly concise, but some of the bullet points could be slightly more concise while still meeting the 10-14 word requirement.
+coherence fluency
+9
+The summary is well-structured and easy to follow, with each bullet point being a clear and coherent statement.
+prompt faithfulness
+10
+The summary adheres to all the constraints specified in the prompt, including the exact number of bullet points and word count per bullet point.
+overall
+9
+The summary effectively conveys the main points from the source text in a clear and concise manner, while also following all the specified constraints.
+Grok
+factual accuracy
+9
+The summary accurately reflects the main points of the source text, but adds an unnecessary word 'as well' in the first bullet point.
+completeness
+9
+The summary covers the main points of the source text, but slightly rephrases some sentences.
+conciseness
+8
+The summary is mostly concise, but could be improved by removing the unnecessary word 'as well' and the comma after 'productivity'.
+coherence fluency
+8
+The summary is coherent and fluent, but the transition between the bullet points could be smoother.
+prompt faithfulness
+7
+The summary mostly follows the prompt, but adds an unnecessary word and slightly rephrases some sentences, and also misses a comma after 'coordination'.
+overall
+8
+The summary is generally good, but could be improved with more attention to detail and faithfulness to the original prompt and text.
+QWEN
+factual accuracy
+10
+The summary accurately represents the information from the source text without introducing any factual errors.
+completeness
+10
+The summary covers all key points from the source text, including the benefits and drawbacks of remote work and the adoption of hybrid schedules.
+conciseness
+10
+The summary is concise and directly to the point, using exactly 3 bullet points as required, each within the 10-14 word limit.
+coherence fluency
+10
+The summary is well-structured, easy to read, and flows smoothly, maintaining a neutral tone throughout.
+prompt faithfulness
+10
+The summary adheres to all constraints provided, including the word limit per bullet point and the requirement for a neutral tone.
+overall
+10
+The summary effectively captures the essence of the source text, meeting all requirements and constraints without introducing any errors or biases.

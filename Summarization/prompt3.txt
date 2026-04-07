@@ -1,10 +1,10 @@
-You will summarize the attached lecture-notes PDF.
+Summarize the content of the webpage at the provided link.
 
 Constraints:
-- Output exactly 5 bullet points titled: Concept, Intuition, Key Terms, Example/Use Case, Common Pitfall.
-- Each bullet must be 1–2 sentences.
-- Do not add external information beyond the PDF.
-- If a bullet cannot be answered from the PDF, write "Not specified in the PDF."
+- Output exactly 4 sections: Overview, What’s New, Who It’s For, Key Themes.
+- Each section must be 2–3 bullet points.
+- Do not include any content not present on the webpage.
+- If the model cannot access the page, it must state that clearly and stop.
 
-Task:
-Summarize the PDF and follow the constraints exactly.
+Link:
+https://docs.python.org/3.14/whatsnew/3.14.html

@@ -1,0 +1,224 @@
+=== LEADERBOARD ===
+Rank,Model,Rank Score,Overall Score,Test Pass Rate,Constraint Score,Maintainability Index,Cyclomatic Complexity,Halstead Volume,Similarity to Reference
+1,GLM,36.39,40.95,0,66.7,46.57,7,1382.15,
+2,Gemini,36.06,40.13,0,66.7,45.53,8,1649.98,
+3,Claude,35.89,39.71,0,66.7,47.51,8,1445.37,
+4,ChatGPT,35.17,37.91,0,66.7,41.67,11,2036.96,
+5,MiniMax,33.13,32.8,0,66.7,30.52,16,4867.83,
+
+=== DETAILED METRICS ===
+
+--- ChatGPT ---
+Metric,Value
+blank_lines,12
+code_to_comment_ratio,4.38
+comment_lines,1
+docstring_lines,7
+sloc,35
+total_loc,55
+cyclomatic_complexity,11
+decision_points,10
+risk_category,high
+halstead_bugs,0.679
+halstead_difficulty,45.5
+halstead_effort,92681.72
+halstead_length,337
+halstead_time,5148.98
+halstead_total_operands,140
+halstead_total_operators,197
+halstead_unique_operands,40
+halstead_unique_operators,26
+halstead_vocabulary,66
+halstead_volume,2036.96
+maintainability_index,41.67
+mi_rating,low_maintainability
+async_function_count,0
+class_count,2
+docstring_coverage,87.5
+function_count,0
+functions_with_docstrings,7
+functions_with_return_type,6
+functions_with_type_hints,5
+lambda_count,0
+method_count,7
+type_hint_coverage,83.3
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `handler` defined,fail,Function `handler` not found in code
+Class `EventEmitter` defined,pass,Found
+Docstrings present,fail,Missing docstrings: __init__
+Type hints present,pass,All 6 functions have type hints
+No external libraries,pass,Only stdlib imports found
+
+--- Claude ---
+Metric,Value
+blank_lines,14
+code_to_comment_ratio,0.61
+comment_lines,2
+docstring_lines,34
+sloc,22
+total_loc,72
+cyclomatic_complexity,8
+decision_points,7
+risk_category,moderate
+halstead_bugs,0.4818
+halstead_difficulty,29.85
+halstead_effort,43149.53
+halstead_length,240
+halstead_time,2397.2
+halstead_total_operands,102
+halstead_total_operators,138
+halstead_unique_operands,41
+halstead_unique_operators,24
+halstead_vocabulary,65
+halstead_volume,1445.37
+maintainability_index,47.51
+mi_rating,low_maintainability
+async_function_count,0
+class_count,1
+docstring_coverage,83.3
+function_count,0
+functions_with_docstrings,5
+functions_with_return_type,5
+functions_with_type_hints,4
+lambda_count,0
+method_count,5
+type_hint_coverage,80
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `handler` defined,fail,Function `handler` not found in code
+Class `EventEmitter` defined,pass,Found
+Docstrings present,fail,Missing docstrings: __init__
+Type hints present,pass,All 5 functions have type hints
+No external libraries,pass,Only stdlib imports found
+
+--- Gemini ---
+Metric,Value
+blank_lines,9
+code_to_comment_ratio,3.25
+comment_lines,3
+docstring_lines,5
+sloc,26
+total_loc,43
+cyclomatic_complexity,8
+decision_points,7
+risk_category,moderate
+halstead_bugs,0.55
+halstead_difficulty,40.07
+halstead_effort,66107.6
+halstead_length,272
+halstead_time,3672.64
+halstead_total_operands,105
+halstead_total_operators,167
+halstead_unique_operands,38
+halstead_unique_operators,29
+halstead_vocabulary,67
+halstead_volume,1649.98
+maintainability_index,45.53
+mi_rating,low_maintainability
+async_function_count,0
+class_count,1
+docstring_coverage,83.3
+function_count,0
+functions_with_docstrings,5
+functions_with_return_type,5
+functions_with_type_hints,4
+lambda_count,0
+method_count,5
+type_hint_coverage,80
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `handler` defined,fail,Function `handler` not found in code
+Class `EventEmitter` defined,pass,Found
+Docstrings present,fail,Missing docstrings: __init__
+Type hints present,pass,All 5 functions have type hints
+No external libraries,pass,Only stdlib imports found
+
+--- GLM ---
+Metric,Value
+blank_lines,7
+code_to_comment_ratio,4.17
+comment_lines,0
+docstring_lines,6
+sloc,25
+total_loc,38
+cyclomatic_complexity,7
+decision_points,6
+risk_category,moderate
+halstead_bugs,0.4607
+halstead_difficulty,37.88
+halstead_effort,52348.95
+halstead_length,238
+halstead_time,2908.27
+halstead_total_operands,101
+halstead_total_operators,137
+halstead_unique_operands,32
+halstead_unique_operators,24
+halstead_vocabulary,56
+halstead_volume,1382.15
+maintainability_index,46.57
+mi_rating,low_maintainability
+async_function_count,0
+class_count,1
+docstring_coverage,85.7
+function_count,0
+functions_with_docstrings,6
+functions_with_return_type,6
+functions_with_type_hints,4
+lambda_count,0
+method_count,6
+type_hint_coverage,66.7
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `handler` defined,fail,Function `handler` not found in code
+Class `EventEmitter` defined,pass,Found
+Docstrings present,fail,Missing docstrings: wrapper
+Type hints present,pass,All 6 functions have type hints
+No external libraries,pass,Only stdlib imports found
+
+--- MiniMax ---
+Metric,Value
+blank_lines,36
+code_to_comment_ratio,1.19
+comment_lines,15
+docstring_lines,52
+sloc,80
+total_loc,183
+cyclomatic_complexity,16
+decision_points,15
+risk_category,high
+halstead_bugs,1.6226
+halstead_difficulty,57.81
+halstead_effort,281405.29
+halstead_length,725
+halstead_time,15633.63
+halstead_total_operands,303
+halstead_total_operators,422
+halstead_unique_operands,76
+halstead_unique_operators,29
+halstead_vocabulary,105
+halstead_volume,4867.83
+maintainability_index,30.52
+mi_rating,unmaintainable
+async_function_count,0
+class_count,1
+docstring_coverage,75
+function_count,1
+functions_with_docstrings,6
+functions_with_return_type,6
+functions_with_type_hints,4
+lambda_count,8
+method_count,6
+type_hint_coverage,57.1
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `handler` defined,pass,Found with args: ['x']
+Class `EventEmitter` defined,pass,Found
+Docstrings present,fail,"Missing docstrings: handler, wrapper"
+Type hints present,fail,Missing type hints: handler
+No external libraries,pass,Only stdlib imports found

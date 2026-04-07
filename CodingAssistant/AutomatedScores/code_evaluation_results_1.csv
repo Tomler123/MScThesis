@@ -1,0 +1,224 @@
+=== LEADERBOARD ===
+Rank,Model,Rank Score,Overall Score,Test Pass Rate,Constraint Score,Maintainability Index,Cyclomatic Complexity,Halstead Volume,Similarity to Reference
+1,MiniMax,89.84,74.61,100,100,45.71,16,2125.65,
+2,Gemini,89.71,74.28,100,100,45.22,15,2256.64,
+3,Claude,81.39,78.44,100,66.7,59.6,5,501.48,
+4,ChatGPT,80.85,77.11,100,66.7,55.7,5,739.96,
+5,GLM,39.23,48.04,0,66.7,61.92,7,469.13,
+
+=== DETAILED METRICS ===
+
+--- ChatGPT ---
+Metric,Value
+blank_lines,9
+code_to_comment_ratio,0.86
+comment_lines,0
+docstring_lines,14
+sloc,12
+total_loc,35
+cyclomatic_complexity,5
+decision_points,4
+risk_category,low
+halstead_bugs,0.2467
+halstead_difficulty,26.6
+halstead_effort,19682.84
+halstead_length,140
+halstead_time,1093.49
+halstead_total_operands,56
+halstead_total_operators,84
+halstead_unique_operands,20
+halstead_unique_operators,19
+halstead_vocabulary,39
+halstead_volume,739.96
+maintainability_index,55.7
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,50
+function_count,2
+functions_with_docstrings,1
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `flatten_dict` defined,pass,"Found with args: ['d', 'sep']"
+Docstrings present,fail,Missing docstrings: _flatten
+Type hints present,pass,All 2 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,partial,Only 0 edge case pattern(s) detected
+
+--- Claude ---
+Metric,Value
+blank_lines,3
+code_to_comment_ratio,1
+comment_lines,0
+docstring_lines,9
+sloc,9
+total_loc,21
+cyclomatic_complexity,5
+decision_points,4
+risk_category,low
+halstead_bugs,0.1672
+halstead_difficulty,23.47
+halstead_effort,11770.09
+halstead_length,97
+halstead_time,653.89
+halstead_total_operands,42
+halstead_total_operators,55
+halstead_unique_operands,17
+halstead_unique_operators,19
+halstead_vocabulary,36
+halstead_volume,501.48
+maintainability_index,59.6
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,50
+function_count,2
+functions_with_docstrings,1
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `flatten_dict` defined,pass,"Found with args: ['d', 'sep']"
+Docstrings present,fail,Missing docstrings: _flatten
+Type hints present,pass,All 2 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,partial,Only 0 edge case pattern(s) detected
+
+--- Gemini ---
+Metric,Value
+blank_lines,6
+code_to_comment_ratio,1.57
+comment_lines,4
+docstring_lines,10
+sloc,22
+total_loc,42
+cyclomatic_complexity,15
+decision_points,14
+risk_category,high
+halstead_bugs,0.7522
+halstead_difficulty,36.85
+halstead_effort,83157.2
+halstead_length,379
+halstead_time,4619.84
+halstead_total_operands,134
+halstead_total_operators,245
+halstead_unique_operands,40
+halstead_unique_operators,22
+halstead_vocabulary,62
+halstead_volume,2256.64
+maintainability_index,45.22
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `flatten_dict` defined,pass,"Found with args: ['d', 'sep']"
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,pass,Found 2 edge case handling patterns
+
+--- GLM ---
+Metric,Value
+blank_lines,7
+code_to_comment_ratio,0.39
+comment_lines,3
+docstring_lines,15
+sloc,7
+total_loc,32
+cyclomatic_complexity,7
+decision_points,6
+risk_category,moderate
+halstead_bugs,0.1564
+halstead_difficulty,20.72
+halstead_effort,9719.76
+halstead_length,93
+halstead_time,539.99
+halstead_total_operands,39
+halstead_total_operators,54
+halstead_unique_operands,16
+halstead_unique_operators,17
+halstead_vocabulary,33
+halstead_volume,469.13
+maintainability_index,61.92
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `flatten_dict` defined,fail,Function `flatten_dict` not found in code
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,partial,Only 1 edge case pattern(s) detected
+
+--- MiniMax ---
+Metric,Value
+blank_lines,9
+code_to_comment_ratio,1.24
+comment_lines,4
+docstring_lines,13
+sloc,21
+total_loc,47
+cyclomatic_complexity,16
+decision_points,15
+risk_category,high
+halstead_bugs,0.7085
+halstead_difficulty,32.52
+halstead_effort,69135.41
+halstead_length,357
+halstead_time,3840.86
+halstead_total_operands,127
+halstead_total_operators,230
+halstead_unique_operands,41
+halstead_unique_operators,21
+halstead_vocabulary,62
+halstead_volume,2125.65
+maintainability_index,45.71
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `flatten_dict` defined,pass,"Found with args: ['d', 'sep']"
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,pass,Found 2 edge case handling patterns

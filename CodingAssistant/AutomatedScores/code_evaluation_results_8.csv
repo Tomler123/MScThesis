@@ -1,0 +1,234 @@
+=== LEADERBOARD ===
+Rank,Model,Rank Score,Overall Score,Test Pass Rate,Constraint Score,Maintainability Index,Cyclomatic Complexity,Halstead Volume,Similarity to Reference
+1,ChatGPT,43.59,46.2,8.7,75,52.67,5,677.26,
+2,Gemini,42.49,43.45,8.7,75,54.35,5,574.48,
+3,GLM,42.07,42.41,8.7,75,50.77,6,729.1,
+4,Claude,41.58,41.17,8.7,75,50.86,7,792.67,
+5,MiniMax,37.07,29.9,8.7,75,30.81,30,3604.3,
+
+=== DETAILED METRICS ===
+
+--- ChatGPT ---
+Metric,Value
+blank_lines,7
+code_to_comment_ratio,2.83
+comment_lines,0
+docstring_lines,6
+sloc,17
+total_loc,30
+cyclomatic_complexity,5
+decision_points,4
+risk_category,low
+halstead_bugs,0.2258
+halstead_difficulty,23.71
+halstead_effort,16058.2
+halstead_length,131
+halstead_time,892.12
+halstead_total_operands,53
+halstead_total_operators,78
+halstead_unique_operands,19
+halstead_unique_operators,17
+halstead_vocabulary,36
+halstead_volume,677.26
+maintainability_index,52.67
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,50
+function_count,2
+functions_with_docstrings,1
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `schedule_tasks` defined,pass,Found with args: ['tasks']
+Function `dfs` defined,pass,Found with args: ['task']
+Docstrings present,fail,Missing docstrings: dfs
+Raises `ValueError`,pass,Found raise ValueError
+Signature preserved: `schedule_tasks`,pass,Original function signature maintained
+Signature preserved: `dfs`,pass,Original function signature maintained
+Edge case handling,partial,Only 1 edge case pattern(s) detected
+
+--- Claude ---
+Metric,Value
+blank_lines,6
+code_to_comment_ratio,1.73
+comment_lines,2
+docstring_lines,9
+sloc,19
+total_loc,36
+cyclomatic_complexity,7
+decision_points,6
+risk_category,moderate
+halstead_bugs,0.2642
+halstead_difficulty,22.12
+halstead_effort,17537.84
+halstead_length,147
+halstead_time,974.32
+halstead_total_operands,59
+halstead_total_operators,88
+halstead_unique_operands,24
+halstead_unique_operators,18
+halstead_vocabulary,42
+halstead_volume,792.67
+maintainability_index,50.86
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,50
+function_count,2
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,50
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `schedule_tasks` defined,pass,Found with args: ['tasks']
+Function `dfs` defined,pass,Found with args: ['task']
+Docstrings present,fail,Missing docstrings: dfs
+Raises `ValueError`,pass,Found raise ValueError
+Signature preserved: `schedule_tasks`,pass,Original function signature maintained
+Signature preserved: `dfs`,pass,Original function signature maintained
+Edge case handling,partial,Only 1 edge case pattern(s) detected
+
+--- Gemini ---
+Metric,Value
+blank_lines,11
+code_to_comment_ratio,0.71
+comment_lines,8
+docstring_lines,13
+sloc,15
+total_loc,47
+cyclomatic_complexity,5
+decision_points,4
+risk_category,low
+halstead_bugs,0.1915
+halstead_difficulty,21.25
+halstead_effort,12207.69
+halstead_length,112
+halstead_time,678.21
+halstead_total_operands,45
+halstead_total_operators,67
+halstead_unique_operands,18
+halstead_unique_operators,17
+halstead_vocabulary,35
+halstead_volume,574.48
+maintainability_index,54.35
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,50
+function_count,2
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,50
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `schedule_tasks` defined,pass,Found with args: ['tasks']
+Function `dfs` defined,pass,Found with args: ['task']
+Docstrings present,fail,Missing docstrings: dfs
+Raises `ValueError`,pass,Found raise ValueError
+Signature preserved: `schedule_tasks`,pass,Original function signature maintained
+Signature preserved: `dfs`,pass,Original function signature maintained
+Edge case handling,partial,Only 1 edge case pattern(s) detected
+
+--- GLM ---
+Metric,Value
+blank_lines,5
+code_to_comment_ratio,2.86
+comment_lines,1
+docstring_lines,6
+sloc,20
+total_loc,32
+cyclomatic_complexity,6
+decision_points,5
+risk_category,moderate
+halstead_bugs,0.243
+halstead_difficulty,20.33
+halstead_effort,14819.83
+halstead_length,137
+halstead_time,823.32
+halstead_total_operands,55
+halstead_total_operators,82
+halstead_unique_operands,23
+halstead_unique_operators,17
+halstead_vocabulary,40
+halstead_volume,729.1
+maintainability_index,50.77
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,50
+function_count,2
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,50
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `schedule_tasks` defined,pass,Found with args: ['tasks']
+Function `dfs` defined,pass,Found with args: ['task']
+Docstrings present,fail,Missing docstrings: dfs
+Raises `ValueError`,pass,Found raise ValueError
+Signature preserved: `schedule_tasks`,pass,Original function signature maintained
+Signature preserved: `dfs`,pass,Original function signature maintained
+Edge case handling,partial,Only 1 edge case pattern(s) detected
+
+--- MiniMax ---
+Metric,Value
+blank_lines,27
+code_to_comment_ratio,1.75
+comment_lines,23
+docstring_lines,17
+sloc,70
+total_loc,137
+cyclomatic_complexity,30
+decision_points,29
+risk_category,very_high
+halstead_bugs,1.2014
+halstead_difficulty,64.98
+halstead_effort,234189.38
+halstead_length,603
+halstead_time,13010.52
+halstead_total_operands,226
+halstead_total_operators,377
+halstead_unique_operands,40
+halstead_unique_operators,23
+halstead_vocabulary,63
+halstead_volume,3604.3
+maintainability_index,30.81
+mi_rating,unmaintainable
+async_function_count,0
+class_count,0
+docstring_coverage,50
+function_count,2
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,50
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `schedule_tasks` defined,pass,Found with args: ['tasks']
+Function `dfs` defined,pass,Found with args: ['task']
+Docstrings present,fail,Missing docstrings: dfs
+Raises `ValueError`,pass,Found raise ValueError
+Signature preserved: `schedule_tasks`,pass,Original function signature maintained
+Signature preserved: `dfs`,pass,Original function signature maintained
+Edge case handling,partial,Only 1 edge case pattern(s) detected

@@ -1,0 +1,244 @@
+=== LEADERBOARD ===
+Rank,Model,Rank Score,Overall Score,Test Pass Rate,Constraint Score,Maintainability Index,Cyclomatic Complexity,Halstead Volume,Similarity to Reference
+1,Claude,87.67,69.18,100,100,31.19,27,3805.9,
+2,MiniMax,84.18,60.46,100,100,17.34,64,7425.92,
+3,ChatGPT,82.52,63.81,100,90,30.72,23,3336.81,
+4,Gemini,82.36,63.39,100,90,30.92,26,2737.59,
+5,GLM,76.62,56.56,100,80,30.34,25,3085.52,
+
+=== DETAILED METRICS ===
+
+--- ChatGPT ---
+Metric,Value
+blank_lines,27
+code_to_comment_ratio,2.96
+comment_lines,0
+docstring_lines,27
+sloc,80
+total_loc,134
+cyclomatic_complexity,23
+decision_points,22
+risk_category,very_high
+halstead_bugs,1.1123
+halstead_difficulty,55.69
+halstead_effort,185843.49
+halstead_length,514
+halstead_time,10324.64
+halstead_total_operands,212
+halstead_total_operators,302
+halstead_unique_operands,59
+halstead_unique_operators,31
+halstead_vocabulary,90
+halstead_volume,3336.81
+maintainability_index,30.72
+mi_rating,unmaintainable
+async_function_count,0
+class_count,1
+docstring_coverage,90.9
+function_count,1
+functions_with_docstrings,10
+functions_with_return_type,10
+functions_with_type_hints,3
+lambda_count,0
+method_count,9
+type_hint_coverage,30
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `evaluate` defined,pass,Found with args: ['expression']
+Docstrings present,fail,Missing docstrings: __init__
+Type hints present,pass,All 10 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Does not use `eval`,pass,No usage of `eval` found
+Does not use `eval`,pass,No usage of `eval` found
+Does not use `eval`,pass,No usage of `eval` found
+Raises `ValueError`,pass,Found raise ValueError
+Edge case handling,pass,Found 3 edge case handling patterns
+
+--- Claude ---
+Metric,Value
+blank_lines,14
+code_to_comment_ratio,3.29
+comment_lines,0
+docstring_lines,21
+sloc,69
+total_loc,104
+cyclomatic_complexity,27
+decision_points,26
+risk_category,very_high
+halstead_bugs,1.2686
+halstead_difficulty,84.48
+halstead_effort,321522.31
+halstead_length,597
+halstead_time,17862.35
+halstead_total_operands,256
+halstead_total_operators,341
+halstead_unique_operands,50
+halstead_unique_operators,33
+halstead_vocabulary,83
+halstead_volume,3805.9
+maintainability_index,31.19
+mi_rating,unmaintainable
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,6
+functions_with_docstrings,6
+functions_with_return_type,6
+functions_with_type_hints,6
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `evaluate` defined,pass,Found with args: ['expression']
+Docstrings present,pass,All 6 definitions have docstrings
+Type hints present,pass,All 6 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Does not use `eval`,pass,No usage of `eval` found
+Does not use `eval`,pass,No usage of `eval` found
+Does not use `eval`,pass,No usage of `eval` found
+Raises `ValueError`,pass,Found raise ValueError
+Edge case handling,pass,Found 3 edge case handling patterns
+
+--- Gemini ---
+Metric,Value
+blank_lines,16
+code_to_comment_ratio,4.71
+comment_lines,6
+docstring_lines,11
+sloc,80
+total_loc,113
+cyclomatic_complexity,26
+decision_points,25
+risk_category,very_high
+halstead_bugs,0.9125
+halstead_difficulty,60.48
+halstead_effort,165569.37
+halstead_length,426
+halstead_time,9198.3
+halstead_total_operands,168
+halstead_total_operators,258
+halstead_unique_operands,50
+halstead_unique_operators,36
+halstead_vocabulary,86
+halstead_volume,2737.59
+maintainability_index,30.92
+mi_rating,unmaintainable
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,6
+functions_with_docstrings,6
+functions_with_return_type,4
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,16.7
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `evaluate` defined,pass,Found with args: ['expression']
+Docstrings present,pass,All 6 definitions have docstrings
+Type hints present,fail,"Missing type hints: peek, consume"
+No external libraries,pass,Only stdlib imports found
+Does not use `eval`,pass,No usage of `eval` found
+Does not use `eval`,pass,No usage of `eval` found
+Does not use `eval`,pass,No usage of `eval` found
+Raises `ValueError`,pass,Found raise ValueError
+Edge case handling,pass,Found 3 edge case handling patterns
+
+--- GLM ---
+Metric,Value
+blank_lines,11
+code_to_comment_ratio,5.19
+comment_lines,2
+docstring_lines,14
+sloc,83
+total_loc,110
+cyclomatic_complexity,25
+decision_points,24
+risk_category,very_high
+halstead_bugs,1.0285
+halstead_difficulty,60.72
+halstead_effort,187352.72
+halstead_length,484
+halstead_time,10408.48
+halstead_total_operands,184
+halstead_total_operators,300
+halstead_unique_operands,50
+halstead_unique_operators,33
+halstead_vocabulary,83
+halstead_volume,3085.52
+maintainability_index,30.34
+mi_rating,unmaintainable
+async_function_count,0
+class_count,0
+docstring_coverage,16.7
+function_count,6
+functions_with_docstrings,1
+functions_with_return_type,4
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,16.7
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `evaluate` defined,pass,Found with args: ['expression']
+Docstrings present,fail,"Missing docstrings: current, advance, parse_expression, parse_term, parse_factor"
+Type hints present,fail,"Missing type hints: current, advance"
+No external libraries,pass,Only stdlib imports found
+Does not use `eval`,pass,No usage of `eval` found
+Does not use `eval`,pass,No usage of `eval` found
+Does not use `eval`,pass,No usage of `eval` found
+Raises `ValueError`,pass,Found raise ValueError
+Edge case handling,pass,Found 2 edge case handling patterns
+
+--- MiniMax ---
+Metric,Value
+blank_lines,69
+code_to_comment_ratio,1.51
+comment_lines,13
+docstring_lines,81
+sloc,142
+total_loc,305
+cyclomatic_complexity,64
+decision_points,63
+risk_category,very_high
+halstead_bugs,2.4753
+halstead_difficulty,74.22
+halstead_effort,551182.8
+halstead_length,1018
+halstead_time,30621.27
+halstead_total_operands,420
+halstead_total_operators,598
+halstead_unique_operands,116
+halstead_unique_operators,41
+halstead_vocabulary,157
+halstead_volume,7425.92
+maintainability_index,17.34
+mi_rating,unmaintainable
+async_function_count,0
+class_count,1
+docstring_coverage,100
+function_count,2
+functions_with_docstrings,12
+functions_with_return_type,10
+functions_with_type_hints,4
+lambda_count,0
+method_count,9
+type_hint_coverage,36.4
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `evaluate` defined,pass,Found with args: ['expression']
+Docstrings present,pass,All 12 definitions have docstrings
+Type hints present,pass,All 11 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Does not use `eval`,pass,No usage of `eval` found
+Does not use `eval`,pass,No usage of `eval` found
+Does not use `eval`,pass,No usage of `eval` found
+Raises `ValueError`,pass,Found raise ValueError
+Edge case handling,pass,Found 3 edge case handling patterns

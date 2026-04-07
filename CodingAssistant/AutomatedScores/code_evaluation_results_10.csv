@@ -1,0 +1,209 @@
+=== LEADERBOARD ===
+Rank,Model,Rank Score,Overall Score,Test Pass Rate,Constraint Score,Maintainability Index,Cyclomatic Complexity,Halstead Volume,Similarity to Reference
+1,GLM,54.85,43.37,25,100,34.1,25,2601.02,
+2,ChatGPT,52.98,38.7,25,100,21.54,42,6994.28,
+3,MiniMax,52.54,37.61,25,100,20.73,41,5923.03,
+4,Claude,52.22,36.8,25,100,33.46,23,2850.97,
+5,Gemini,50.56,32.66,25,100,31.05,29,3332.96,
+
+=== DETAILED METRICS ===
+
+--- ChatGPT ---
+Metric,Value
+blank_lines,45
+code_to_comment_ratio,6.35
+comment_lines,1
+docstring_lines,19
+sloc,127
+total_loc,192
+cyclomatic_complexity,42
+decision_points,41
+risk_category,very_high
+halstead_bugs,2.3314
+halstead_difficulty,67.02
+halstead_effort,468760.86
+halstead_length,996
+halstead_time,26042.27
+halstead_total_operands,394
+halstead_total_operators,602
+halstead_unique_operands,97
+halstead_unique_operators,33
+halstead_vocabulary,130
+halstead_volume,6994.28
+maintainability_index,21.54
+mi_rating,unmaintainable
+async_function_count,0
+class_count,0
+docstring_coverage,71.4
+function_count,7
+functions_with_docstrings,5
+functions_with_return_type,7
+functions_with_type_hints,7
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `parse_config` defined,pass,Found with args: ['text']
+Edge case handling,pass,Found 3 edge case handling patterns
+
+--- Claude ---
+Metric,Value
+blank_lines,13
+code_to_comment_ratio,15.75
+comment_lines,3
+docstring_lines,1
+sloc,63
+total_loc,80
+cyclomatic_complexity,23
+decision_points,22
+risk_category,very_high
+halstead_bugs,0.9503
+halstead_difficulty,36
+halstead_effort,102635.05
+halstead_length,446
+halstead_time,5701.95
+halstead_total_operands,180
+halstead_total_operators,266
+halstead_unique_operands,60
+halstead_unique_operators,24
+halstead_vocabulary,84
+halstead_volume,2850.97
+maintainability_index,33.46
+mi_rating,unmaintainable
+async_function_count,0
+class_count,0
+docstring_coverage,33.3
+function_count,3
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,3
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `parse_config` defined,pass,Found with args: ['text']
+Edge case handling,pass,Found 2 edge case handling patterns
+
+--- Gemini ---
+Metric,Value
+blank_lines,24
+code_to_comment_ratio,3.74
+comment_lines,19
+docstring_lines,0
+sloc,71
+total_loc,114
+cyclomatic_complexity,29
+decision_points,28
+risk_category,very_high
+halstead_bugs,1.111
+halstead_difficulty,39.97
+halstead_effort,133221.63
+halstead_length,505
+halstead_time,7401.2
+halstead_total_operands,197
+halstead_total_operators,308
+halstead_unique_operands,69
+halstead_unique_operators,28
+halstead_vocabulary,97
+halstead_volume,3332.96
+maintainability_index,31.05
+mi_rating,unmaintainable
+async_function_count,0
+class_count,0
+docstring_coverage,0
+function_count,3
+functions_with_docstrings,0
+functions_with_return_type,1
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,66.7
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `parse_config` defined,pass,Found with args: ['text']
+Edge case handling,pass,Found 3 edge case handling patterns
+
+--- GLM ---
+Metric,Value
+blank_lines,17
+code_to_comment_ratio,3.69
+comment_lines,13
+docstring_lines,3
+sloc,59
+total_loc,92
+cyclomatic_complexity,25
+decision_points,24
+risk_category,very_high
+halstead_bugs,0.867
+halstead_difficulty,39
+halstead_effort,101439.63
+halstead_length,408
+halstead_time,5635.53
+halstead_total_operands,171
+halstead_total_operators,237
+halstead_unique_operands,57
+halstead_unique_operators,26
+halstead_vocabulary,83
+halstead_volume,2601.02
+maintainability_index,34.1
+mi_rating,unmaintainable
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,3
+functions_with_docstrings,3
+functions_with_return_type,1
+functions_with_type_hints,3
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `parse_config` defined,pass,Found with args: ['text']
+Edge case handling,pass,Found 3 edge case handling patterns
+
+--- MiniMax ---
+Metric,Value
+blank_lines,39
+code_to_comment_ratio,3.29
+comment_lines,34
+docstring_lines,11
+sloc,148
+total_loc,232
+cyclomatic_complexity,41
+decision_points,40
+risk_category,very_high
+halstead_bugs,1.9743
+halstead_difficulty,39.76
+halstead_effort,235511.03
+halstead_length,813
+halstead_time,13083.95
+halstead_total_operands,334
+halstead_total_operators,479
+halstead_unique_operands,126
+halstead_unique_operators,30
+halstead_vocabulary,156
+halstead_volume,5923.03
+maintainability_index,20.73
+mi_rating,unmaintainable
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,3
+functions_with_docstrings,3
+functions_with_return_type,1
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,66.7
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `parse_config` defined,pass,Found with args: ['text']
+Edge case handling,pass,Found 3 edge case handling patterns

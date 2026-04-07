@@ -1,0 +1,224 @@
+=== LEADERBOARD ===
+Rank,Model,Rank Score,Overall Score,Test Pass Rate,Constraint Score,Maintainability Index,Cyclomatic Complexity,Halstead Volume,Similarity to Reference
+1,Claude,93.33,83.32,100,100,58.8,4,682.23,
+2,GLM,93.27,83.17,100,100,57.77,4,691.12,
+3,ChatGPT,93.22,83.05,100,100,57,4,661.6,
+4,Gemini,90.02,75.06,100,100,43.72,16,2694.11,
+5,MiniMax,88.39,70.98,100,100,34.88,20,5442.8,
+
+=== DETAILED METRICS ===
+
+--- ChatGPT ---
+Metric,Value
+blank_lines,7
+code_to_comment_ratio,0.92
+comment_lines,0
+docstring_lines,12
+sloc,11
+total_loc,30
+cyclomatic_complexity,4
+decision_points,3
+risk_category,low
+halstead_bugs,0.2205
+halstead_difficulty,24.16
+halstead_effort,15982.88
+halstead_length,127
+halstead_time,887.94
+halstead_total_operands,51
+halstead_total_operators,76
+halstead_unique_operands,19
+halstead_unique_operators,18
+halstead_vocabulary,37
+halstead_volume,661.6
+maintainability_index,57
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,1
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `merge_intervals` defined,pass,Found with args: ['intervals']
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,pass,Found 2 edge case handling patterns
+
+--- Claude ---
+Metric,Value
+blank_lines,7
+code_to_comment_ratio,0.69
+comment_lines,0
+docstring_lines,13
+sloc,9
+total_loc,29
+cyclomatic_complexity,4
+decision_points,3
+risk_category,low
+halstead_bugs,0.2274
+halstead_difficulty,24.5
+halstead_effort,16714.65
+halstead_length,130
+halstead_time,928.59
+halstead_total_operands,49
+halstead_total_operators,81
+halstead_unique_operands,19
+halstead_unique_operators,19
+halstead_vocabulary,38
+halstead_volume,682.23
+maintainability_index,58.8
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,1
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `merge_intervals` defined,pass,Found with args: ['intervals']
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,pass,Found 2 edge case handling patterns
+
+--- Gemini ---
+Metric,Value
+blank_lines,9
+code_to_comment_ratio,1.26
+comment_lines,10
+docstring_lines,9
+sloc,24
+total_loc,52
+cyclomatic_complexity,16
+decision_points,15
+risk_category,high
+halstead_bugs,0.898
+halstead_difficulty,45.09
+halstead_effort,121472.83
+halstead_length,466
+halstead_time,6748.49
+halstead_total_operands,146
+halstead_total_operators,320
+halstead_unique_operands,34
+halstead_unique_operators,21
+halstead_vocabulary,55
+halstead_volume,2694.11
+maintainability_index,43.72
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,1
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `merge_intervals` defined,pass,Found with args: ['intervals']
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,pass,Found 2 edge case handling patterns
+
+--- GLM ---
+Metric,Value
+blank_lines,9
+code_to_comment_ratio,0.67
+comment_lines,3
+docstring_lines,12
+sloc,10
+total_loc,34
+cyclomatic_complexity,4
+decision_points,3
+risk_category,low
+halstead_bugs,0.2304
+halstead_difficulty,26.25
+halstead_effort,18142.01
+halstead_length,129
+halstead_time,1007.89
+halstead_total_operands,50
+halstead_total_operators,79
+halstead_unique_operands,20
+halstead_unique_operators,21
+halstead_vocabulary,41
+halstead_volume,691.12
+maintainability_index,57.77
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,1
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `merge_intervals` defined,pass,Found with args: ['intervals']
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,pass,Found 2 edge case handling patterns
+
+--- MiniMax ---
+Metric,Value
+blank_lines,13
+code_to_comment_ratio,2.09
+comment_lines,10
+docstring_lines,12
+sloc,46
+total_loc,81
+cyclomatic_complexity,20
+decision_points,19
+risk_category,high
+halstead_bugs,1.8143
+halstead_difficulty,73.61
+halstead_effort,400650.8
+halstead_length,888
+halstead_time,22258.38
+halstead_total_operands,265
+halstead_total_operators,623
+halstead_unique_operands,45
+halstead_unique_operators,25
+halstead_vocabulary,70
+halstead_volume,5442.8
+maintainability_index,34.88
+mi_rating,unmaintainable
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,1
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `merge_intervals` defined,pass,Found with args: ['intervals']
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,pass,Found 2 edge case handling patterns

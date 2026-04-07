@@ -1,0 +1,224 @@
+=== LEADERBOARD ===
+Rank,Model,Rank Score,Overall Score,Test Pass Rate,Constraint Score,Maintainability Index,Cyclomatic Complexity,Halstead Volume,Similarity to Reference
+1,MiniMax,45.34,38.36,0,100,37.04,15,2737.39,
+2,GLM,44.24,35.6,0,100,37.01,19,3021.88,
+3,ChatGPT,41.52,41.33,0,83.3,40.18,10,2294.86,
+4,Claude,40.03,37.59,0,83.3,41.1,13,2456.58,
+5,Gemini,38.09,32.76,0,83.3,29.77,30,4649.42,
+
+=== DETAILED METRICS ===
+
+--- ChatGPT ---
+Metric,Value
+blank_lines,21
+code_to_comment_ratio,1.18
+comment_lines,0
+docstring_lines,34
+sloc,40
+total_loc,95
+cyclomatic_complexity,10
+decision_points,9
+risk_category,moderate
+halstead_bugs,0.765
+halstead_difficulty,36.59
+halstead_effort,83974.87
+halstead_length,363
+halstead_time,4665.27
+halstead_total_operands,152
+halstead_total_operators,211
+halstead_unique_operands,54
+halstead_unique_operators,26
+halstead_vocabulary,80
+halstead_volume,2294.86
+maintainability_index,40.18
+mi_rating,low_maintainability
+async_function_count,0
+class_count,1
+docstring_coverage,100
+function_count,0
+functions_with_docstrings,6
+functions_with_return_type,5
+functions_with_type_hints,4
+lambda_count,1
+method_count,5
+type_hint_coverage,80
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Class `SearchIndex` defined,pass,Found
+Docstrings present,pass,All 6 definitions have docstrings
+Type hints present,pass,All 5 functions have type hints
+No external libraries,fail,External imports found: __future__
+Edge case handling,pass,Found 2 edge case handling patterns
+
+--- Claude ---
+Metric,Value
+blank_lines,23
+code_to_comment_ratio,0.94
+comment_lines,2
+docstring_lines,34
+sloc,34
+total_loc,93
+cyclomatic_complexity,13
+decision_points,12
+risk_category,high
+halstead_bugs,0.8189
+halstead_difficulty,39.42
+halstead_effort,96845.96
+halstead_length,392
+halstead_time,5380.33
+halstead_total_operands,164
+halstead_total_operators,228
+halstead_unique_operands,52
+halstead_unique_operators,25
+halstead_vocabulary,77
+halstead_volume,2456.58
+maintainability_index,41.1
+mi_rating,low_maintainability
+async_function_count,0
+class_count,1
+docstring_coverage,71.4
+function_count,0
+functions_with_docstrings,5
+functions_with_return_type,6
+functions_with_type_hints,5
+lambda_count,0
+method_count,6
+type_hint_coverage,83.3
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Class `SearchIndex` defined,pass,Found
+Docstrings present,fail,"Missing docstrings: __init__, score"
+Type hints present,pass,All 6 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,pass,Found 2 edge case handling patterns
+
+--- Gemini ---
+Metric,Value
+blank_lines,33
+code_to_comment_ratio,1.5
+comment_lines,19
+docstring_lines,29
+sloc,72
+total_loc,153
+cyclomatic_complexity,30
+decision_points,29
+risk_category,very_high
+halstead_bugs,1.5498
+halstead_difficulty,41.87
+halstead_effort,194681.09
+halstead_length,683
+halstead_time,10815.62
+halstead_total_operands,277
+halstead_total_operators,406
+halstead_unique_operands,86
+halstead_unique_operators,26
+halstead_vocabulary,112
+halstead_volume,4649.42
+maintainability_index,29.77
+mi_rating,unmaintainable
+async_function_count,0
+class_count,1
+docstring_coverage,83.3
+function_count,0
+functions_with_docstrings,5
+functions_with_return_type,5
+functions_with_type_hints,4
+lambda_count,1
+method_count,5
+type_hint_coverage,80
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Class `SearchIndex` defined,pass,Found
+Docstrings present,fail,Missing docstrings: __init__
+Type hints present,pass,All 5 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,pass,Found 2 edge case handling patterns
+
+--- GLM ---
+Metric,Value
+blank_lines,28
+code_to_comment_ratio,0.96
+comment_lines,15
+docstring_lines,32
+sloc,45
+total_loc,120
+cyclomatic_complexity,19
+decision_points,18
+risk_category,high
+halstead_bugs,1.0073
+halstead_difficulty,49.42
+halstead_effort,149326.57
+halstead_length,478
+halstead_time,8295.92
+halstead_total_operands,194
+halstead_total_operators,284
+halstead_unique_operands,53
+halstead_unique_operators,27
+halstead_vocabulary,80
+halstead_volume,3021.88
+maintainability_index,37.01
+mi_rating,unmaintainable
+async_function_count,0
+class_count,1
+docstring_coverage,100
+function_count,0
+functions_with_docstrings,6
+functions_with_return_type,5
+functions_with_type_hints,4
+lambda_count,1
+method_count,5
+type_hint_coverage,80
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Class `SearchIndex` defined,pass,Found
+Docstrings present,pass,All 6 definitions have docstrings
+Type hints present,pass,All 5 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,pass,Found 2 edge case handling patterns
+
+--- MiniMax ---
+Metric,Value
+blank_lines,20
+code_to_comment_ratio,2.33
+comment_lines,14
+docstring_lines,7
+sloc,49
+total_loc,90
+cyclomatic_complexity,15
+decision_points,14
+risk_category,high
+halstead_bugs,0.9125
+halstead_difficulty,43.09
+halstead_effort,117961.44
+halstead_length,433
+halstead_time,6553.41
+halstead_total_operands,179
+halstead_total_operators,254
+halstead_unique_operands,54
+halstead_unique_operators,26
+halstead_vocabulary,80
+halstead_volume,2737.39
+maintainability_index,37.04
+mi_rating,unmaintainable
+async_function_count,0
+class_count,1
+docstring_coverage,100
+function_count,0
+functions_with_docstrings,6
+functions_with_return_type,5
+functions_with_type_hints,4
+lambda_count,1
+method_count,5
+type_hint_coverage,80
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Class `SearchIndex` defined,pass,Found
+Docstrings present,pass,All 6 definitions have docstrings
+Type hints present,pass,All 5 functions have type hints
+No external libraries,pass,Only stdlib imports found
+Edge case handling,pass,Found 2 edge case handling patterns

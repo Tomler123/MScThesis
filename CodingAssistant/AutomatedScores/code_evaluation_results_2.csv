@@ -1,0 +1,224 @@
+=== LEADERBOARD ===
+Rank,Model,Rank Score,Overall Score,Test Pass Rate,Constraint Score,Maintainability Index,Cyclomatic Complexity,Halstead Volume,Similarity to Reference
+1,ChatGPT,91.67,79.18,100,100,48.93,7,824.52,
+2,Claude,91.59,78.97,100,100,49.49,8,1015.99,
+3,GLM,91.29,78.23,100,100,47.31,9,993.01,
+4,Gemini,88.58,71.45,100,100,40.98,22,1569.89,
+5,MiniMax,88.56,71.39,100,100,39.19,24,1850.59,
+
+=== DETAILED METRICS ===
+
+--- ChatGPT ---
+Metric,Value
+blank_lines,12
+code_to_comment_ratio,1.15
+comment_lines,0
+docstring_lines,20
+sloc,23
+total_loc,55
+cyclomatic_complexity,7
+decision_points,6
+risk_category,moderate
+halstead_bugs,0.2748
+halstead_difficulty,34.21
+halstead_effort,28207.36
+halstead_length,156
+halstead_time,1567.08
+halstead_total_operands,65
+halstead_total_operators,91
+halstead_unique_operands,19
+halstead_unique_operators,20
+halstead_vocabulary,39
+halstead_volume,824.52
+maintainability_index,48.93
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,2
+functions_with_docstrings,2
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `rle_encode` defined,pass,Found with args: ['s']
+Function `rle_decode` defined,pass,Found with args: ['s']
+Docstrings present,pass,All 2 definitions have docstrings
+Type hints present,pass,All 2 functions have type hints
+No external libraries,pass,Only stdlib imports found
+
+--- Claude ---
+Metric,Value
+blank_lines,8
+code_to_comment_ratio,0.91
+comment_lines,0
+docstring_lines,22
+sloc,20
+total_loc,50
+cyclomatic_complexity,8
+decision_points,7
+risk_category,moderate
+halstead_bugs,0.3387
+halstead_difficulty,52.68
+halstead_effort,53526.78
+halstead_length,185
+halstead_time,2973.71
+halstead_total_operands,77
+halstead_total_operators,108
+halstead_unique_operands,19
+halstead_unique_operators,26
+halstead_vocabulary,45
+halstead_volume,1015.99
+maintainability_index,49.49
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,2
+functions_with_docstrings,2
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `rle_encode` defined,pass,Found with args: ['s']
+Function `rle_decode` defined,pass,Found with args: ['s']
+Docstrings present,pass,All 2 definitions have docstrings
+Type hints present,pass,All 2 functions have type hints
+No external libraries,pass,Only stdlib imports found
+
+--- Gemini ---
+Metric,Value
+blank_lines,10
+code_to_comment_ratio,2.33
+comment_lines,7
+docstring_lines,8
+sloc,35
+total_loc,60
+cyclomatic_complexity,22
+decision_points,21
+risk_category,very_high
+halstead_bugs,0.5233
+halstead_difficulty,33.56
+halstead_effort,52682.61
+halstead_length,257
+halstead_time,2926.81
+halstead_total_operands,111
+halstead_total_operators,146
+halstead_unique_operands,43
+halstead_unique_operators,26
+halstead_vocabulary,69
+halstead_volume,1569.89
+maintainability_index,40.98
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,2
+functions_with_docstrings,2
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `rle_encode` defined,pass,Found with args: ['s']
+Function `rle_decode` defined,pass,Found with args: ['s']
+Docstrings present,pass,All 2 definitions have docstrings
+Type hints present,pass,All 2 functions have type hints
+No external libraries,pass,Only stdlib imports found
+
+--- GLM ---
+Metric,Value
+blank_lines,16
+code_to_comment_ratio,1.04
+comment_lines,3
+docstring_lines,21
+sloc,25
+total_loc,65
+cyclomatic_complexity,9
+decision_points,8
+risk_category,moderate
+halstead_bugs,0.331
+halstead_difficulty,45.43
+halstead_effort,45107.32
+halstead_length,183
+halstead_time,2505.96
+halstead_total_operands,79
+halstead_total_operators,104
+halstead_unique_operands,20
+halstead_unique_operators,23
+halstead_vocabulary,43
+halstead_volume,993.01
+maintainability_index,47.31
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,2
+functions_with_docstrings,2
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `rle_encode` defined,pass,Found with args: ['s']
+Function `rle_decode` defined,pass,Found with args: ['s']
+Docstrings present,pass,All 2 definitions have docstrings
+Type hints present,pass,All 2 functions have type hints
+No external libraries,pass,Only stdlib imports found
+
+--- MiniMax ---
+Metric,Value
+blank_lines,27
+code_to_comment_ratio,0.8
+comment_lines,6
+docstring_lines,43
+sloc,39
+total_loc,115
+cyclomatic_complexity,24
+decision_points,23
+risk_category,very_high
+halstead_bugs,0.6169
+halstead_difficulty,38.08
+halstead_effort,70473
+halstead_length,304
+halstead_time,3915.17
+halstead_total_operands,131
+halstead_total_operators,173
+halstead_unique_operands,43
+halstead_unique_operators,25
+halstead_vocabulary,68
+halstead_volume,1850.59
+maintainability_index,39.19
+mi_rating,unmaintainable
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,2
+functions_with_docstrings,2
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `rle_encode` defined,pass,Found with args: ['s']
+Function `rle_decode` defined,pass,Found with args: ['s']
+Docstrings present,pass,All 2 definitions have docstrings
+Type hints present,pass,All 2 functions have type hints
+No external libraries,pass,Only stdlib imports found

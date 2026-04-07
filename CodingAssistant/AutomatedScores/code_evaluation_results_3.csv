@@ -1,0 +1,224 @@
+=== LEADERBOARD ===
+Rank,Model,Rank Score,Overall Score,Test Pass Rate,Constraint Score,Maintainability Index,Cyclomatic Complexity,Halstead Volume,Similarity to Reference
+1,Claude,92.75,81.88,100,100,52.55,5,849.14,
+2,GLM,92.75,81.88,100,100,52.55,5,849.14,
+3,Gemini,92.69,81.72,100,100,51.44,5,849.14,
+4,ChatGPT,92.63,81.57,100,100,50.44,5,849.14,
+5,MiniMax,90,75.01,100,100,43.42,16,2314.38,
+
+=== DETAILED METRICS ===
+
+--- ChatGPT ---
+Metric,Value
+blank_lines,7
+code_to_comment_ratio,10
+comment_lines,0
+docstring_lines,2
+sloc,20
+total_loc,29
+cyclomatic_complexity,5
+decision_points,4
+risk_category,low
+halstead_bugs,0.283
+halstead_difficulty,36.42
+halstead_effort,30922.88
+halstead_length,163
+halstead_time,1717.94
+halstead_total_operands,69
+halstead_total_operators,94
+halstead_unique_operands,18
+halstead_unique_operators,19
+halstead_vocabulary,37
+halstead_volume,849.14
+maintainability_index,50.44
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,2
+functions_with_docstrings,2
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `merge_sort` defined,pass,Found with args: ['arr']
+Function `merge` defined,pass,"Found with args: ['left', 'right']"
+Docstrings present,pass,All 2 definitions have docstrings
+Signature preserved: `merge_sort`,pass,Original function signature maintained
+Signature preserved: `merge`,pass,Original function signature maintained
+
+--- Claude ---
+Metric,Value
+blank_lines,6
+code_to_comment_ratio,0.94
+comment_lines,0
+docstring_lines,17
+sloc,16
+total_loc,39
+cyclomatic_complexity,5
+decision_points,4
+risk_category,low
+halstead_bugs,0.283
+halstead_difficulty,36.42
+halstead_effort,30922.88
+halstead_length,163
+halstead_time,1717.94
+halstead_total_operands,69
+halstead_total_operators,94
+halstead_unique_operands,18
+halstead_unique_operators,19
+halstead_vocabulary,37
+halstead_volume,849.14
+maintainability_index,52.55
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,2
+functions_with_docstrings,2
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `merge_sort` defined,pass,Found with args: ['arr']
+Function `merge` defined,pass,"Found with args: ['left', 'right']"
+Docstrings present,pass,All 2 definitions have docstrings
+Signature preserved: `merge_sort`,pass,Original function signature maintained
+Signature preserved: `merge`,pass,Original function signature maintained
+
+--- Gemini ---
+Metric,Value
+blank_lines,8
+code_to_comment_ratio,1.12
+comment_lines,4
+docstring_lines,12
+sloc,18
+total_loc,42
+cyclomatic_complexity,5
+decision_points,4
+risk_category,low
+halstead_bugs,0.283
+halstead_difficulty,36.42
+halstead_effort,30922.88
+halstead_length,163
+halstead_time,1717.94
+halstead_total_operands,69
+halstead_total_operators,94
+halstead_unique_operands,18
+halstead_unique_operators,19
+halstead_vocabulary,37
+halstead_volume,849.14
+maintainability_index,51.44
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,2
+functions_with_docstrings,2
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `merge_sort` defined,pass,Found with args: ['arr']
+Function `merge` defined,pass,"Found with args: ['left', 'right']"
+Docstrings present,pass,All 2 definitions have docstrings
+Signature preserved: `merge_sort`,pass,Original function signature maintained
+Signature preserved: `merge`,pass,Original function signature maintained
+
+--- GLM ---
+Metric,Value
+blank_lines,5
+code_to_comment_ratio,0.94
+comment_lines,0
+docstring_lines,17
+sloc,16
+total_loc,38
+cyclomatic_complexity,5
+decision_points,4
+risk_category,low
+halstead_bugs,0.283
+halstead_difficulty,36.42
+halstead_effort,30922.88
+halstead_length,163
+halstead_time,1717.94
+halstead_total_operands,69
+halstead_total_operators,94
+halstead_unique_operands,18
+halstead_unique_operators,19
+halstead_vocabulary,37
+halstead_volume,849.14
+maintainability_index,52.55
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,2
+functions_with_docstrings,2
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `merge_sort` defined,pass,Found with args: ['arr']
+Function `merge` defined,pass,"Found with args: ['left', 'right']"
+Docstrings present,pass,All 2 definitions have docstrings
+Signature preserved: `merge_sort`,pass,Original function signature maintained
+Signature preserved: `merge`,pass,Original function signature maintained
+
+--- MiniMax ---
+Metric,Value
+blank_lines,16
+code_to_comment_ratio,0.84
+comment_lines,1
+docstring_lines,30
+sloc,26
+total_loc,73
+cyclomatic_complexity,16
+decision_points,15
+risk_category,high
+halstead_bugs,0.7715
+halstead_difficulty,59.03
+halstead_effort,136625.48
+halstead_length,406
+halstead_time,7590.3
+halstead_total_operands,161
+halstead_total_operators,245
+halstead_unique_operands,30
+halstead_unique_operators,22
+halstead_vocabulary,52
+halstead_volume,2314.38
+maintainability_index,43.42
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,2
+functions_with_docstrings,2
+functions_with_return_type,2
+functions_with_type_hints,2
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `merge_sort` defined,pass,Found with args: ['arr']
+Function `merge` defined,pass,"Found with args: ['left', 'right']"
+Docstrings present,pass,All 2 definitions have docstrings
+Signature preserved: `merge_sort`,pass,Original function signature maintained
+Signature preserved: `merge`,pass,Original function signature maintained

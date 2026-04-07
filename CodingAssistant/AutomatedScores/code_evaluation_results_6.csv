@@ -1,0 +1,224 @@
+=== LEADERBOARD ===
+Rank,Model,Rank Score,Overall Score,Test Pass Rate,Constraint Score,Maintainability Index,Cyclomatic Complexity,Halstead Volume,Similarity to Reference
+1,Gemini,88.96,84.92,100,83.3,66.12,3,401.29,
+2,Claude,88.95,84.89,100,83.3,65.96,3,422.26,
+3,ChatGPT,88.68,84.22,100,83.3,61.46,3,430,
+4,GLM,88.43,83.61,100,83.3,60.75,4,518.92,
+5,MiniMax,85.81,77.06,100,83.3,47.07,13,1549.4,
+
+=== DETAILED METRICS ===
+
+--- ChatGPT ---
+Metric,Value
+blank_lines,5
+code_to_comment_ratio,1
+comment_lines,0
+docstring_lines,8
+sloc,8
+total_loc,21
+cyclomatic_complexity,3
+decision_points,2
+risk_category,low
+halstead_bugs,0.1433
+halstead_difficulty,19.27
+halstead_effort,8284.67
+halstead_length,86
+halstead_time,460.26
+halstead_total_operands,34
+halstead_total_operators,52
+halstead_unique_operands,15
+halstead_unique_operators,17
+halstead_vocabulary,32
+halstead_volume,430
+maintainability_index,61.46
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `group_anagrams_brute` defined,fail,Function `group_anagrams_brute` not found in code
+Function `group_anagrams` defined,pass,Found with args: ['words']
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found
+
+--- Claude ---
+Metric,Value
+blank_lines,5
+code_to_comment_ratio,0.33
+comment_lines,0
+docstring_lines,15
+sloc,5
+total_loc,25
+cyclomatic_complexity,3
+decision_points,2
+risk_category,low
+halstead_bugs,0.1408
+halstead_difficulty,20.27
+halstead_effort,8557.79
+halstead_length,83
+halstead_time,475.43
+halstead_total_operands,32
+halstead_total_operators,51
+halstead_unique_operands,15
+halstead_unique_operators,19
+halstead_vocabulary,34
+halstead_volume,422.26
+maintainability_index,65.96
+mi_rating,moderately_maintainable
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `group_anagrams_brute` defined,fail,Function `group_anagrams_brute` not found in code
+Function `group_anagrams` defined,pass,Found with args: ['words']
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found
+
+--- Gemini ---
+Metric,Value
+blank_lines,7
+code_to_comment_ratio,0.31
+comment_lines,4
+docstring_lines,12
+sloc,5
+total_loc,28
+cyclomatic_complexity,3
+decision_points,2
+risk_category,low
+halstead_bugs,0.1338
+halstead_difficulty,18.82
+halstead_effort,7552.85
+halstead_length,81
+halstead_time,419.6
+halstead_total_operands,31
+halstead_total_operators,50
+halstead_unique_operands,14
+halstead_unique_operators,17
+halstead_vocabulary,31
+halstead_volume,401.29
+maintainability_index,66.12
+mi_rating,moderately_maintainable
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `group_anagrams_brute` defined,fail,Function `group_anagrams_brute` not found in code
+Function `group_anagrams` defined,pass,Found with args: ['words']
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found
+
+--- GLM ---
+Metric,Value
+blank_lines,6
+code_to_comment_ratio,0.67
+comment_lines,1
+docstring_lines,11
+sloc,8
+total_loc,26
+cyclomatic_complexity,4
+decision_points,3
+risk_category,low
+halstead_bugs,0.173
+halstead_difficulty,25.33
+halstead_effort,13146
+halstead_length,102
+halstead_time,730.33
+halstead_total_operands,40
+halstead_total_operators,62
+halstead_unique_operands,15
+halstead_unique_operators,19
+halstead_vocabulary,34
+halstead_volume,518.92
+maintainability_index,60.75
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `group_anagrams_brute` defined,fail,Function `group_anagrams_brute` not found in code
+Function `group_anagrams` defined,pass,Found with args: ['words']
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found
+
+--- MiniMax ---
+Metric,Value
+blank_lines,10
+code_to_comment_ratio,1.62
+comment_lines,5
+docstring_lines,8
+sloc,21
+total_loc,44
+cyclomatic_complexity,13
+decision_points,12
+risk_category,high
+halstead_bugs,0.5165
+halstead_difficulty,22.96
+halstead_effort,35571.74
+halstead_length,268
+halstead_time,1976.21
+halstead_total_operands,87
+halstead_total_operators,181
+halstead_unique_operands,36
+halstead_unique_operators,19
+halstead_vocabulary,55
+halstead_volume,1549.4
+maintainability_index,47.07
+mi_rating,low_maintainability
+async_function_count,0
+class_count,0
+docstring_coverage,100
+function_count,1
+functions_with_docstrings,1
+functions_with_return_type,1
+functions_with_type_hints,1
+lambda_count,0
+method_count,0
+type_hint_coverage,100
+
+Constraint Check,Status,Detail
+Syntax Valid,pass,Code parses without errors
+Function `group_anagrams_brute` defined,fail,Function `group_anagrams_brute` not found in code
+Function `group_anagrams` defined,pass,Found with args: ['words']
+Docstrings present,pass,All 1 definitions have docstrings
+Type hints present,pass,All 1 functions have type hints
+No external libraries,pass,Only stdlib imports found

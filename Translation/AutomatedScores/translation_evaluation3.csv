@@ -1,0 +1,6 @@
+id,model_name,language_pair,composite_score,bleu_1,bleu_2,bleu_4,rouge_1_f1,rouge_2_f1,rouge_l_f1,chrf,wer,cer,tfidf_cosine,jaccard,length_ratio,length_score,content_word_overlap,bigram_overlap,sentence_overlap,lex_div_original,lex_div_backtranslation,orig_word_count,bt_word_count,llm_overall_score,llm_translation_accuracy,llm_fluency,llm_meaning_preservation,llm_naturalness,llm_grammatical_correctness
+1,ChatGPT,English -> Georgian,0.6382,0.7513,0.6034,0.4066,0.7733,0.4989,0.672,0.7303,0.4439,0.3741,0.968,0.5277,1.0605,0.9395,0.487,0.3206,0.5633,0.4997,0.4956,1505,1596,8,8,7,8,6,9
+2,Claude,English -> Georgian,0.583,0.7129,0.5338,0.3216,0.7169,0.402,0.5927,0.7012,0.5223,0.426,0.9437,0.4601,1.0113,0.9887,0.4141,0.2415,0.4813,0.4997,0.5026,1505,1522,8,8,7,8,6,9
+3,Gemini,English -> Georgian,0.6691,0.7763,0.635,0.4502,0.787,0.5266,0.6868,0.7696,0.4126,0.34,0.9648,0.5876,1.0279,0.9721,0.5496,0.3476,0.5716,0.4997,0.5042,1505,1547,8,8,7,8,6,9
+4,Grok,English -> Georgian,0.7229,0.8098,0.6922,0.5315,0.8189,0.5983,0.7545,0.7717,0.301,0.2552,0.9642,0.6433,0.9781,0.9781,0.6106,0.4236,0.6731,0.4997,0.5095,1505,1472,8,8,9,7,6,8
+5,QWEN,English -> Georgian,0.6029,0.7235,0.557,0.3656,0.7294,0.4323,0.6162,0.6984,0.4811,0.4052,0.955,0.4733,0.9841,0.9841,0.4306,0.2687,0.5207,0.4997,0.5159,1505,1481,8.2,8,9,7,8,9

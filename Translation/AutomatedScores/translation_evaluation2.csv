@@ -1,0 +1,6 @@
+id,model_name,language_pair,composite_score,bleu_1,bleu_2,bleu_4,rouge_1_f1,rouge_2_f1,rouge_l_f1,chrf,wer,cer,tfidf_cosine,jaccard,length_ratio,length_score,content_word_overlap,bigram_overlap,sentence_overlap,lex_div_original,lex_div_backtranslation,orig_word_count,bt_word_count,llm_overall_score,llm_translation_accuracy,llm_fluency,llm_meaning_preservation,llm_naturalness,llm_grammatical_correctness
+1,ChatGPT,English -> Italian,0.7448,0.8184,0.7156,0.5733,0.8341,0.6378,0.7814,0.8142,0.2897,0.2321,0.9771,0.6562,1.0392,0.9608,0.632,0.464,0.6837,0.4997,0.4987,1505,1564,8,8,9,8,7,9
+2,Claude,English -> Italian,0.696,0.7639,0.6501,0.4983,0.7866,0.5697,0.7324,0.7925,0.3415,0.2796,0.97,0.5844,1.0611,0.9389,0.5491,0.3907,0.6134,0.4997,0.4934,1505,1597,8,8,9,7,8,9
+3,Gemini,English -> Italian,0.8184,0.8846,0.8032,0.6841,0.8855,0.73,0.8497,0.8686,0.196,0.1606,0.9855,0.7617,1.002,0.998,0.7435,0.5686,0.7676,0.4997,0.5013,1505,1508,8.2,8,9,8,8,9
+4,Grok,English -> Italian,0.7838,0.8535,0.7643,0.6349,0.8583,0.6883,0.8259,0.8117,0.2193,0.1937,0.98,0.7107,1.0113,0.9887,0.6839,0.5177,0.7285,0.4997,0.4928,1505,1522,8.4,8,9,8,8,9
+5,QWEN,English -> Italian,0.742,0.8182,0.7155,0.5686,0.8247,0.6306,0.7752,0.8124,0.2791,0.2245,0.9744,0.6423,1.0159,0.9841,0.6124,0.4507,0.6661,0.4997,0.5082,1505,1529,8.4,8,9,8,8,9

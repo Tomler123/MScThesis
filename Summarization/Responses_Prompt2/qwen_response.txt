@@ -1,6 +1,3 @@
-Response:
-
-'''
 **Purpose**
 The purpose of this research is to align large language models with user intent by fine-tuning them with human feedback. Large language models often express unintended behaviors such as making up facts, generating biased or toxic text, or simply not following user instructions. This work seeks to demonstrate that fine-tuning with human feedback is a promising direction for aligning language models with human intent.
 
@@ -15,17 +12,3 @@ On their test set, outputs from the 175B InstructGPT model are preferred to outp
 
 **Limitations**
 InstructGPT still makes simple mistakes, such as failing to detect instructions with false premises or providing long hedging answers to simple questions. The models may follow user instructions even if that leads to harm, meaning they are neither fully aligned nor fully safe. The alignment is based on the preferences of specific labelers and researchers, necessitating further work to generalize to broader groups of users.
-'''
-
-Extra feature:
--    Auto option on model selection. (Decides which model to use that better suits the input)
--    Thinking option
--    Copy button
--    Export to PDF option.
--    Read loud
-
-Model:
-Free tier chat.qwen.ai (QWEN) using "Qwen3.5-Flash" + Thinking
-
-Date:
-3/23/2026

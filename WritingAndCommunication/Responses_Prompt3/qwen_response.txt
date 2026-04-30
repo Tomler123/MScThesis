@@ -1,6 +1,3 @@
-Response:
-
-'''
 Summary
 We are performing scheduled maintenance on the primary internal corporate web service to improve overall system stability. This critical update ensures that all backend components remain secure and efficient for daily business operations.
 
@@ -15,17 +12,3 @@ Please save your current work before the start time; log out of the application 
 
 Contact
 Direct any technical questions or concerns to the dedicated IT helpdesk team. You can reach them via email at support@example.com for any further assistance.
-'''
-
-Extra feature:
--    Auto option on model selection. (Decides which model to use that better suits the input)
--    Thinking option
--    Copy button
--    Export to PDF option.
--    Read loud
-
-Model:
-Free tier chat.qwen.ai (QWEN) using "Qwen3.5-Flash" + Thinking
-
-Date:
-3/23/2026

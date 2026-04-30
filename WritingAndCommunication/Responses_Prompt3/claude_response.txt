@@ -1,6 +1,3 @@
-Response:
-
-'''
 **Summary**
 Scheduled maintenance will be performed on the internal web service next Tuesday. This work is part of routine infrastructure updates intended to ensure continued system reliability and performance.
 
@@ -15,16 +12,3 @@ Users should save all active work before the maintenance window begins; log out 
 
 **Contact**
 For questions or concerns, contact the support team directly at support@example.com. Status updates will be communicated through the standard internal notification channels as the maintenance progresses.
-'''
-
-Extra feature:
--    Extended thinking option
--    Copy button
--    In the response, generated email had its own separate section/window.
--    Get notified when Claude finishes response.
-
-Model:
-Free tier claude.ai using "Sonnet 4.6" + Extended thinking
-
-Date:
-3/23/2026

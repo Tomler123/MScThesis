@@ -1,21 +1,3 @@
-Response:
+""A) The critical bug is fixed, and the release is delayed by one day because QA needs extra time to verify the change and rule out any regression. Next, QA will complete the final test pass tomorrow morning, and I will share a go/no-go update as soon as results are in. We are confident the fix is stable and that this short delay will give us a safer release with fewer surprises for the team and users after a careful check of the integration points and customer-facing flows before launch this week.
 
-'''
-A) The critical bug is fixed, and the release is delayed by one day because QA needs extra time to verify the change and rule out any regression. Next, QA will complete the final test pass tomorrow morning, and I will share a go/no-go update as soon as results are in. We are confident the fix is stable and that this short delay will give us a safer release with fewer surprises for the team and users after a careful check of the integration points and customer-facing flows before launch this week.
-
-B) The critical bug has been fixed, and the launch is moving back by one day so we can do a final round of testing before sending it out. Next, I will confirm the results and share an updated go-ahead time tomorrow morning. We are confident this short delay will help us deliver a more reliable release and avoid unnecessary issues for customers and the team, while keeping everyone informed and maintaining a clear path to launch after a careful check of the final sign-off with room to spare for everyone.
-'''
-
-Extra feature:
--    Open in email button
--    Read loud
--    Thinking option
--    Copy button
--    Seperate window for email
--    Personality Adjustment (Basically deciding the style, tone and formatting of the response that model gives)
-
-Model:
-Free tier chatgpt.com (ChatGPT) using "GPT-5.3" + Thinking
-
-Date:
-3/23/2026
+B) The critical bug has been fixed, and the launch is moving back by one day so we can do a final round of testing before sending it out. Next, I will confirm the results and share an updated go-ahead time tomorrow morning. We are confident this short delay will help us deliver a more reliable release and avoid unnecessary issues for customers and the team, while keeping everyone informed and maintaining a clear path to launch after a careful check of the final sign-off with room to spare for everyone.""

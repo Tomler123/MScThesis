@@ -1,6 +1,3 @@
-Response:
-
-'''
 **Purpose**  
 The purpose of this paper is to align language models with user intent on a wide range of tasks by fine-tuning with human feedback. Making language models bigger does not inherently make them better at following a user’s intent, as large models can generate outputs that are untruthful, toxic, or simply not helpful. The language modeling objective is misaligned with the goal of producing outputs that are helpful, honest, and harmless.
 
@@ -15,20 +12,3 @@ On the API prompt distribution, outputs from the 1.3B InstructGPT model are pref
 
 **Limitations**  
 The behavior of InstructGPT models is determined in part by the human feedback obtained from about 40 contractors, a small non-representative group primarily English-speaking whose value judgments may be influenced by personal history and cultural backgrounds. Models are neither fully aligned nor fully safe; they still generate toxic or biased outputs, make up facts, generate sexual and violent content without explicit prompting, and can fail to generate reasonable outputs on some inputs. The greatest limitation is that they follow the user’s instruction even if that could lead to harm in the real world—for example, generating more toxic outputs than GPT-3 when instructed to be maximally biased.
-'''
-
-Extra feature:
--    Auto option on model selection. (Decides which model to use that better suits the input)
--    Expert option (Similar to whats most commonly known as Extended thinking)
--    Copy button
--    Export to PDF option
--    Read loud
--    Options for follow up inputs that can be sent in one click:
-    *   Explain RLHF in details
-    *   Discuss ChatGPT origins
-
-Model:
-Free tier grok.com (Grok) using "Grok 4.20" + Expert thinking
-
-Date:
-3/23/2026

@@ -1,6 +1,3 @@
-Response:
-
-'''
 **Purpose**
 The paper aims to address the misalignment between large language models and user intent, particularly issues like untruthful, toxic, or unhelpful outputs. It proposes a method to align models with human intentions—defined as being helpful, honest, and harmless—using human feedback. The goal is to improve instruction-following behavior across a wide range of natural language tasks. The work introduces InstructGPT as a case study of this alignment approach.
 
@@ -15,18 +12,3 @@ Human evaluators preferred outputs from the 1.3B InstructGPT model over the 175B
 
 **Limitations**
 The alignment is dependent on a small, non-representative group of human labelers, whose preferences may not generalize to broader populations. The models still produce biased, toxic, or incorrect outputs and can fail on tasks with false premises or complex constraints. There is an “alignment tax,” where performance on some benchmarks decreases during RLHF fine-tuning. Additionally, the approach aligns models to specific human preferences rather than universal values, raising questions about fairness and general applicability.
-
-'''
-
-Extra feature:
--    Open in email button
--    Read loud
--    Thinking option
--    Copy button
--    Personality Adjustment (Basically deciding the style, tone and formatting of the response that model gives)
-
-Model:
-Free tier chatgpt.com (ChatGPT) using "GPT-5.3" + Thinking
-
-Date:
-3/23/2026

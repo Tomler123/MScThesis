@@ -1,24 +1,3 @@
-Response:
-
-'''
 A) Dear technical team, I am pleased to inform you that a critical bug has been resolved in our latest build. The release is delayed by one day due to additional testing required after implementing the patch. This ensures we catch any potential regression before proceeding. We have completed the initial preparations and are now focusing on verification steps. As the next clear step, please join the sync meeting tomorrow at 10 AM to review the test results. We are confident that the final product will meet all performance standards without further issues. To maintain momentum, continue monitoring the staging environment and report any anomalies immediately.
 
 B) Dear manager, I wanted to let you know about an important update regarding our project. A critical bug was fixed successfully. The release is delayed by one day due to additional testing. This step is necessary to make sure the product works perfectly for our users. Moving forward, the next step is to review the updated plan in our team call scheduled for tomorrow afternoon. We are confident that with this extra care, everything will be ready and reliable without any problems. Please let the team know if you have any questions or need more details on the progress so far.
-'''
-
-Extra feature:
--    Auto option on model selection. (Decides which model to use that better suits the input)
--    Expert option (Similar to whats most commonly known as Extended thinking)
--    Copy button
--    Export to PDF option
--    Read loud
--    Option for 3 follow up inputs that can be sent in one click:
-    *   Explain technical terms used
-    *   Discuss bug prevention strategies
-    *   Revise messages for conciseness
-
-Model:
-Free tier grok.com (Grok) using "Grok 4.20" + Expert thinking
-
-Date:
-3/23/2026

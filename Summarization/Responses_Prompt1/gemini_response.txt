@@ -1,6 +1,3 @@
-Response:
-
-'''
 Here is the summary of the text provided:
 
 * Remote work increases flexibility and reduces the amount of time spent on commuting.
@@ -9,16 +6,3 @@ Here is the summary of the text provided:
 
 ---
 Would you like me to generate a table comparing the pros and cons of these work models?
-'''
-
-Extra feature:
--    Extended thinking
--    Draft in Gmail
--    Export to Docs
--    Listen (Clear, outloud reading of the given output)
-
-Model:
-Free tier gemini.google.com (Gemini) using "Gemini 3" + Extended thinking
-
-Date:
-3/23/2026

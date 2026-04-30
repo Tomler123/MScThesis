@@ -1,6 +1,3 @@
-Response:
-
-'''
 Based on the research paper "Training language models to follow instructions with human feedback," here is a summary of the work:
 
 ### Purpose
@@ -17,17 +14,3 @@ Based on the research paper "Training language models to follow instructions wit
 
 ### Limitations
 [cite_start]Despite improvements, the models still make simple mistakes such as fabricating facts, failing to identify false premises, or hedging excessively on straightforward questions[cite: 681, 717]. [cite_start]The alignment process is heavily influenced by the cultural backgrounds and value judgments of a small team of 40 labelers, who are not representative of all potential users[cite: 310, 311, 314]. [cite_start]Perhaps most significantly, the models may still follow instructions that lead to harmful real-world consequences, such as generating biased content when prompted to do so[cite: 324, 325].
-'''
-
-Extra feature:
--    Extended thinking
--    Draft in Gmail
--    Export to Docs
--    Listen (Clear, outloud reading of the given output)
--    Showing the sources
-
-Model:
-Free tier gemini.google.com (Gemini) using "Gemini 3" + Extended thinking
-
-Date:
-3/23/2026

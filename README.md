@@ -1,6 +1,6 @@
 # Generative AI Model Evaluation — MSc Thesis Repository
 
-**Thesis:** *Understanding and Comparing Generative AI Models: Capabilities, Domains, and Identifying the Best Models for Specific Use Cases*  
+**Thesis:** *A Comparative Study of Generative AI Models: Evaluating Capabilities and Identifying the Best Models for Specific Applications*  
 **Author:** Toma Sulava Sulaberidze  
 **Institution:** Eötvös Loránd University (ELTE), Faculty of Informatics  
 **Programme:** MSc Computer Science — Software and Service Architectures
